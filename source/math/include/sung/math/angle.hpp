@@ -1,10 +1,9 @@
 #pragma once
 
+#include <cmath>
+
 
 namespace sung {
-
-    constexpr double PI = 3.14159265358979323846;
-
 
     /*
     Strong type for angles
@@ -22,46 +21,79 @@ namespace sung {
     So, you may use `normalize_*` function to normalize the angles before comparing.
     Or you can call `rad` to get numeric value and compare them.
     */
-    class Angle {
+    template <typename T>
+    class TAngle {
 
     public:
-        Angle() = default;
+        TAngle() = default;
 
-        static Angle from_deg(double degrees);
-        static Angle from_rad(double radians) { return Angle{ radians }; }
+        static TAngle from_deg(T degrees) { return TAngle{ degrees * DEG_TO_RAD }; }
+        static TAngle from_rad(T radians) { return TAngle{ radians }; }
 
-        Angle operator+(const Angle& rhs) const;
-        Angle operator-(const Angle& rhs) const;
+        TAngle operator+(const TAngle& rhs) const { return TAngle{ radians_ + rhs.radians_ }; }
+        TAngle operator-(const TAngle& rhs) const { return TAngle{ radians_ - rhs.radians_ }; }
 
         // Multiply an angle by a scalar, not an angle.
         // Product of two angles are usually not an angle.
         // You can use `rad` or `deg` functions to get numeric value to use it in your folmulas.
-        Angle operator*(double rhs) const;
-        Angle operator/(double rhs) const;
+        TAngle operator*(T rhs) const { return TAngle{ radians_ * rhs }; }
+        TAngle operator/(T rhs) const { return TAngle{ radians_ / rhs }; }
 
-        bool is_equivalent(const Angle& rhs, double epsilon = 0.0) const;
+        bool is_equivalent(const TAngle& rhs, T epsilon = 0) const {
+            const auto diff = std::abs(this->rad_diff(radians_, rhs.radians_));
+            return diff <= epsilon;
+        }
 
-        double deg() const;
-        double rad() const { return radians_; }
+        T deg() const { return radians_ * RAD_TO_DEG; }
+        T rad() const { return radians_; }
 
-        void set_deg(double degrees);
-        void set_rad(double radians) { radians_ = radians; }
+        void set_deg(T degrees) { radians_ = degrees * DEG_TO_RAD; }
+        void set_rad(T radians) { radians_ = radians; }
 
         // Normalize to [0, 2pi), retaining the phase
-        Angle normalize_pos() const;
+        TAngle normalize_pos() const { return TAngle{ this->positive_radians(radians_) }; }
         // Normalize to [-pi, pi), retaining the phase
-        Angle normalize_neg() const;
+        TAngle normalize_neg() const { return TAngle{ this->negative_radians(radians_) }; }
 
         // https://gist.github.com/shaunlebron/8832585
         // Calculate the shortest angular distance from this to rhs
-        Angle calc_short_diff(Angle rhs) const;
-        Angle lerp(Angle rhs, double t) const;
+        TAngle calc_short_diff(TAngle rhs) const {
+            return TAngle(this->rad_diff(radians_, rhs.radians_));
+        }
+        TAngle lerp(TAngle rhs, T t) const {
+            return (*this) + this->calc_short_diff(rhs) * t;
+        }
 
     private:
-        Angle(double radians) : radians_(radians) {}
+        TAngle(T radians) : radians_(radians) {}
 
-        double radians_ = 0;
+        // [0, 2pi)
+        static T positive_radians(T x) {
+            return x - std::floor(x * PI2_INV) * PI2;
+        }
+
+        // [-pi, pi)
+        static T negative_radians(T x) {
+            return x - std::floor(x * PI2_INV + static_cast<T>(0.5)) * PI2;
+        }
+
+        static T rad_diff(T a, T b) {
+            const auto da = std::fmod(b - a, PI2);
+            return std::fmod(da * static_cast<T>(2), PI2) - da;
+        }
+
+        constexpr static T PI = 3.14159265358979323846;
+        constexpr static T PI2 = PI * static_cast<T>(2);
+        constexpr static T PI2_INV = static_cast<T>(1) / PI2;
+
+        constexpr static T DEG_TO_RAD = PI / 180.0;
+        constexpr static T RAD_TO_DEG = 180.0 / PI;
+
+        T radians_ = 0;
 
     };
+
+
+    using Angle = TAngle<double>;
 
 }
