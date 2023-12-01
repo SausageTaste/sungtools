@@ -1,4 +1,4 @@
-#include "sung/math/angle.hpp"
+#include "sung/general/angle.hpp"
 
 #include <chrono>
 #include <iostream>
