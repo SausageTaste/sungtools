@@ -13,6 +13,7 @@ namespace sung {
     public:
         double elapsed() const;
 
+        void set_min();
         void check();
         double check_get_elapsed();
 

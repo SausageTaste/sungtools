@@ -8,6 +8,10 @@ namespace sung {
         return this->duration_cast(Clock_t::now() - last_checked_);
     }
 
+    void TimeChecker::set_min() {
+        last_checked_ = Clock_t::time_point::min();
+    }
+
     void TimeChecker::check() {
         last_checked_ = Clock_t::now();
     }
