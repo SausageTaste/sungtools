@@ -65,7 +65,7 @@ namespace sung {
         }
 
     private:
-        TAngle(T radians) : radians_(radians) {}
+        explicit TAngle(T radians) : radians_(radians) {}
 
         // [0, 2pi)
         static T positive_radians(T x) {
