@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "sung/general/time.hpp"
 
 
@@ -59,6 +61,34 @@ namespace sung {
         EdgeDetector edge_detector_;
         TimeChecker last_state_changed_;
         bool consumed_ = false;
+
+    };
+
+
+    class PulseResponseFuture {
+
+    public:
+        void add_signal(double delay_sec) {
+            records_.push_back({ TimeChecker{}, delay_sec });
+        }
+
+        bool get_pulse() {
+            for (auto it = records_.begin(); it != records_.end(); ++it) {
+                if (it->timer_.elapsed() >= it->delay_sec_) {
+                    records_.erase(it);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+    private:
+        struct Record {
+            TimeChecker timer_;
+            double delay_sec_;
+        };
+
+        std::vector<Record> records_;
 
     };
 
