@@ -47,4 +47,19 @@ namespace sung {
 
     };
 
+
+    class LongPressDetector {
+
+    public:
+        enum class Type { none, short_press, long_press };
+
+        Type notify_signal(bool pressed, double threshold_sec);
+
+    private:
+        EdgeDetector edge_detector_;
+        TimeChecker last_state_changed_;
+        bool consumed_ = false;
+
+    };
+
 }
