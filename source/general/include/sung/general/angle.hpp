@@ -1,12 +1,70 @@
 #pragma once
 
+#define _USE_MATH_DEFINES
 #include <cmath>
 
 
 namespace sung {
 
+    template <typename T>
+    T to_degrees(T radians) {
+        constexpr auto FACTOR = static_cast<T>(180.0 / M_PI);
+        return radians * FACTOR;
+    }
+
+    template <typename T>
+    T to_radians(T degrees) {
+        constexpr auto FACTOR = static_cast<T>(M_PI / 180.0);
+        return degrees * FACTOR;
+    }
+
+
+    // Normalize to [0, 2pi), retaining the phase.
+    // Consider some angles like 512 degrees, which can be simplified to 152 degrees.
+    // 360 degrees equals to 0 degrees, -42 degrees equals to 318 degrees, etc...
+    // This function does that.
+    // Note that I'm using degrees for explanation, but the function uses radians internally.
+    template <typename T>
+    T repeat_rad_positive(T x) {
+        constexpr auto PI2 = static_cast<T>(M_PI * 2.0);
+        constexpr auto PI2_INV = static_cast<T>(1.0 / (M_PI * 2.0));
+        return x - std::floor(x * PI2_INV) * PI2;
+    }
+
+
+    // Normalize to [-pi, pi), retaining the phase.
+    // Same notion as `repeat_rad_positive`, but it maps values to [-pi, pi), or [-180, 180) in degrees.
+    // 512 degrees will be 152 degrees, which is identical to result of `repeat_rad_positive`.
+    // But some angles like 272 degrees will be -88 degrees to make it fit in [-180, 180).
+    //
+    // You don't want to use this function for comparing two angles' similarity.
+    // Because -179 degrees and 179 degrees are very similar, but numerically they are very different.
+    // So, you may want to use `calc_rad_shortest_diff` function instead, which will output -2 degrees for the case above.
+    template <typename T>
+    T repeat_rad_negative(T x) {
+        constexpr auto PI2 = static_cast<T>(M_PI * 2.0);
+        constexpr auto PI2_INV = static_cast<T>(1.0 / (M_PI * 2.0));
+        return x - std::floor(x * PI2_INV + static_cast<T>(0.5)) * PI2;
+    }
+
+
+    // Calculate the shortest angular distance from a to b.
+    // The result will be in [-pi, pi).
+    // For instance, if a is 0 degrees and b is 270 degrees, the result will be -90 degrees.
+    // If a is 178 degrees and b is -169 degrees, the function well magically find the shortest path and outputs -13 degrees,
+    // which can be added to a and get new angle whose phase equals to `rhs`.
+    // That means `repeat_rad_negative(a + new angle) = repeat_rad_negative(rhs)`, ignoring the float precision problem.
+    // Check out https://gist.github.com/shaunlebron/8832585 for more details.
+    template <typename T>
+    T calc_rad_shortest_diff(T a, T b) {
+        constexpr auto PI2 = static_cast<T>(M_PI * 2.0);
+        const auto da = std::fmod(b - a, PI2);
+        return std::fmod(da * static_cast<T>(2), PI2) - da;
+    }
+
+
     /*
-    Strong type for angles
+    Strong type for angles.
     This class eliminates the confusion between radians and degrees.
 
     Just be careful and choose correct unit when using `from_*`, `set_*` functions.
@@ -27,8 +85,9 @@ namespace sung {
     public:
         TAngle() = default;
 
-        static TAngle from_deg(T degrees) { return TAngle{ degrees * DEG_TO_RAD }; }
+        static TAngle from_deg(T degrees) { return TAngle{ sung::to_radians(degrees) }; }
         static TAngle from_rad(T radians) { return TAngle{ radians }; }
+        static TAngle from_zero() { return TAngle{ 0 }; }  // You can just use default ctor but for explicitness
 
         TAngle operator+(const TAngle& rhs) const { return TAngle{ radians_ + rhs.radians_ }; }
         TAngle operator-(const TAngle& rhs) const { return TAngle{ radians_ - rhs.radians_ }; }
@@ -40,25 +99,21 @@ namespace sung {
         TAngle operator/(T rhs) const { return TAngle{ radians_ / rhs }; }
 
         bool is_equivalent(const TAngle& rhs, T epsilon = 0) const {
-            const auto diff = std::abs(this->rad_diff(radians_, rhs.radians_));
-            return diff <= epsilon;
+            const auto diff = sung::calc_rad_shortest_diff(radians_, rhs.radians_);
+            return std::abs(diff) <= epsilon;  // It must be <=, not < because the epsilon can be 0.
         }
 
-        T deg() const { return radians_ * RAD_TO_DEG; }
+        T deg() const { return sung::to_degrees(radians_); }
         T rad() const { return radians_; }
 
-        void set_deg(T degrees) { radians_ = degrees * DEG_TO_RAD; }
+        void set_deg(T degrees) { radians_ = sung::to_radians(degrees); }
         void set_rad(T radians) { radians_ = radians; }
 
-        // Normalize to [0, 2pi), retaining the phase
-        TAngle normalize_pos() const { return TAngle{ this->positive_radians(radians_) }; }
-        // Normalize to [-pi, pi), retaining the phase
-        TAngle normalize_neg() const { return TAngle{ this->negative_radians(radians_) }; }
+        TAngle normalize_pos() const { return TAngle{ sung::repeat_rad_positive(radians_) }; }
+        TAngle normalize_neg() const { return TAngle{ sung::repeat_rad_negative(radians_) }; }
 
-        // https://gist.github.com/shaunlebron/8832585
-        // Calculate the shortest angular distance from this to rhs
         TAngle calc_short_diff(TAngle rhs) const {
-            return TAngle(this->rad_diff(radians_, rhs.radians_));
+            return TAngle(sung::calc_rad_shortest_diff(radians_, rhs.radians_));
         }
         TAngle lerp(TAngle rhs, T t) const {
             return (*this) + this->calc_short_diff(rhs) * t;
@@ -66,28 +121,6 @@ namespace sung {
 
     private:
         explicit TAngle(T radians) : radians_(radians) {}
-
-        // [0, 2pi)
-        static T positive_radians(T x) {
-            return x - std::floor(x * PI2_INV) * PI2;
-        }
-
-        // [-pi, pi)
-        static T negative_radians(T x) {
-            return x - std::floor(x * PI2_INV + static_cast<T>(0.5)) * PI2;
-        }
-
-        static T rad_diff(T a, T b) {
-            const auto da = std::fmod(b - a, PI2);
-            return std::fmod(da * static_cast<T>(2), PI2) - da;
-        }
-
-        constexpr static T PI = 3.14159265358979323846;
-        constexpr static T PI2 = PI * static_cast<T>(2);
-        constexpr static T PI2_INV = static_cast<T>(1) / PI2;
-
-        constexpr static T DEG_TO_RAD = PI / 180.0;
-        constexpr static T RAD_TO_DEG = 180.0 / PI;
 
         T radians_ = 0;
 
