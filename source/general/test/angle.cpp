@@ -12,6 +12,7 @@ namespace {
         TEST_RESULT_TEST_DIFF_FLOAT_FAIL,
         TEST_RESULT_TEST_DIFF_DOUBLE_FAIL,
         TEST_RESULT_TEST_ADD_FAIL,
+        TEST_RESULT_TEST_CONVERSION_FAIL,
     };
 
 
@@ -144,6 +145,43 @@ namespace {
 }
 
 
+// Angle conversion test
+namespace {
+
+    template <typename T>
+    TestResult conversion_test(T error_tolerance) {
+        ::RandomDoubleGenerator<T> rng{ -1e3, 1e3 };
+
+        constexpr auto TEST_DURATION = std::chrono::seconds(1);
+        const auto start_time = std::chrono::high_resolution_clock::now();
+        size_t count = 0;
+
+        for (;;) {
+            const auto deg_value = rng.gen();
+            const auto angle = sung::TAngle<T>::from_deg(deg_value);
+            const auto error = std::abs(angle.deg() - deg_value);
+            if (error > error_tolerance) {
+                std::cout << "Test `conversion_test` failed (T = " << typeid(T).name() << ")"
+                    << "\n    deg_value: " << deg_value
+                    << "\n    angle.deg(): " << angle.deg()
+                    << "\n    error: " << error
+                    << std::endl;
+                return TEST_RESULT_TEST_CONVERSION_FAIL;
+            }
+
+            ++count;
+            if (std::chrono::high_resolution_clock::now() - start_time > TEST_DURATION)
+                break;
+        }
+
+        const auto seconds = std::chrono::duration_cast<std::chrono::milliseconds>(TEST_DURATION).count() / 1000.0;
+        std::cout << "Conversion test (" << typeid(T).name() << ") passed " << std::fixed << count / seconds << " times per seconds" << std::endl;
+        return TEST_RESULT_SUCCESS;
+    }
+
+}
+
+
 int main() {
     TestResult result;
 
@@ -156,6 +194,14 @@ int main() {
         return result;
 
     result = ::diff_calc_test();
+    if (TEST_RESULT_SUCCESS != result)
+        return result;
+
+    result = ::conversion_test<double>(1e-10);
+    if (TEST_RESULT_SUCCESS != result)
+        return result;
+
+    result = ::conversion_test<float>(1e-4f);
     if (TEST_RESULT_SUCCESS != result)
         return result;
 
