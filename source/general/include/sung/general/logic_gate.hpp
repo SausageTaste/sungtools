@@ -41,7 +41,7 @@ namespace sung {
     public:
         RetriggerableMonostableMultivibrator();
         void notify_signal(bool value);
-        bool out_signal(double tolerance_sec);
+        bool out_signal(double tolerance_sec);  //TODO: It might not work correctly if the torlerance changes
 
     private:
         TimeChecker timer_;
