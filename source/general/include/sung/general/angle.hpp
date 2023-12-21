@@ -126,7 +126,4 @@ namespace sung {
 
     };
 
-
-    using Angle = TAngle<double>;
-
 }
