@@ -5,7 +5,11 @@ project(SungTools
     LANGUAGES CXX
 )
 
-include(CTest)
+set(SUNG_ENABLE_TEST OFF CACHE BOOL "Enable testing")
+
+if(SUNG_ENABLE_TEST)
+    enable_testing()
+endif()
 
 
 add_subdirectory(source)
