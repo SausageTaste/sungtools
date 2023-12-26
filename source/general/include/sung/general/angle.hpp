@@ -1,20 +1,21 @@
 #pragma once
 
-#define _USE_MATH_DEFINES
 #include <cmath>
+
+#define SUNG_PI 3.14159265358979323846
 
 
 namespace sung {
 
     template <typename T>
     T to_degrees(T radians) {
-        constexpr auto FACTOR = static_cast<T>(180.0 / M_PI);
+        constexpr auto FACTOR = static_cast<T>(180.0 / SUNG_PI);
         return radians * FACTOR;
     }
 
     template <typename T>
     T to_radians(T degrees) {
-        constexpr auto FACTOR = static_cast<T>(M_PI / 180.0);
+        constexpr auto FACTOR = static_cast<T>(SUNG_PI / 180.0);
         return degrees * FACTOR;
     }
 
@@ -26,8 +27,8 @@ namespace sung {
     // Note that I'm using degrees for explanation, but the function uses radians internally.
     template <typename T>
     T repeat_rad_positive(T x) {
-        constexpr auto PI2 = static_cast<T>(M_PI * 2.0);
-        constexpr auto PI2_INV = static_cast<T>(1.0 / (M_PI * 2.0));
+        constexpr auto PI2 = static_cast<T>(SUNG_PI * 2.0);
+        constexpr auto PI2_INV = static_cast<T>(1.0 / (SUNG_PI * 2.0));
         return x - std::floor(x * PI2_INV) * PI2;
     }
 
@@ -42,8 +43,8 @@ namespace sung {
     // So, you may want to use `calc_rad_shortest_diff` function instead, which will output -2 degrees for the case above.
     template <typename T>
     T repeat_rad_negative(T x) {
-        constexpr auto PI2 = static_cast<T>(M_PI * 2.0);
-        constexpr auto PI2_INV = static_cast<T>(1.0 / (M_PI * 2.0));
+        constexpr auto PI2 = static_cast<T>(SUNG_PI * 2.0);
+        constexpr auto PI2_INV = static_cast<T>(1.0 / (SUNG_PI * 2.0));
         return x - std::floor(x * PI2_INV + static_cast<T>(0.5)) * PI2;
     }
 
@@ -57,7 +58,7 @@ namespace sung {
     // Check out https://gist.github.com/shaunlebron/8832585 for more details.
     template <typename T>
     T calc_rad_shortest_diff(T a, T b) {
-        constexpr auto PI2 = static_cast<T>(M_PI * 2.0);
+        constexpr auto PI2 = static_cast<T>(SUNG_PI * 2.0);
         const auto da = std::fmod(b - a, PI2);
         return std::fmod(da * static_cast<T>(2), PI2) - da;
     }
