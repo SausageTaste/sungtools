@@ -16,6 +16,7 @@ namespace sung {
         void set_min();
         void check();
         double check_get_elapsed();
+        bool check_if_elapsed(double seconds);
 
     private:
         using Clock_t = std::chrono::steady_clock;
