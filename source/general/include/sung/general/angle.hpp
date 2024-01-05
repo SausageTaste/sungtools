@@ -2,7 +2,8 @@
 
 #include <cmath>
 
-#define SUNG_PI 3.14159265358979323846
+#define SUNG_PI (3.14159265358979323846)
+#define SUNG_TAU (SUNG_PI * 2)
 
 
 namespace sung {
@@ -27,9 +28,9 @@ namespace sung {
     // Note that I'm using degrees for explanation, but the function uses radians internally.
     template <typename T>
     T repeat_rad_positive(T x) {
-        constexpr auto PI2 = static_cast<T>(SUNG_PI * 2.0);
-        constexpr auto PI2_INV = static_cast<T>(1.0 / (SUNG_PI * 2.0));
-        return x - std::floor(x * PI2_INV) * PI2;
+        constexpr auto TAU = static_cast<T>(SUNG_TAU);
+        constexpr auto TAU_INV = static_cast<T>(1.0 / (SUNG_TAU));
+        return x - std::floor(x * TAU_INV) * TAU;
     }
 
 
@@ -43,9 +44,9 @@ namespace sung {
     // So, you may want to use `calc_rad_shortest_diff` function instead, which will output -2 degrees for the case above.
     template <typename T>
     T repeat_rad_negative(T x) {
-        constexpr auto PI2 = static_cast<T>(SUNG_PI * 2.0);
-        constexpr auto PI2_INV = static_cast<T>(1.0 / (SUNG_PI * 2.0));
-        return x - std::floor(x * PI2_INV + static_cast<T>(0.5)) * PI2;
+        constexpr auto TAU = static_cast<T>(SUNG_TAU);
+        constexpr auto TAU_INV = static_cast<T>(1.0 / (SUNG_TAU));
+        return x - std::floor(x * TAU_INV + static_cast<T>(0.5)) * TAU;
     }
 
 
@@ -58,9 +59,9 @@ namespace sung {
     // Check out https://gist.github.com/shaunlebron/8832585 for more details.
     template <typename T>
     T calc_rad_shortest_diff(T a, T b) {
-        constexpr auto PI2 = static_cast<T>(SUNG_PI * 2.0);
-        const auto da = std::fmod(b - a, PI2);
-        return std::fmod(da * static_cast<T>(2), PI2) - da;
+        constexpr auto TAU = static_cast<T>(SUNG_TAU);
+        const auto da = std::fmod(b - a, TAU);
+        return std::fmod(da * static_cast<T>(2), TAU) - da;
     }
 
 
