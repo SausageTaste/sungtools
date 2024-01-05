@@ -9,7 +9,7 @@ namespace sung {
     }
 
     void TimeChecker::set_min() {
-        last_checked_ = Clock_t::time_point::min();
+        last_checked_ = Clock_t::time_point{};
     }
 
     void TimeChecker::check() {
