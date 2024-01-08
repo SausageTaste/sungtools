@@ -51,6 +51,23 @@ namespace sung {
     };
 
 
+    class RetriggerableMonostableMultivibratorCompact {
+
+    public:
+        RetriggerableMonostableMultivibratorCompact(double tolerance_sec) : tolerance_sec_(tolerance_sec) {}
+        void notify_signal(bool value) { rmm_.notify_signal(value); }
+        bool poll_signal(double tolerance_sec) { return rmm_.poll_signal(tolerance_sec); }
+
+        double tolerance() const { return tolerance_sec_; }
+        void set_tolerance(double tolerance_sec) { tolerance_sec_ = tolerance_sec; }
+
+    private:
+        RetriggerableMonostableMultivibrator rmm_;
+        double tolerance_sec_ = 0;
+
+    };
+
+
     class LongPressDetector {
 
     public:
