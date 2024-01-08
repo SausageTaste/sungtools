@@ -8,7 +8,7 @@ namespace sung {
         return signal_;
     }
 
-    void EdgeDetector::set_signal(bool v) {
+    void EdgeDetector::notify_signal(bool v) {
         signal_ = v;
     }
 
@@ -42,13 +42,17 @@ namespace sung {
         }
     }
 
-    bool RetriggerableMonostableMultivibrator::out_signal(double tolerance_sec) {
+    bool RetriggerableMonostableMultivibrator::poll_signal(double tolerance_sec) {
         if (signal_once_) {
             signal_once_ = false;
             return true;
         }
 
-        return timer_.elapsed() <= tolerance_sec;
+        if (timer_.elapsed() <= tolerance_sec)
+            return true;
+
+        timer_.set_min();  // To prevent false positive after tolerance time increased
+        return false;
     }
 
 }
@@ -57,8 +61,8 @@ namespace sung {
 // LongPressDetector
 namespace sung {
 
-    LongPressDetector::Type LongPressDetector::notify_signal(bool pressed, double threshold_sec) {
-        edge_detector_.set_signal(pressed);
+    LongPressDetector::Type LongPressDetector::notify_poll(bool pressed, double threshold_sec) {
+        edge_detector_.notify_signal(pressed);
         const auto edge = edge_detector_.check_edge();
 
         switch (edge) {
@@ -89,6 +93,45 @@ namespace sung {
         }
 
         return Type::none;
+    }
+
+}
+
+
+// PulseResponseFuture
+namespace sung {
+
+    class PulseResponseFuture::Record {
+
+    public:
+        explicit
+        Record(double delay_sec)
+            : delay_sec_(delay_sec)
+        { }
+
+        bool expired() const {
+            return timer_.elapsed() >= delay_sec_;
+        }
+
+    private:
+        TimeChecker timer_;
+        double delay_sec_;
+
+    };
+
+
+    void PulseResponseFuture::add_future(double delay_sec) {
+        records_.emplace_back(delay_sec);
+    }
+
+    bool PulseResponseFuture::poll_pulse() {
+        for (auto it = records_.begin(); it != records_.end(); ++it) {
+            if (it->expired()) {
+                records_.erase(it);
+                return true;
+            }
+        }
+        return false;
     }
 
 }

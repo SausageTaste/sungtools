@@ -18,9 +18,10 @@ namespace sung {
 
         // Input signal
         bool signal() const;
-        void set_signal(bool v);
+        void notify_signal(bool v);
 
         // Methods with names starting with `check_` will update the internal state.
+        // Call one of these periodically to poll the signal.
         Type check_edge();
         bool check_rising() { return Type::rising == this->check_edge(); }
         bool check_falling() { return Type::falling == this->check_edge(); }
@@ -41,7 +42,7 @@ namespace sung {
     public:
         RetriggerableMonostableMultivibrator();
         void notify_signal(bool value);
-        bool out_signal(double tolerance_sec);  //TODO: It might not work correctly if the torlerance changes
+        bool poll_signal(double tolerance_sec);
 
     private:
         TimeChecker timer_;
@@ -55,7 +56,8 @@ namespace sung {
     public:
         enum class Type { none, short_press, long_press };
 
-        Type notify_signal(bool pressed, double threshold_sec);
+        // Call it periodically to poll the signal.
+        Type notify_poll(bool pressed, double threshold_sec);
 
     private:
         EdgeDetector edge_detector_;
@@ -68,26 +70,11 @@ namespace sung {
     class PulseResponseFuture {
 
     public:
-        void add_signal(double delay_sec) {
-            records_.push_back({ TimeChecker{}, delay_sec });
-        }
-
-        bool get_pulse() {
-            for (auto it = records_.begin(); it != records_.end(); ++it) {
-                if (it->timer_.elapsed() >= it->delay_sec_) {
-                    records_.erase(it);
-                    return true;
-                }
-            }
-            return false;
-        }
+        void add_future(double delay_sec);
+        bool poll_pulse();
 
     private:
-        struct Record {
-            TimeChecker timer_;
-            double delay_sec_;
-        };
-
+        class Record;
         std::vector<Record> records_;
 
     };
