@@ -9,6 +9,12 @@
 namespace sung {
 
     template <typename T>
+    T clamp(T x, T min, T max) {
+        return std::max(min, std::min(max, x));
+    }
+
+
+    template <typename T>
     T to_degrees(T radians) {
         constexpr auto FACTOR = static_cast<T>(180.0 / SUNG_PI);
         return radians * FACTOR;
@@ -18,6 +24,19 @@ namespace sung {
     T to_radians(T degrees) {
         constexpr auto FACTOR = static_cast<T>(SUNG_PI / 180.0);
         return degrees * FACTOR;
+    }
+
+
+    template <typename T>
+    T asin_safe(T x) {
+        x = clamp(x, static_cast<T>(-1), static_cast<T>(1));
+        return std::asin(x);
+    }
+
+    template <typename T>
+    T acos_safe(T x) {
+        x = clamp(x, static_cast<T>(-1), static_cast<T>(1));
+        return std::acos(x);
     }
 
 
