@@ -77,9 +77,9 @@ namespace sung {
     // That means `repeat_rad_negative(a + new angle) = repeat_rad_negative(rhs)`, ignoring the float precision problem.
     // Check out https://gist.github.com/shaunlebron/8832585 for more details.
     template <typename T>
-    T calc_rad_shortest_diff(T a, T b) {
+    T calc_rad_shortest_diff(T from, T to) {
         constexpr auto TAU = static_cast<T>(SUNG_TAU);
-        const auto da = std::fmod(b - a, TAU);
+        const auto da = std::fmod(to - from, TAU);
         return std::fmod(da * static_cast<T>(2), TAU) - da;
     }
 
@@ -133,11 +133,11 @@ namespace sung {
         TAngle normalize_pos() const { return TAngle{ sung::repeat_rad_positive(radians_) }; }
         TAngle normalize_neg() const { return TAngle{ sung::repeat_rad_negative(radians_) }; }
 
-        TAngle calc_short_diff(TAngle rhs) const {
-            return TAngle(sung::calc_rad_shortest_diff(radians_, rhs.radians_));
+        TAngle calc_short_diff(TAngle dst) const {
+            return TAngle(sung::calc_rad_shortest_diff(radians_, dst.radians_));
         }
-        TAngle lerp(TAngle rhs, T t) const {
-            return (*this) + this->calc_short_diff(rhs) * t;
+        TAngle lerp(TAngle dst, T t) const {
+            return (*this) + this->calc_short_diff(dst) * t;
         }
 
     private:
