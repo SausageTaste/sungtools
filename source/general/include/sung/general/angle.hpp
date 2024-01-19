@@ -10,7 +10,7 @@ namespace sung {
 
     template <typename T>
     T clamp(T x, T min, T max) {
-        return std::max(min, std::min(max, x));
+        return (std::max)(min, (std::min)(max, x));
     }
 
 
