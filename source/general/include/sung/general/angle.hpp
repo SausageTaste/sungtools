@@ -147,4 +147,8 @@ namespace sung {
 
     };
 
+
+    static_assert(sizeof(TAngle<float>) == sizeof(float), "TAngle<float> must be as big as underlying type");
+    static_assert(sizeof(TAngle<double>) == sizeof(double), "TAngle<double> must be as big as underlying type");
+
 }
