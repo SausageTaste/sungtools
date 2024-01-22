@@ -72,7 +72,7 @@ namespace sung {
     // Calculate the shortest angular distance from a to b.
     // The result will be in [-pi, pi).
     // For instance, if a is 0 degrees and b is 270 degrees, the result will be -90 degrees.
-    // If a is 178 degrees and b is -169 degrees, the function well magically find the shortest path and outputs -13 degrees,
+    // If a is 178 degrees and b is -169 degrees, the function will magically find the shortest path and outputs -13 degrees,
     // which can be added to a and get new angle whose phase equals to `rhs`.
     // That means `repeat_rad_negative(a + new angle) = repeat_rad_negative(rhs)`, ignoring the float precision problem.
     // Check out https://gist.github.com/shaunlebron/8832585 for more details.
