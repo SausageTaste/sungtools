@@ -1,5 +1,39 @@
 #include "sung/general/time.hpp"
 
+#include <thread>
+
+
+namespace sung {
+
+    void sleep_naive(double seconds) {
+        std::this_thread::sleep_for(std::chrono::duration<double>(seconds));
+    }
+
+    void sleep_loop(double seconds) {
+        using clock_t = std::chrono::steady_clock;
+        using duration_t = std::chrono::duration<double>;
+        constexpr static duration_t MIN_SLEEP_DURATION(0);
+
+        const auto start = clock_t::now();
+        while (duration_t(clock_t::now() - start).count() < seconds) {
+            std::this_thread::sleep_for(MIN_SLEEP_DURATION);
+        }
+    }
+
+    void sleep_hybrid(double seconds, double proportion) {
+        using clock_t = std::chrono::steady_clock;
+        using duration_t = std::chrono::duration<double>;
+        constexpr static duration_t MIN_SLEEP_DURATION(0);
+
+        const auto start = clock_t::now();
+        std::this_thread::sleep_for(duration_t(seconds * proportion));
+        while (duration_t(clock_t::now() - start).count() < seconds) {
+            std::this_thread::sleep_for(MIN_SLEEP_DURATION);
+        }
+    }
+
+}
+
 
 // TimeChecker
 namespace sung {

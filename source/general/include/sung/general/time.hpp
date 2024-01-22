@@ -5,6 +5,11 @@
 
 namespace sung {
 
+    void sleep_naive(double seconds);
+    void sleep_loop(double seconds);
+    void sleep_hybrid(double seconds, double proportion = 0.5);
+
+
     /*
     This class uses monotonic clock.
     */
