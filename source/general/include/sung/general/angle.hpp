@@ -131,6 +131,9 @@ namespace sung {
         void set_rad(T radians) { radians_ = radians; }
         void set_zero() { radians_ = 0; }
 
+        TAngle add_deg(T degrees) const { return TAngle{ radians_ + sung::to_radians(degrees) }; }
+        TAngle add_rad(T radians) { return TAngle{ radians_ + radians }; }
+
         TAngle normalize_pos() const { return TAngle{ sung::repeat_rad_positive(radians_) }; }
         TAngle normalize_neg() const { return TAngle{ sung::repeat_rad_negative(radians_) }; }
 
