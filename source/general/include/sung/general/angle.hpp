@@ -71,6 +71,9 @@ namespace sung {
     // 360 degrees equals to 0 degrees, -42 degrees equals to 318 degrees, etc...
     // This function does that.
     // Note that I'm using degrees for explanation, but the function uses radians internally.
+    /// @tparam T Either `float` or `double`
+    /// @param x Angle in radians
+    /// @return Normalized angle in radians in range [0, 2pi)
     template <typename T>
     T repeat_rad_positive(T x) {
         constexpr auto TAU = static_cast<T>(SUNG_TAU);
@@ -87,6 +90,9 @@ namespace sung {
     // You don't want to use this function for comparing two angles' similarity.
     // Because -179 degrees and 179 degrees are very similar, but numerically they are very different.
     // So, you may want to use `calc_rad_shortest_diff` function instead, which will output -2 degrees for the case above.
+    /// @tparam T Either `float` or `double`
+    /// @param x Angle in radians
+    /// @return Normalized angle in radians in range [-pi, pi)
     template <typename T>
     T repeat_rad_negative(T x) {
         constexpr auto TAU = static_cast<T>(SUNG_TAU);
@@ -95,13 +101,6 @@ namespace sung {
     }
 
 
-    // Calculate the shortest angular distance from a to b.
-    // The result will be in [-pi, pi).
-    // For instance, if a is 0 degrees and b is 270 degrees, the result will be -90 degrees.
-    // If a is 178 degrees and b is -169 degrees, the function will magically find the shortest path and outputs -13 degrees,
-    // which can be added to a and get new angle whose phase equals to `rhs`.
-    // That means `repeat_rad_negative(a + new angle) = repeat_rad_negative(rhs)`, ignoring the float precision problem.
-    // Check out https://gist.github.com/shaunlebron/8832585 for more details.
     template <typename T>
     T calc_rad_shortest_diff_mod(T from, T to) {
         constexpr auto TAU = static_cast<T>(SUNG_TAU);
@@ -112,6 +111,18 @@ namespace sung {
     T calc_rad_shortest_diff_floor(T from, T to) {
         return repeat_rad_negative(to - from);
     }
+
+    // Calculate the shortest angular distance from `a` to `b`.
+    // The result will be in [-pi, pi).
+    // For instance, if `a` is 0 degrees and `b` is 270 degrees, the result will be -90 degrees.
+    // If `a` is 178 degrees and `b` is -169 degrees, the function will magically find the shortest path and outputs -13 degrees,
+    // which can be added to `a` and get new angle whose phase equals to `rhs`.
+    // That means `repeat_rad_negative(a + new angle) = repeat_rad_negative(rhs)`, ignoring the float precision problem.
+    // Check out https://gist.github.com/shaunlebron/8832585 for more details.
+    /// @tparam T Either `float` or `double`
+    /// @param from Start angle in radians
+    /// @param to Destination angle in radians
+    /// @return Shortest angular distance in radians
     template <typename T>
     T calc_rad_shortest_diff(T from, T to) {
         return calc_rad_shortest_diff_floor<T>(from, to);
@@ -133,6 +144,8 @@ namespace sung {
     For instance, 0 deg and 360 deg can be treated as a same angle, but sometimes not.
     So, you may use `normalize_*` function to normalize the angles before comparing.
     Or you can call `rad` to get numeric value and compare them.
+
+    @tparam T Either `float` or `double`
     */
     template <typename T>
     class TAngle {
