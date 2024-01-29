@@ -8,6 +8,13 @@
 
 namespace sung {
 
+    // This function is not tested enough yet
+    constexpr
+    int fast_floor(double x) {
+        int xi = (int)x;
+        return x < xi ? xi - 1 : xi;
+    }
+
     template <typename T> constexpr
     T clamp(T x, T min, T max) {
         return (std::max)(min, (std::min)(max, x));
