@@ -8,19 +8,19 @@
 
 namespace sung {
 
-    template <typename T>
+    template <typename T> constexpr
     T clamp(T x, T min, T max) {
         return (std::max)(min, (std::min)(max, x));
     }
 
 
-    template <typename T>
+    template <typename T> constexpr
     T to_degrees(T radians) {
         constexpr auto FACTOR = static_cast<T>(180.0 / SUNG_PI);
         return radians * FACTOR;
     }
 
-    template <typename T>
+    template <typename T> constexpr
     T to_radians(T degrees) {
         constexpr auto FACTOR = static_cast<T>(SUNG_PI / 180.0);
         return degrees * FACTOR;
@@ -104,35 +104,35 @@ namespace sung {
     class TAngle {
 
     public:
-        TAngle() = default;
+        constexpr TAngle() = default;
 
-        static TAngle from_deg(T degrees) { return TAngle{ sung::to_radians(degrees) }; }
-        static TAngle from_rad(T radians) { return TAngle{ radians }; }
-        static TAngle from_zero() { return TAngle{ 0 }; }  // You can just use default ctor but for explicitness
+        constexpr static TAngle from_deg(T degrees) { return TAngle{ sung::to_radians(degrees) }; }
+        constexpr static TAngle from_rad(T radians) { return TAngle{ radians }; }
+        constexpr static TAngle from_zero() { return TAngle{ 0 }; }  // You can just use default ctor but for explicitness
 
-        TAngle operator+(const TAngle& rhs) const { return TAngle{ radians_ + rhs.radians_ }; }
-        TAngle operator-(const TAngle& rhs) const { return TAngle{ radians_ - rhs.radians_ }; }
+        constexpr TAngle operator+(const TAngle& rhs) const { return TAngle{ radians_ + rhs.radians_ }; }
+        constexpr TAngle operator-(const TAngle& rhs) const { return TAngle{ radians_ - rhs.radians_ }; }
 
         // Multiply an angle by a scalar, not an angle.
         // Product of two angles are usually not an angle.
         // You can use `rad` or `deg` functions to get numeric value to use it in your folmulas.
-        TAngle operator*(T rhs) const { return TAngle{ radians_ * rhs }; }
-        TAngle operator/(T rhs) const { return TAngle{ radians_ / rhs }; }
+        constexpr TAngle operator*(T rhs) const { return TAngle{ radians_ * rhs }; }
+        constexpr TAngle operator/(T rhs) const { return TAngle{ radians_ / rhs }; }
 
         bool is_equivalent(const TAngle& rhs, T epsilon = 0) const {
             const auto diff = sung::calc_rad_shortest_diff(radians_, rhs.radians_);
             return std::abs(diff) <= epsilon;  // It must be <=, not < because the epsilon can be 0.
         }
 
-        T deg() const { return sung::to_degrees(radians_); }
-        T rad() const { return radians_; }
+        constexpr T deg() const { return sung::to_degrees(radians_); }
+        constexpr T rad() const { return radians_; }
 
         void set_deg(T degrees) { radians_ = sung::to_radians(degrees); }
         void set_rad(T radians) { radians_ = radians; }
         void set_zero() { radians_ = 0; }
 
-        TAngle add_deg(T degrees) const { return TAngle{ radians_ + sung::to_radians(degrees) }; }
-        TAngle add_rad(T radians) { return TAngle{ radians_ + radians }; }
+        constexpr TAngle add_deg(T degrees) const { return TAngle{ radians_ + sung::to_radians(degrees) }; }
+        constexpr TAngle add_rad(T radians) { return TAngle{ radians_ + radians }; }
 
         TAngle normalize_pos() const { return TAngle{ sung::repeat_rad_positive(radians_) }; }
         TAngle normalize_neg() const { return TAngle{ sung::repeat_rad_negative(radians_) }; }
@@ -145,7 +145,7 @@ namespace sung {
         }
 
     private:
-        explicit TAngle(T radians) : radians_(radians) {}
+        constexpr explicit TAngle(T radians) : radians_(radians) {}
 
         T radians_ = 0;
 
