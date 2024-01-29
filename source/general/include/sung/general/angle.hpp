@@ -34,9 +34,23 @@ namespace sung {
     }
 
     template <typename T>
-    T acos_safe(T x) {
+    T acos_safe_clamp(T x) {
         x = clamp(x, static_cast<T>(-1), static_cast<T>(1));
         return std::acos(x);
+    }
+
+    template <typename T>
+    T acos_safe_branches(T x) {
+        if (x < static_cast<T>(-1))
+            return SUNG_PI;
+        if (x > static_cast<T>(1))
+            return 0;
+        return std::acos(x);
+    }
+
+    template <typename T>
+    T acos_safe(T x) {
+        return acos_safe_branches(x);
     }
 
 
