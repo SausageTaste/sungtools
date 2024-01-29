@@ -13,6 +13,11 @@ namespace sung {
         return (std::max)(min, (std::min)(max, x));
     }
 
+    template <typename T> constexpr
+    bool are_similiar(T a, T b, T epsilon = 0) {
+        return std::abs(a - b) <= epsilon;  // It must be <=, not < because the epsilon can be 0.
+    }
+
 
     template <typename T> constexpr
     T to_degrees(T radians) {
@@ -91,10 +96,18 @@ namespace sung {
     // That means `repeat_rad_negative(a + new angle) = repeat_rad_negative(rhs)`, ignoring the float precision problem.
     // Check out https://gist.github.com/shaunlebron/8832585 for more details.
     template <typename T>
-    T calc_rad_shortest_diff(T from, T to) {
+    T calc_rad_shortest_diff_mod(T from, T to) {
         constexpr auto TAU = static_cast<T>(SUNG_TAU);
         const auto da = std::fmod(to - from, TAU);
         return std::fmod(da * static_cast<T>(2), TAU) - da;
+    }
+    template <typename T>
+    T calc_rad_shortest_diff_floor(T from, T to) {
+        return repeat_rad_negative(to - from);
+    }
+    template <typename T>
+    T calc_rad_shortest_diff(T from, T to) {
+        return calc_rad_shortest_diff_floor<T>(from, to);
     }
 
 

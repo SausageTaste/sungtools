@@ -4,6 +4,8 @@
 #include <iostream>
 #include <random>
 
+#include "sung/general/time.hpp"
+
 
 namespace {
 
@@ -11,6 +13,7 @@ namespace {
         TEST_RESULT_SUCCESS = 0,
         TEST_RESULT_TEST_DIFF_FLOAT_FAIL,
         TEST_RESULT_TEST_DIFF_DOUBLE_FAIL,
+        TEST_RESULT_TEST_DIFF_FUNC_FAIL,
         TEST_RESULT_TEST_ADD_FAIL,
         TEST_RESULT_TEST_CONVERSION_FAIL,
     };
@@ -95,7 +98,54 @@ namespace {
         }
 
         const auto seconds = std::chrono::duration_cast<std::chrono::milliseconds>(TEST_DURATION).count() / 1000.0;
-        std::cout << "Randomized test passed " << std::fixed << count / seconds << " times per seconds" << std::endl;
+        std::cout << "`diff_calc_test` passed " << std::fixed << count / seconds << " times per seconds" << std::endl;
+        return TEST_RESULT_SUCCESS;
+    }
+
+    TestResult diff_calc_func_test() {
+        ::RandomDoubleGenerator<double> rng{ -1e3, 1e3 };
+
+        constexpr auto TEST_DURATION = std::chrono::seconds(1);
+        const auto start_time = std::chrono::high_resolution_clock::now();
+        size_t count = 0;
+
+        sung::TimeChecker timer;
+        double accum_mod = 0;
+        double accum_floor = 0;
+
+        for (;;) {
+            const auto a_deg = rng.gen();
+            const auto b_deg = rng.gen();
+
+            const auto a_rad = sung::to_radians(a_deg);
+            const auto b_rad = sung::to_radians(b_deg);
+
+            timer.check();
+            const auto diff_mod = sung::calc_rad_shortest_diff_mod(a_rad, b_rad);
+            accum_mod += timer.elapsed();
+
+            timer.check();
+            const auto diff_floor = sung::calc_rad_shortest_diff_floor(a_rad, b_rad);
+            accum_floor += timer.elapsed();
+
+            if (!sung::are_similiar(diff_mod, diff_floor, 1e-10)) {
+                std::cout << "Test `diff_calc_func_test` failed (T = " << typeid(double).name() << ")"
+                    << "\n    a:            " << a_rad << " (" << sung::to_degrees(a_rad) << ")"
+                    << "\n    b:            " << b_rad << " (" << sung::to_degrees(b_rad) << ")"
+                    << "\n    diff_mod:     " << diff_mod << " (" << sung::to_degrees(diff_mod) << ")"
+                    << "\n    diff_floor:   " << diff_floor << " (" << sung::to_degrees(diff_floor) << ")"
+                    << std::endl;
+                return TEST_RESULT_TEST_DIFF_FUNC_FAIL;
+            }
+
+            ++count;
+            if (std::chrono::high_resolution_clock::now() - start_time > TEST_DURATION)
+                break;
+        }
+
+        const auto seconds = std::chrono::duration_cast<std::chrono::milliseconds>(TEST_DURATION).count() / 1000.0;
+        std::cout << "`diff_calc_func_test` passed " << std::fixed << count / seconds << " times per seconds" << std::endl;
+        std::cout << "    mod took " << accum_mod << " seconds, floor took " << accum_floor <<  " seconds" << std::endl;
         return TEST_RESULT_SUCCESS;
     }
 
@@ -194,6 +244,10 @@ int main() {
         return result;
 
     result = ::diff_calc_test();
+    if (TEST_RESULT_SUCCESS != result)
+        return result;
+
+    result = ::diff_calc_func_test();
     if (TEST_RESULT_SUCCESS != result)
         return result;
 
