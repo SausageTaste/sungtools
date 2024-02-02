@@ -39,10 +39,10 @@ namespace sung {
             if (x_max_ < other.x_min_ || x_min_ > other.x_max_ || y_max_ < other.y_min_ || y_min_ > other.y_max_)
                 return false;
 
-            output.x_min_ = std::max(x_min_, other.x_min_);
-            output.x_max_ = std::min(x_max_, other.x_max_);
-            output.y_min_ = std::max(y_min_, other.y_min_);
-            output.y_max_ = std::min(y_max_, other.y_max_);
+            output.x_min_ = (std::max)(x_min_, other.x_min_);
+            output.x_max_ = (std::min)(x_max_, other.x_max_);
+            output.y_min_ = (std::max)(y_min_, other.y_min_);
+            output.y_max_ = (std::min)(y_max_, other.y_max_);
             return true;
         }
 
