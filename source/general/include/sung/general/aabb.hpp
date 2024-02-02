@@ -46,14 +46,6 @@ namespace sung {
             return true;
         }
 
-        double sharing_area(const AABB2& other) const {
-            AABB2 intersection;
-            if (!this->make_intersection(other, intersection))
-                return 0;
-
-            return intersection.area();
-        }
-
         // Yes it makes the volume 0
         void set(T x, T y) {
             x_min_ = x;
