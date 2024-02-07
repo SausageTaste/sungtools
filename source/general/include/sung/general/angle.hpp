@@ -17,8 +17,8 @@ namespace sung {
     }
 
     template <typename T> constexpr
-    T clamp(T x, T min, T max) {
-        return (std::max)(min, (std::min)(max, x));
+    T clamp(T x, T min_value, T max_value) {
+        return (std::max)(min_value, (std::min)(max_value, x));
     }
 
     template <typename T> constexpr
