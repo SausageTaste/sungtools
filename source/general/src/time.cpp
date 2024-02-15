@@ -81,17 +81,6 @@ namespace sung {
         return accum_;
     }
 
-    void TimeAccumulator::add(double value) {
-        accum_ += value;
-        lasted_added_value_ = value;
-    }
-
-    void TimeAccumulator::set_max() {
-        constexpr double MAX_VALUE = 9999999999999;  // Such random number
-        lasted_added_value_ = MAX_VALUE - accum_;
-        accum_ = MAX_VALUE;
-    }
-
     void TimeAccumulator::set_min() {
         accum_ = 0;
         lasted_added_value_ = 0;
@@ -107,12 +96,23 @@ namespace sung {
         return result;
     }
 
-    double TimeAccumulator::check_if_elapsed(double seconds) {
+    bool TimeAccumulator::check_if_elapsed(double seconds) {
         if (accum_ >= seconds) {
             this->set_min();
             return true;
         }
         return false;
+    }
+
+    void TimeAccumulator::add(double value) {
+        accum_ += value;
+        lasted_added_value_ = value;
+    }
+
+    void TimeAccumulator::set_max() {
+        constexpr double MAX_VALUE = 9999999999999;  // Such random number
+        lasted_added_value_ = MAX_VALUE - accum_;
+        accum_ = MAX_VALUE;
     }
 
 }
