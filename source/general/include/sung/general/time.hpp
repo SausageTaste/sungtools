@@ -32,4 +32,23 @@ namespace sung {
 
     };
 
+
+    class TimeAccumulator {
+
+    public:
+        double elapsed() const;
+
+        void add(double value);
+        void set_max();
+        void set_min();
+        void check();
+        double check_get_elapsed();
+        double check_if_elapsed(double seconds);
+
+    private:
+        double accum_ = 0;
+        double lasted_added_value_ = 0;
+
+    };
+
 }
