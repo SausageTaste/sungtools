@@ -54,7 +54,7 @@ namespace sung {
         double elapsed() const override final;
 
         void set_min() override final;
-        void check() override final;6
+        void check() override final;
         double check_get_elapsed() override final;
         bool check_if_elapsed(double seconds) override final;
 
