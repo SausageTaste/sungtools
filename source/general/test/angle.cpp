@@ -49,9 +49,9 @@ namespace {
 
     template <typename T>
     void print_diff_test_variables(const sung::TAngle<T> a, const sung::TAngle<T> b) {
-        const auto d = a.calc_short_diff(b);
+        const auto d = a.calc_short_diff_to(b);
         const auto a_plus_d = a + d;
-        const auto b_ad_diff = b.calc_short_diff(a_plus_d);
+        const auto b_ad_diff = b.calc_short_diff_to(a_plus_d);
 
         std::cout << "Test `randomized_test` failed (T = " << typeid(T).name() << ")"
             << "\n    a:              " << a.rad() << " (" << a.normalize_neg().rad() << ")"
@@ -76,7 +76,7 @@ namespace {
 
             const auto ad = sung::TAngle<double>::from_rad(a_deg);
             const auto bd = sung::TAngle<double>::from_rad(b_deg);
-            const auto dd = ad.calc_short_diff(bd);
+            const auto dd = ad.calc_short_diff_to(bd);
             const auto a_plus_d_d = ad + dd;
             if (!bd.is_equivalent(a_plus_d_d, 1e-10)) {
                 ::print_diff_test_variables(ad, bd);
@@ -85,7 +85,7 @@ namespace {
 
             const auto af = sung::TAngle<float>::from_rad(static_cast<float>(a_deg));
             const auto bf = sung::TAngle<float>::from_rad(static_cast<float>(b_deg));
-            const auto df = af.calc_short_diff(bf);
+            const auto df = af.calc_short_diff_to(bf);
             const auto a_plus_d_f = af + df;
             if (!bf.is_equivalent(a_plus_d_f, 1e-3f)) {
                 ::print_diff_test_variables(af, bf);

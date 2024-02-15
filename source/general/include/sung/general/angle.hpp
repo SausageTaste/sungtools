@@ -120,6 +120,7 @@ namespace sung {
     // which can be added to `a` and get new angle whose phase equals to `rhs`.
     // That means `repeat_rad_negative(a + new angle) = repeat_rad_negative(rhs)`, ignoring the float precision problem.
     // Check out https://gist.github.com/shaunlebron/8832585 for more details.
+    // Also there is a simple interactive Desmos graph (https://www.desmos.com/calculator/bkrjdpk2am) you can play with.
     /// @tparam T Either `float` or `double`
     /// @param from Start angle in radians
     /// @param to Destination angle in radians
@@ -185,8 +186,11 @@ namespace sung {
         TAngle normalize_pos() const { return TAngle{ sung::repeat_rad_positive(radians_) }; }
         TAngle normalize_neg() const { return TAngle{ sung::repeat_rad_negative(radians_) }; }
 
-        TAngle calc_short_diff(TAngle dst) const {
+        TAngle calc_short_diff_to(TAngle dst) const {
             return TAngle(sung::calc_rad_shortest_diff(radians_, dst.radians_));
+        }
+        TAngle calc_short_diff_from(TAngle start) const {
+            return TAngle(sung::calc_rad_shortest_diff(start.radians_, radians_));
         }
         TAngle lerp(TAngle dst, T t) const {
             return (*this) + this->calc_short_diff(dst) * t;
