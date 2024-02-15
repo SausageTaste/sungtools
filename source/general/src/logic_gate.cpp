@@ -28,36 +28,6 @@ namespace sung {
 }
 
 
-// RetriggerableMonostableMultivibrator
-namespace sung {
-
-    RetriggerableMonostableMultivibrator::RetriggerableMonostableMultivibrator() {
-        timer_.set_min();
-    }
-
-    void RetriggerableMonostableMultivibrator::notify_signal(bool value) {
-        if (value) {
-            timer_.check();
-            signal_once_ = true;
-        }
-    }
-
-    bool RetriggerableMonostableMultivibrator::poll_signal(double tolerance_sec) {
-        if (signal_once_) {
-            signal_once_ = false;
-            return true;
-        }
-
-        if (timer_.elapsed() <= tolerance_sec)
-            return true;
-
-        timer_.set_min();  // To prevent false positive after tolerance time increased
-        return false;
-    }
-
-}
-
-
 // LongPressDetector
 namespace sung {
 

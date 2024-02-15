@@ -37,20 +37,44 @@ namespace sung {
     };
 
 
+    template <typename TTimer>
     class RetriggerableMonostableMultivibrator {
 
     public:
-        RetriggerableMonostableMultivibrator();
-        void notify_signal(bool value);
-        bool poll_signal(double tolerance_sec);
+        RetriggerableMonostableMultivibrator() {
+            timer_.set_min();
+        }
+
+        void notify_signal(bool value) {
+            if (value) {
+                timer_.check();
+                signal_once_ = true;
+            }
+        }
+
+        bool poll_signal(double tolerance_sec) {
+            if (signal_once_) {
+                signal_once_ = false;
+                return true;
+            }
+
+            if (timer_.elapsed() <= tolerance_sec)
+                return true;
+
+            timer_.set_min();  // To prevent false positive after tolerance time increased
+            return false;
+        }
+
+        TTimer& timer() { return timer_; }
 
     private:
-        TimeChecker timer_;
+        TTimer timer_;
         bool signal_once_ = false;  // Ensure at least one true signal to be reported
 
     };
 
 
+    template <typename TTimer>
     class RetriggerableMonostableMultivibratorCompact {
 
     public:
@@ -61,8 +85,10 @@ namespace sung {
         double tolerance() const { return tolerance_sec_; }
         void set_tolerance(double tolerance_sec) { tolerance_sec_ = tolerance_sec; }
 
+        TTimer& timer() { return rmm_.timer_; }
+
     private:
-        RetriggerableMonostableMultivibrator rmm_;
+        RetriggerableMonostableMultivibrator<TTimer> rmm_;
         double tolerance_sec_ = 0;
 
     };
