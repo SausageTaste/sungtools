@@ -10,24 +10,24 @@ namespace sung {
     class AABB1 {
 
     public:
-        AABB1() = default;
+        constexpr AABB1() = default;
 
-        AABB1(T val0, T val1) {
+        constexpr AABB1(T val0, T val1) {
             this->set(val0, val1);
         }
 
-        T minimum() const { return min_; }
-        T maximum() const { return min_; }
+        constexpr T minimum() const { return min_; }
+        constexpr T maximum() const { return max_; }
 
-        T length() const { return max_ - min_; }
+        constexpr T length() const { return max_ - min_; }
 
         // Returns true if the point is inside the volume, not on the surface of it
-        bool is_inside(T val) const {
+        constexpr bool is_inside(T val) const {
             return val > min_ && val < max_;
         }
 
         // Returns true if the point is inside the volume or on the surface of it
-        bool is_contacting(T val) const {
+        constexpr bool is_contacting(T val) const {
             return val >= min_ && val <= max_;
         }
 
@@ -41,12 +41,12 @@ namespace sung {
         }
 
         // It makes the length 0
-        void set(T val) {
+        constexpr void set(T val) {
             min_ = val;
             max_ = val;
         }
 
-        void set(T val0, T val1) {
+        constexpr void set(T val0, T val1) {
             if (val0 < val1) {
                 min_ = val0;
                 max_ = val1;
@@ -57,7 +57,7 @@ namespace sung {
             }
         }
 
-        void expand_to_include(T val) {
+        constexpr void expand_to_include(T val) {
             if (min_ > val)
                 min_ = val;
             if (max_ < val)
