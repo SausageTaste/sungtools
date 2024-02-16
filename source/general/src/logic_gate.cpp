@@ -32,10 +32,7 @@ namespace sung {
 namespace sung {
 
     LongPressDetector::Type LongPressDetector::notify_poll(bool pressed, double threshold_sec) {
-        edge_detector_.notify_signal(pressed);
-        const auto edge = edge_detector_.check_edge();
-
-        switch (edge) {
+        switch (edge_detector_.notify_check_edge(pressed)) {
         case EdgeDetector::Type::rising:
             last_state_changed_.check();
             break;
@@ -52,12 +49,9 @@ namespace sung {
             break;
         }
 
-        if (!pressed)
-            return Type::none;
         if (consumed_)
             return Type::none;
-
-        if (last_state_changed_.elapsed() >= threshold_sec) {
+        if (pressed && last_state_changed_.elapsed() >= threshold_sec) {
             consumed_ = true;
             return Type::long_press;
         }

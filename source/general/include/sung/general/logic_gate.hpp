@@ -28,6 +28,11 @@ namespace sung {
         bool check_any_edge() { return Type::none != this->check_edge(); }
         void check() { last_checked_signal_ = signal_; }
 
+        Type notify_check_edge(bool v) {
+            this->notify_signal(v);
+            return this->check_edge();
+        }
+
     private:
         Type edge_type() const;
 
