@@ -1,7 +1,75 @@
 #pragma once
 
+#include <algorithm>
+
 
 namespace sung {
+
+    // This class must allow integers as T
+    template <typename T>
+    class AABB1 {
+
+    public:
+        AABB1() = default;
+
+        AABB1(T val0, T val1) {
+            this->set(val0, val1);
+        }
+
+        T minimum() const { return min_; }
+        T maximum() const { return min_; }
+
+        T length() const { return max_ - min_; }
+
+        // Returns true if the point is inside the volume, not on the surface of it
+        bool is_inside(T val) const {
+            return val > min_ && val < max_;
+        }
+
+        // Returns true if the point is inside the volume or on the surface of it
+        bool is_contacting(T val) const {
+            return val >= min_ && val <= max_;
+        }
+
+        bool make_intersection(const AABB1& other, AABB1& output) const {
+            if (max_ < other.min_ || min_ > other.max_)
+                return false;
+
+            output.min_ = (std::max)(min_, other.min_);
+            output.max_ = (std::min)(max_, other.max_);
+            return true;
+        }
+
+        // It makes the length 0
+        void set(T val) {
+            min_ = val;
+            max_ = val;
+        }
+
+        void set(T val0, T val1) {
+            if (val0 < val1) {
+                min_ = val0;
+                max_ = val1;
+            }
+            else {
+                min_ = val1;
+                max_ = val0;
+            }
+        }
+
+        void expand_to_include(T val) {
+            if (min_ > val)
+                min_ = val;
+            if (max_ < val)
+                max_ = val;
+        }
+
+    private:
+        T min_ = 0;
+        T max_ = 0;
+
+    };
+
 
     // This class must allow integers as T
     template <typename T>
