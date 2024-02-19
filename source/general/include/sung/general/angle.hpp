@@ -193,7 +193,7 @@ namespace sung {
             return TAngle(sung::calc_rad_shortest_diff(start.radians_, radians_));
         }
         TAngle lerp(TAngle dst, T t) const {
-            return (*this) + this->calc_short_diff(dst) * t;
+            return (*this) + this->calc_short_diff_to(dst) * t;
         }
 
     private:
