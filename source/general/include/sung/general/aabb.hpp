@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include "optional.hpp"
+
 
 namespace sung {
 
@@ -31,13 +33,22 @@ namespace sung {
             return val >= min_ && val <= max_;
         }
 
-        bool make_intersection(const AABB1& other, AABB1& output) const {
+        constexpr bool make_intersection(const AABB1& other, AABB1& output) const {
             if (max_ < other.min_ || min_ > other.max_)
                 return false;
 
-            output.min_ = (std::max)(min_, other.min_);
-            output.max_ = (std::min)(max_, other.max_);
+            output.min_ = (min_ > other.min_) ? min_ : other.min_;
+            output.max_ = (max_ < other.max_) ? max_ : other.max_;
             return true;
+        }
+
+        constexpr Optional<AABB1> make_intersection(const AABB1& other) const {
+            if (max_ < other.min_ || min_ > other.max_)
+                return nullopt;
+
+            AABB1 output;
+            this->make_intersection(other, output);
+            return output;
         }
 
         // It makes the length 0

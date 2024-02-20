@@ -46,6 +46,16 @@
 #endif
 
 
-#if ((defined(_MSVC_LANG) && _MSVC_LANG >= 201703L) || __cplusplus >= 201703L)
+#if defined(_MSVC_LANG)
+    #define SUNG__cplusplus _MSVC_LANG
+#else
+    #define SUNG__cplusplus __cplusplus
+#endif
+
+#if SUNG__cplusplus >= 201703L
     #define SUNG_CPP17
+#elif SUNG__cplusplus >= 201402L
+    #define SUNG_CPP14
+#elif SUNG__cplusplus >= 201103L
+    #define SUNG_CPP11
 #endif
