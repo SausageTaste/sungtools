@@ -87,6 +87,9 @@ namespace sung {
         constexpr static TSpeed from_kts(T value) {
             return TSpeed(value * MS_PER_KTS);
         }
+        constexpr static TSpeed from_mph(T value) {
+            return TSpeed(value * MS_PER_MPH);
+        }
 
         TSpeed() = default;
 
@@ -129,9 +132,14 @@ namespace sung {
             constexpr T FACTOR = 1.0 / MS_PER_KTS;
             return metres_per_second_ * FACTOR;
         }
+        constexpr T mph() const {
+            constexpr T FACTOR = 1.0 / MS_PER_MPH;
+            return metres_per_second_ * FACTOR;
+        }
 
         constexpr static T SEC_PER_HOUR = 3600;
         constexpr static T MS_PER_KTS = TDistance<T>::METRES_PER_NAUTICAL_MILE / SEC_PER_HOUR;
+        constexpr static T MS_PER_MPH = TDistance<T>::METRES_PER_MILES / SEC_PER_HOUR;
 
     private:
         constexpr explicit TSpeed(T value)
