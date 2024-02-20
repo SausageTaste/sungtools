@@ -27,4 +27,8 @@ if (SUNG_ENABLE_TEST)
     add_executable(sungtools_test_units test/units.cpp)
     add_test(sungtools_test_units sungtools_test_units)
     target_link_libraries(sungtools_test_units sungtools::general)
+
+    add_executable(sungtools_test_aabb_units test/aabb_units.cpp)
+    add_test(sungtools_test_aabb_units sungtools_test_aabb_units)
+    target_link_libraries(sungtools_test_aabb_units sungtools::general)
 endif()

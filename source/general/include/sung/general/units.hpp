@@ -20,11 +20,32 @@ namespace sung {
             return TDistance(nautical_miles * METRES_PER_NAUTICAL_MILE);
         }
 
+        TDistance() = default;
+
         constexpr TDistance operator+(const TDistance& rhs) const {
             return TDistance(metres_ + rhs.metres_);
         }
         constexpr TDistance operator-(const TDistance& rhs) const {
             return TDistance(metres_ - rhs.metres_);
+        }
+
+        constexpr bool operator<(const TDistance& rhs) const {
+            return metres_ < rhs.metres_;
+        }
+        constexpr bool operator>(const TDistance& rhs) const {
+            return metres_ > rhs.metres_;
+        }
+        constexpr bool operator<=(const TDistance& rhs) const {
+            return metres_ <= rhs.metres_;
+        }
+        constexpr bool operator>=(const TDistance& rhs) const {
+            return metres_ >= rhs.metres_;
+        }
+        constexpr bool operator==(const TDistance& rhs) const {
+            return metres_ == rhs.metres_;
+        }
+        constexpr bool operator!=(const TDistance& rhs) const {
+            return metres_ != rhs.metres_;
         }
 
         constexpr T metres() const {
@@ -67,6 +88,8 @@ namespace sung {
             return TSpeed(value * MS_PER_KTS);
         }
 
+        TSpeed() = default;
+
         constexpr TSpeed operator+(const TSpeed& rhs) const {
             return TSpeed(metres_per_second_ + rhs.metres_per_second_);
         }
@@ -78,6 +101,25 @@ namespace sung {
         }
         constexpr TSpeed operator/(T rhs) const {
             return TSpeed(metres_per_second_ / rhs);
+        }
+
+        constexpr bool operator<(const TSpeed& rhs) const {
+            return metres_per_second_ < rhs.metres_per_second_;
+        }
+        constexpr bool operator>(const TSpeed& rhs) const {
+            return metres_per_second_ > rhs.metres_per_second_;
+        }
+        constexpr bool operator<=(const TSpeed& rhs) const {
+            return metres_per_second_ <= rhs.metres_per_second_;
+        }
+        constexpr bool operator>=(const TSpeed& rhs) const {
+            return metres_per_second_ >= rhs.metres_per_second_;
+        }
+        constexpr bool operator==(const TSpeed& rhs) const {
+            return metres_per_second_ == rhs.metres_per_second_;
+        }
+        constexpr bool operator!=(const TSpeed& rhs) const {
+            return metres_per_second_ != rhs.metres_per_second_;
         }
 
         constexpr T ms() const {

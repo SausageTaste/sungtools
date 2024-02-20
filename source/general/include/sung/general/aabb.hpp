@@ -65,8 +65,8 @@ namespace sung {
         }
 
     private:
-        T min_ = 0;
-        T max_ = 0;
+        T min_{};
+        T max_{};
 
     };
 
