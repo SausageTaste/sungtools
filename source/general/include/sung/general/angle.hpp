@@ -21,9 +21,15 @@ namespace sung {
         return (std::max)(min_value, (std::min)(max_value, x));
     }
 
-    template <typename T> constexpr
+    template <typename T>
     bool are_similiar(T a, T b, T epsilon = 0) {
         return std::abs(a - b) <= epsilon;  // It must be <=, not < because the epsilon can be 0.
+    }
+
+    template <typename T> constexpr
+    bool are_similiar_constexpr(T a, T b, T epsilon = 0) {
+        const auto diff_abs = a > b ? a - b : b - a;
+        return diff_abs <= epsilon;
     }
 
 
