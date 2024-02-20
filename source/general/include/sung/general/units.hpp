@@ -65,9 +65,9 @@ namespace sung {
         }
 
         // These are exact values
-        constexpr static T METRES_PER_FEET = 0.3048;
-        constexpr static T METRES_PER_MILES = 1609.344;
-        constexpr static T METRES_PER_NAUTICAL_MILE = 1852;
+        constexpr static T METRES_PER_FEET = static_cast<T>(0.3048);
+        constexpr static T METRES_PER_MILES = static_cast<T>(1609.344);
+        constexpr static T METRES_PER_NAUTICAL_MILE = static_cast<T>(1852);
 
     private:
         constexpr explicit TDistance(T metres) : metres_(metres) {}
@@ -137,7 +137,7 @@ namespace sung {
             return metres_per_second_ * FACTOR;
         }
 
-        constexpr static T SEC_PER_HOUR = 3600;
+        constexpr static T SEC_PER_HOUR = static_cast<T>(3600);
         constexpr static T MS_PER_KTS = TDistance<T>::METRES_PER_NAUTICAL_MILE / SEC_PER_HOUR;
         constexpr static T MS_PER_MPH = TDistance<T>::METRES_PER_MILES / SEC_PER_HOUR;
 

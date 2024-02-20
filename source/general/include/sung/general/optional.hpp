@@ -18,14 +18,14 @@ namespace sung {
 
     static constexpr auto nullopt = std::nullopt;
 
-    #pragma message("std::optional will be used.");
+    #pragma message("[SUNG] std::optional will be used")
 #else
     template <class T>
     using Optional = tl::optional<T>;
 
     static constexpr auto nullopt = tl::nullopt;
 
-    #pragma message("tl::optional will be used.");
+    #pragma message("[SUNG] tl::optional will be used")
 #endif
 
 }
