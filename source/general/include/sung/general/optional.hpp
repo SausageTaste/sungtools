@@ -1,9 +1,6 @@
 #pragma once
 
-#include "os_detect.hpp"
-
-
-#if defined(SUNG_CPP17)
+#if defined(__cpp_lib_optional)
     #include <optional>
 #else
     #include <tl/optional.hpp>
@@ -12,7 +9,7 @@
 
 namespace sung {
 
-#if defined(SUNG_CPP17)
+#if defined(__cpp_lib_optional)
     template <class T>
     using Optional = std::optional<T>;
 
