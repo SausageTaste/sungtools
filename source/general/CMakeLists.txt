@@ -7,6 +7,7 @@ add_library(sungtools::general ALIAS sungtools_general)
 target_include_directories(sungtools_general PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${sung_fetch_optional_SOURCE_DIR}/include
+    ${sung_fetch_expected_SOURCE_DIR}/include
 )
 
 
@@ -18,6 +19,15 @@ if (SUNG_ENABLE_TEST)
     add_executable(sungtools_test_angle test/angle.cpp)
     add_test(sungtools_test_angle sungtools_test_angle)
     target_link_libraries(sungtools_test_angle sungtools::general)
+
+    add_executable(sungtools_test_expected test/expected.cpp)
+    add_test(sungtools_test_expected sungtools_test_expected)
+    target_link_libraries(sungtools_test_expected sungtools::general)
+
+    add_executable(sungtools_test_expected_23 test/expected.cpp)
+    add_test(sungtools_test_expected_23 sungtools_test_expected_23)
+    target_link_libraries(sungtools_test_expected_23 sungtools::general)
+    target_compile_features(sungtools_test_expected_23 PUBLIC cxx_std_23)
 
     add_executable(sungtools_test_logicgate test/logic_gate.cpp)
     add_test(sungtools_test_logicgate sungtools_test_logicgate)

@@ -52,7 +52,9 @@
     #define SUNG__cplusplus __cplusplus
 #endif
 
-#if SUNG__cplusplus >= 201703L
+#if SUNG__cplusplus >= 202002L
+    #define SUNG_CPP20
+#elif SUNG__cplusplus >= 201703L
     #define SUNG_CPP17
 #elif SUNG__cplusplus >= 201402L
     #define SUNG_CPP14
