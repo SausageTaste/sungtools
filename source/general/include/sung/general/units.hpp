@@ -20,7 +20,7 @@ namespace sung {
             return TDistance(nautical_miles * METRES_PER_NAUTICAL_MILE);
         }
 
-        TDistance() = default;
+        constexpr TDistance() = default;
 
         constexpr TDistance operator+(const TDistance& rhs) const {
             return TDistance(metres_ + rhs.metres_);
@@ -91,7 +91,7 @@ namespace sung {
             return TSpeed(value * MS_PER_MPH);
         }
 
-        TSpeed() = default;
+        constexpr TSpeed() = default;
 
         constexpr TSpeed operator+(const TSpeed& rhs) const {
             return TSpeed(metres_per_second_ + rhs.metres_per_second_);
