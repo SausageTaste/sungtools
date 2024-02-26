@@ -13,6 +13,12 @@ if(SUNG_ENABLE_TEST)
     enable_testing()
 endif()
 
+macro(sungtools_add_test test_name filename)
+    add_executable("sungtest_${test_name}" "${filename}")
+    add_test("sungtest_${test_name}" "sungtest_${test_name}")
+    target_link_libraries("sungtest_${test_name}" sungtools::general)
+endmacro()
+
 
 FetchContent_Declare(
     sung_fetch_optional
