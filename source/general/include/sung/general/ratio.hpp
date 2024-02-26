@@ -3,11 +3,35 @@
 
 namespace sung {
 
+    template<class M, class N> constexpr
+    std::common_type_t<M, N> gcd(M a, N b) {
+#ifdef __cpp_lib_gcd_lcm
+        return std::gcd(a, b);
+#else
+        static_assert(std::is_integral<M>::value, "M must be an integral type");
+        static_assert(std::is_integral<N>::value, "N must be an integral type");
+
+        while (b != 0) {
+            const auto t = b;
+            b = a % b;
+            a = t;
+        }
+        return a;
+#endif
+    }
+
+
     template <typename T>
     class Ratio {
 
     public:
-        constexpr Ratio(T num = 0, T den = 1) : num_(num), den_(den) {}
+        constexpr Ratio(T num = 0, T den = 1)
+            : num_(num), den_(den)
+        {
+            const auto g = gcd(num_, den_);
+            num_ /= g;
+            den_ /= g;
+        }
 
         constexpr T num() const {
             return num_;
@@ -51,8 +75,10 @@ namespace sung {
 
 
     void test() {
-        constexpr Ratio<int> r0(5, 7);
-        constexpr Ratio<int> r1(3, 4);
+        constexpr auto s0 = sung::gcd(10, -5);
+
+        constexpr Ratio<int> r0(5, 8);
+        constexpr Ratio<int> r1(20, 4);
         constexpr auto r2 = r0 * r1;
         constexpr auto r3 = r0 / r1;
         constexpr auto r4 = r0 + r1;
