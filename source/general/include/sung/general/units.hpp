@@ -86,11 +86,11 @@ namespace sung {
         }
         // Knots (nautical miles per hour)
         constexpr static TSpeed from_kts(T value) {
-            return TSpeed(value * MS_PER_KTS.value<T>());
+            return TSpeed<T>(value * MS_PER_KTS.template value<T>());
         }
         // Miles per hour
         constexpr static TSpeed from_mph(T value) {
-            return TSpeed(value * MS_PER_MPH.value<T>());
+            return TSpeed<T>(value * (MS_PER_MPH.template value<T>)());
         }
 
         constexpr TSpeed() = default;
@@ -133,11 +133,11 @@ namespace sung {
         }
         // Knots (nautical miles per hour)
         constexpr T kts() const {
-            return metres_per_second_ * MS_PER_KTS.reciprocal<T>();
+            return metres_per_second_ * MS_PER_KTS.template reciprocal<T>();
         }
         // Miles per hour
         constexpr T mph() const {
-            return metres_per_second_ * MS_PER_MPH.reciprocal<T>();
+            return metres_per_second_ * MS_PER_MPH.template reciprocal<T>();
         }
 
         constexpr static Ratio<int> SEC_PER_HOUR{ 3600 };
