@@ -27,7 +27,7 @@ namespace {
             : unif_(lower_bound, upper_bound)
         {
             const auto time_seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-            const std::seed_seq ss{ uint32_t(time_seed & 0xffffffff), uint32_t(time_seed >> 32) };
+            std::seed_seq ss{ uint32_t(time_seed & 0xffffffff), uint32_t(time_seed >> 32) };
             rng_.seed(ss);
         }
 
