@@ -15,11 +15,12 @@ namespace sung {
         return ZERO == x ? ZERO : (x < ZERO ? -x : x);
     }
 
-    // This function is not tested enough yet
-    constexpr
-    int fast_floor(double x) {
-        int xi = (int)x;
-        return x < xi ? xi - 1 : xi;
+    template <typename T> constexpr
+    T floor(const T x) {
+        constexpr auto ZERO = static_cast<T>(0);
+        constexpr auto ONE = static_cast<T>(1);
+        const auto x_int = static_cast<T>(static_cast<int64_t>(x));
+        return (x >= ZERO ? x_int : (x == x_int ? x : x_int - ONE));
     }
 
     template <typename T> constexpr
@@ -52,6 +53,9 @@ namespace sung {
         return std::asin(x);
     }
 
+
+namespace internal {
+
     template <typename T>
     T acos_safe_clamp(T x) {
         x = clamp(x, static_cast<T>(-1), static_cast<T>(1));
@@ -67,9 +71,12 @@ namespace sung {
         return std::acos(x);
     }
 
+}
+
+
     template <typename T>
     T acos_safe(T x) {
-        return acos_safe_branches(x);
+        return internal::acos_safe_branches(x);
     }
 
 
@@ -81,11 +88,11 @@ namespace sung {
     /// @tparam T Either `float` or `double`
     /// @param x Angle in radians
     /// @return Normalized angle in radians in range [0, 2pi)
-    template <typename T>
+    template <typename T> constexpr
     T repeat_rad_positive(T x) {
         constexpr auto TAU = static_cast<T>(SUNG_TAU);
         constexpr auto TAU_INV = static_cast<T>(1.0 / (SUNG_TAU));
-        return x - std::floor(x * TAU_INV) * TAU;
+        return x - sung::floor(x * TAU_INV) * TAU;
     }
 
 
@@ -100,11 +107,11 @@ namespace sung {
     /// @tparam T Either `float` or `double`
     /// @param x Angle in radians
     /// @return Normalized angle in radians in range [-pi, pi)
-    template <typename T>
+    template <typename T> constexpr
     T repeat_rad_negative(T x) {
         constexpr auto TAU = static_cast<T>(SUNG_TAU);
         constexpr auto TAU_INV = static_cast<T>(1.0 / (SUNG_TAU));
-        return x - std::floor(x * TAU_INV + static_cast<T>(0.5)) * TAU;
+        return x - sung::floor(x * TAU_INV + static_cast<T>(0.5)) * TAU;
     }
 
 
@@ -114,10 +121,12 @@ namespace sung {
         const auto da = std::fmod(to - from, TAU);
         return std::fmod(da * static_cast<T>(2), TAU) - da;
     }
-    template <typename T>
+
+    template <typename T> constexpr
     T calc_rad_shortest_diff_floor(T from, T to) {
         return repeat_rad_negative(to - from);
     }
+
 
     // Calculate the shortest angular distance from `a` to `b`.
     // The result will be in [-pi, pi).
@@ -131,7 +140,7 @@ namespace sung {
     /// @param from Start angle in radians
     /// @param to Destination angle in radians
     /// @return Shortest angular distance in radians
-    template <typename T>
+    template <typename T> constexpr
     T calc_rad_shortest_diff(T from, T to) {
         return calc_rad_shortest_diff_floor<T>(from, to);
     }
@@ -182,23 +191,23 @@ namespace sung {
         constexpr T deg() const { return sung::to_degrees(radians_); }
         constexpr T rad() const { return radians_; }
 
-        void set_deg(T degrees) { radians_ = sung::to_radians(degrees); }
-        void set_rad(T radians) { radians_ = radians; }
-        void set_zero() { radians_ = 0; }
+        constexpr void set_deg(T degrees) { radians_ = sung::to_radians(degrees); }
+        constexpr void set_rad(T radians) { radians_ = radians; }
+        constexpr void set_zero() { radians_ = 0; }
 
         constexpr TAngle add_deg(T degrees) const { return TAngle{ radians_ + sung::to_radians(degrees) }; }
         constexpr TAngle add_rad(T radians) { return TAngle{ radians_ + radians }; }
 
-        TAngle normalize_pos() const { return TAngle{ sung::repeat_rad_positive(radians_) }; }
-        TAngle normalize_neg() const { return TAngle{ sung::repeat_rad_negative(radians_) }; }
+        constexpr TAngle normalize_pos() const { return TAngle{ sung::repeat_rad_positive(radians_) }; }
+        constexpr TAngle normalize_neg() const { return TAngle{ sung::repeat_rad_negative(radians_) }; }
 
-        TAngle calc_short_diff_to(TAngle dst) const {
+        constexpr TAngle calc_short_diff_to(TAngle dst) const {
             return TAngle(sung::calc_rad_shortest_diff(radians_, dst.radians_));
         }
-        TAngle calc_short_diff_from(TAngle start) const {
+        constexpr TAngle calc_short_diff_from(TAngle start) const {
             return TAngle(sung::calc_rad_shortest_diff(start.radians_, radians_));
         }
-        TAngle lerp(TAngle dst, T t) const {
+        constexpr TAngle lerp(TAngle dst, T t) const {
             return (*this) + this->calc_short_diff_to(dst) * t;
         }
 

@@ -259,5 +259,16 @@ int main() {
     if (TEST_RESULT_SUCCESS != result)
         return result;
 
+    {
+        constexpr auto a0 = sung::TAngle<double>::from_deg(-12);
+        constexpr auto a1 = sung::TAngle<double>::from_deg(345);
+
+        constexpr auto a0_pos = a0.normalize_pos().deg();
+        constexpr auto a1_neg = a1.normalize_neg().deg();
+
+        constexpr auto diff = a0.calc_short_diff_to(a1).deg();
+        const auto a0_acos = sung::acos_safe(a0.rad());
+    }
+
     return 0;
 }
