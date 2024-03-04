@@ -73,16 +73,4 @@ namespace sung {
 
     };
 
-
-    void test() {
-        constexpr auto s0 = sung::gcd(10, -5);
-
-        constexpr Ratio<int> r0(5, 8);
-        constexpr Ratio<int> r1(20, 4);
-        constexpr auto r2 = r0 * r1;
-        constexpr auto r3 = r0 / r1;
-        constexpr auto r4 = r0 + r1;
-        constexpr auto r5 = r0 - r1;
-    }
-
 }
