@@ -1,4 +1,4 @@
-#include "sung/general/angle.hpp"
+#include "sung/general/mamath.hpp"
 #include "sung/general/units.hpp"
 
 #include <ratio>

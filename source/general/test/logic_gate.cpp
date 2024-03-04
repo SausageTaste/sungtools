@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "sung/general/angle.hpp"
 #include "sung/general/logic_gate.hpp"
+#include "sung/general/mamath.hpp"
 
 
 namespace {
