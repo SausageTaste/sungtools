@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include "mamath.hpp"
+
 
 namespace sung {
 
@@ -182,11 +184,11 @@ namespace sung {
         constexpr T z() const { return elements_[2]; }
         constexpr T w() const { return elements_[3]; }
 
-        bool is_similar(const TVec4& rhs, T epsilon) const {
-            return std::abs(this->x() - rhs.x()) <= epsilon
-                && std::abs(this->y() - rhs.y()) <= epsilon
-                && std::abs(this->z() - rhs.z()) <= epsilon
-                && std::abs(this->w() - rhs.w()) <= epsilon;
+        constexpr bool are_similar(const TVec4& rhs, T epsilon) const {
+            return sung::are_similiar(this->x(), rhs.x(), epsilon)
+                && sung::are_similiar(this->y(), rhs.y(), epsilon)
+                && sung::are_similiar(this->z(), rhs.z(), epsilon)
+                && sung::are_similiar(this->w(), rhs.w(), epsilon);
         }
 
         constexpr T dot(const TVec4& rhs) const {
@@ -273,14 +275,32 @@ namespace sung {
         constexpr TVec4<T>& row(size_t r) { return elements_[r]; }
         constexpr const TVec4<T>& row(size_t r) const { return elements_[r]; }
 
+        constexpr TVec4<T> column(size_t c) const {
+            return TVec4<T>{ this->at(0, c), this->at(1, c), this->at(2, c), this->at(3, c) };
+        }
+
     private:
         TVec4<T> elements_[4];
 
     };
 
+    static_assert(sizeof(TMat4<double>) == sizeof(double) * 16, "TMat4<double> must be as big as 4 doubles");
 
-    template <typename T>
-    constexpr TVec4<T> operator*(const TMat4<T>& m, const TVec4<T>& v) {
+
+    template <typename T> constexpr
+    TMat4<T> operator*(const TMat4<T>& a, const TMat4<T>& b) {
+        TMat4<T> result;
+        for (size_t r = 0; r < 4; ++r) {
+            for (size_t c = 0; c < 4; ++c) {
+                result.at(r, c) = a.row(r).dot(b.column(c));
+            }
+        }
+        return result;
+    }
+
+
+    template <typename T> constexpr
+    TVec4<T> operator*(const TMat4<T>& m, const TVec4<T>& v) {
         return TVec4<T>{
             m.row(0).dot(v),
             m.row(1).dot(v),
