@@ -9,6 +9,12 @@
 
 namespace sung {
 
+    template<typename T> constexpr
+    T abs(const T x) {
+        constexpr auto ZERO = static_cast<T>(0);
+        return ZERO == x ? ZERO : (x < ZERO ? -x : x);
+    }
+
     // This function is not tested enough yet
     constexpr
     int fast_floor(double x) {
@@ -21,15 +27,9 @@ namespace sung {
         return (std::max)(min_value, (std::min)(max_value, x));
     }
 
-    template <typename T>
-    bool are_similiar(T a, T b, T epsilon = 0) {
-        return std::abs(a - b) <= epsilon;  // It must be <=, not < because the epsilon can be 0.
-    }
-
     template <typename T> constexpr
-    bool are_similiar_constexpr(T a, T b, T epsilon = 0) {
-        const auto diff_abs = a > b ? a - b : b - a;
-        return diff_abs <= epsilon;
+    bool are_similiar(T a, T b, T epsilon = 0) {
+        return sung::abs(a - b) <= epsilon;  // It must be <=, not < because the epsilon can be 0.
     }
 
 
@@ -174,9 +174,9 @@ namespace sung {
         constexpr TAngle operator*(T rhs) const { return TAngle{ radians_ * rhs }; }
         constexpr TAngle operator/(T rhs) const { return TAngle{ radians_ / rhs }; }
 
-        bool is_equivalent(const TAngle& rhs, T epsilon = 0) const {
+        constexpr bool is_equivalent(const TAngle& rhs, T epsilon = 0) const {
             const auto diff = sung::calc_rad_shortest_diff(radians_, rhs.radians_);
-            return std::abs(diff) <= epsilon;  // It must be <=, not < because the epsilon can be 0.
+            return sung::abs(diff) <= epsilon;  // It must be <=, not < because the epsilon can be 0.
         }
 
         constexpr T deg() const { return sung::to_degrees(radians_); }
