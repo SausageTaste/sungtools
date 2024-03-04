@@ -61,6 +61,13 @@ namespace sung {
             return TVec3{-this->x(), -this->y(), -this->z()};
         }
 
+        constexpr T& operator[](size_t i) {
+            return elements_[i];
+        }
+        constexpr T operator[](size_t i) const {
+            return elements_[i];
+        }
+
         constexpr T& x() { return elements_[0]; }
         constexpr T& y() { return elements_[1]; }
         constexpr T& z() { return elements_[2]; }

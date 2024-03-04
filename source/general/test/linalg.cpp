@@ -7,18 +7,24 @@
 namespace {
 
     void matrix_transform_test() {
+        using Vec3 = sung::TVec4<float>;
+        using Vec4 = sung::TVec4<float>;
         using Mat = sung::TMat4<float>;
 
-        constexpr sung::TVec4<float> v{1, 0, 0, 0};
+        constexpr sung::TVec3<float> v{1, 0, 0};
+        constexpr auto angle = sung::to_radians(90.f);
 
-        const auto result0 = sung::TMat4<float>::rotate_axis(sung::TVec3<float>{0, 0, 1}, sung::to_radians(90.f)) * v;
-        assert(result0.are_similar(sung::TVec4<float>{0, 1, 0, 0}, 0.001f));
+        const auto result0 = Mat::rotate_axis({0, 0, 1}, angle) * Vec4(v, 0);
+        assert(result0.are_similar({0, 1, 0, 0}, 0.001f));
 
-        const auto result1 = sung::TMat4<float>::rotate_axis(sung::TVec3<float>{0, 1, 0}, sung::to_radians(90.f)) * v;
-        assert(result1.are_similar(sung::TVec4<float>{0, 0, -1, 0}, 0.001f));
+        const auto result1 = Mat::rotate_axis({0, 1, 0}, angle) * Vec4(v, 0);
+        assert(result1.are_similar({0, 0, -1, 0}, 0.001f));
 
-        constexpr auto result2 = sung::TMat4<float>::translate(1, 2, 3) * sung::TMat4<float>::translate(1, -2, 3) * sung::TVec4<float>{1, 1, 1, 1};
-        static_assert(result2.are_similar(sung::TVec4<float>{3, 1, 7, 1}, 0.001f), "");
+        const auto result2 = Mat::rotate_axis({0, 1, 0}, angle) * Mat::rotate_axis({1, 0, 0}, -angle) * Vec4(v, 1);
+        assert(result1.are_similar({0, 0, -1, 0}, 0.001f));
+
+        constexpr auto result3 = Mat::translate(1, 2, 3) * Mat::translate(1, -2, 3) * Vec4(v, 1);
+        static_assert(result3.are_similar({3, 0, 6, 1}, 0.001f), "");
 
         return;
     }
