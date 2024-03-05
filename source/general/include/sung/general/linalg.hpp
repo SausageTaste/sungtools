@@ -115,6 +115,27 @@ namespace sung {
     };
 
 
+    template <typename T> constexpr
+    T length(const TVec3<T>& v) {
+        return v.len();
+    }
+
+    template <typename T> constexpr
+    T dot(const TVec3<T>& a, const TVec3<T>& b) {
+        return a.dot(b);
+    }
+
+    template <typename T> constexpr
+    TVec3<T> cross(const TVec3<T>& a, const TVec3<T>& b) {
+        return a.cross(b);
+    }
+
+    template <typename T> constexpr
+    TVec3<T> normalize(const TVec3<T>& v) {
+        return v.normalize();
+    }
+
+
     template <typename T>
     class TVec4 {
 
