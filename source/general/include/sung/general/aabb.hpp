@@ -44,12 +44,12 @@ namespace sung {
             return max_ >= rhs.min_ && min_ <= rhs.max_;
         }
 
-        constexpr bool make_intersection(const AABB1& rhs, AABB1& output) const {
+        constexpr bool make_intersection(const AABB1& rhs, AABB1& out) const {
             if (!this->is_intersecting_cl(rhs))
                 return false;
 
-            output.min_ = (min_ > rhs.min_) ? min_ : rhs.min_;
-            output.max_ = (max_ < rhs.max_) ? max_ : rhs.max_;
+            out.min_ = (min_ > rhs.min_) ? min_ : rhs.min_;
+            out.max_ = (max_ < rhs.max_) ? max_ : rhs.max_;
             return true;
         }
 
@@ -130,17 +130,19 @@ namespace sung {
         }
 
         constexpr bool is_intersecting_op(const AABB2& rhs) const {
-            return x_.is_intersecting_op(rhs.x_) && y_.is_intersecting_op(rhs.y_);
+            return x_.is_intersecting_op(rhs.x_)
+                && y_.is_intersecting_op(rhs.y_);
         }
         constexpr bool is_intersecting_cl(const AABB2& rhs) const {
-            return x_.is_intersecting_cl(rhs.x_) && y_.is_intersecting_cl(rhs.y_);
+            return x_.is_intersecting_cl(rhs.x_)
+                && y_.is_intersecting_cl(rhs.y_);
         }
 
-        constexpr bool make_intersection(const AABB2& rhs, AABB2& output) const {
+        constexpr bool make_intersection(const AABB2& rhs, AABB2& out) const {
             if (auto x_intersection = x_.make_intersection(rhs.x_)) {
                 if (auto y_intersection = y_.make_intersection(rhs.y_)) {
-                    output.x_ = *x_intersection;
-                    output.y_ = *y_intersection;
+                    out.x_ = *x_intersection;
+                    out.y_ = *y_intersection;
                     return true;
                 }
             }
