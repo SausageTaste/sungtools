@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "mamath.hpp"
 #include "optional.hpp"
 
 
@@ -13,42 +14,51 @@ namespace sung {
 
     public:
         constexpr AABB1() = default;
-
         constexpr AABB1(T val0, T val1) {
             this->set(val0, val1);
         }
 
-        constexpr T minimum() const { return min_; }
-        constexpr T maximum() const { return max_; }
+        constexpr T mini() const { return min_; }
+        constexpr T maxi() const { return max_; }
 
-        constexpr T length() const { return max_ - min_; }
+        constexpr T len() const { return max_ - min_; }
 
-        // Returns true if the point is inside the volume, not on the surface of it
-        constexpr bool is_inside(T val) const {
+        // Open interval
+        constexpr bool is_inside_op(T val) const {
             return val > min_ && val < max_;
         }
-
-        // Returns true if the point is inside the volume or on the surface of it
-        constexpr bool is_contacting(T val) const {
+        // Closed interval
+        constexpr bool is_inside_cl(T val) const {
             return val >= min_ && val <= max_;
         }
 
-        constexpr bool make_intersection(const AABB1& other, AABB1& output) const {
-            if (max_ < other.min_ || min_ > other.max_)
+        constexpr bool are_similar(const AABB1& rhs, T epsilon) const {
+            return sung::are_similiar(min_, rhs.min_, epsilon)
+                && sung::are_similiar(max_, rhs.max_, epsilon);
+        }
+
+        constexpr bool is_intersecting_op(const AABB1& rhs) const {
+            return max_ > rhs.min_ && min_ < rhs.max_;
+        }
+        constexpr bool is_intersecting_cl(const AABB1& rhs) const {
+            return max_ >= rhs.min_ && min_ <= rhs.max_;
+        }
+
+        constexpr bool make_intersection(const AABB1& rhs, AABB1& output) const {
+            if (!this->is_intersecting_cl(rhs))
                 return false;
 
-            output.min_ = (min_ > other.min_) ? min_ : other.min_;
-            output.max_ = (max_ < other.max_) ? max_ : other.max_;
+            output.min_ = (min_ > rhs.min_) ? min_ : rhs.min_;
+            output.max_ = (max_ < rhs.max_) ? max_ : rhs.max_;
             return true;
         }
 
-        constexpr Optional<AABB1> make_intersection(const AABB1& other) const {
-            if (max_ < other.min_ || min_ > other.max_)
-                return nullopt;
-
+        constexpr Optional<AABB1> make_intersection(const AABB1& rhs) const {
             AABB1 output;
-            this->make_intersection(other, output);
-            return output;
+            if (this->make_intersection(rhs, output))
+                return output;
+            else
+                return sung::nullopt;
         }
 
         // It makes the length 0
@@ -56,7 +66,6 @@ namespace sung {
             min_ = val;
             max_ = val;
         }
-
         constexpr void set(T val0, T val1) {
             if (val0 < val1) {
                 min_ = val0;
@@ -68,11 +77,16 @@ namespace sung {
             }
         }
 
-        constexpr void expand_to_include(T val) {
+        constexpr void expand_to_span(T val) {
             if (min_ > val)
                 min_ = val;
             if (max_ < val)
                 max_ = val;
+        }
+        constexpr AABB1 get_expanded_to_span(T val) const {
+            AABB1 output = *this;
+            output.expand_to_span(val);
+            return output;
         }
 
     private:
@@ -87,89 +101,82 @@ namespace sung {
     class AABB2 {
 
     public:
-        AABB2() = default;
-
-        AABB2(T x0, T x1, T y0, T y1) {
+        constexpr AABB2() = default;
+        constexpr AABB2(T x0, T x1, T y0, T y1) {
             this->set(x0, x1, y0, y1);
         }
 
-        T x_min() const { return x_min_; }
-        T y_min() const { return y_min_; }
-        T x_max() const { return x_max_; }
-        T y_max() const { return y_max_; }
+        constexpr T x_min() const { return x_.mini(); }
+        constexpr T y_min() const { return y_.mini(); }
+        constexpr T x_max() const { return x_.maxi(); }
+        constexpr T y_max() const { return y_.maxi(); }
 
-        T width() const { return x_max_ - x_min_; }
-        T height() const { return y_max_ - y_min_; }
-        T area() const {
+        constexpr T width() const { return x_.len(); }
+        constexpr T height() const { return y_.len(); }
+        constexpr T area() const {
             return this->width() * this->height();
         }
 
-        // Returns true if the point is inside the volume, not on the surface of it
-        bool is_inside(T x, T y) const {
-            return x > x_min_ && x < x_max_ && y > y_min_ && y < y_max_;
+        constexpr bool are_similar(const AABB2& rhs, T epsilon) const {
+            return x_.are_similar(rhs.x_, epsilon)
+                && y_.are_similar(rhs.y_, epsilon);
         }
 
-        // Returns true if the point is inside the volume or on the surface of it
-        bool is_contacting(T x, T y) const {
-            return x >= x_min_ && x <= x_max_ && y >= y_min_ && y <= y_max_;
+        constexpr bool is_inside_op(T x, T y) const {
+            return x_.is_inside_op(x) && y_.is_inside_op(y);
+        }
+        constexpr bool is_inside_cl(T x, T y) const {
+            return x_.is_inside_cl(x) && y_.is_inside_cl(y);
         }
 
-        bool make_intersection(const AABB2& other, AABB2& output) const {
-            if (x_max_ < other.x_min_ || x_min_ > other.x_max_ || y_max_ < other.y_min_ || y_min_ > other.y_max_)
-                return false;
+        constexpr bool is_intersecting_op(const AABB2& rhs) const {
+            return x_.is_intersecting_op(rhs.x_) && y_.is_intersecting_op(rhs.y_);
+        }
+        constexpr bool is_intersecting_cl(const AABB2& rhs) const {
+            return x_.is_intersecting_cl(rhs.x_) && y_.is_intersecting_cl(rhs.y_);
+        }
 
-            output.x_min_ = (std::max)(x_min_, other.x_min_);
-            output.x_max_ = (std::min)(x_max_, other.x_max_);
-            output.y_min_ = (std::max)(y_min_, other.y_min_);
-            output.y_max_ = (std::min)(y_max_, other.y_max_);
-            return true;
+        constexpr bool make_intersection(const AABB2& rhs, AABB2& output) const {
+            if (auto x_intersection = x_.make_intersection(rhs.x_)) {
+                if (auto y_intersection = y_.make_intersection(rhs.y_)) {
+                    output.x_ = *x_intersection;
+                    output.y_ = *y_intersection;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        constexpr Optional<AABB2> make_intersection(const AABB2& rhs) const {
+            AABB2 output;
+            if (this->make_intersection(rhs, output))
+                return output;
+            else
+                return sung::nullopt;
         }
 
         // Yes it makes the volume 0
-        void set(T x, T y) {
-            x_min_ = x;
-            x_max_ = x;
-            y_min_ = y;
-            y_max_ = y;
+        constexpr void set(T x, T y) {
+            x_.set(x);
+            y_.set(y);
+        }
+        constexpr void set(T x0, T x1, T y0, T y1) {
+            x_.set(x0, x1);
+            y_.set(y0, y1);
         }
 
-        void set(T x0, T x1, T y0, T y1) {
-            if (x0 < x1) {
-                x_min_ = x0;
-                x_max_ = x1;
-            }
-            else {
-                x_min_ = x1;
-                x_max_ = x0;
-            }
-
-            if (y0 < y1) {
-                y_min_ = y0;
-                y_max_ = y1;
-            }
-            else {
-                y_min_ = y1;
-                y_max_ = y0;
-            }
+        constexpr void expand_to_span(T x, T y) {
+            x_.expand_to_span(x);
+            y_.expand_to_span(y);
         }
-
-        void resize_to_include(T x, T y) {
-            if (x < x_min_)
-                x_min_ = x;
-            if (x > x_max_)
-                x_max_ = x;
-
-            if (y < y_min_)
-                y_min_ = y;
-            if (y > y_max_)
-                y_max_ = y;
+        constexpr AABB2 get_expanded_to_span(T x, T y) const {
+            AABB2 output = *this;
+            output.expand_to_span(x, y);
+            return output;
         }
 
     private:
-        T x_min_ = 0;
-        T y_min_ = 0;
-        T x_max_ = 0;
-        T y_max_ = 0;
+        AABB1<T> x_, y_;
 
     };
 
