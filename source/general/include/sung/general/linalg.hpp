@@ -76,6 +76,17 @@ namespace sung {
         constexpr T y() const { return elements_[1]; }
         constexpr T z() const { return elements_[2]; }
 
+        bool has_nan() const noexcept {
+            return std::isnan(this->x()) || std::isnan(this->y()) || std::isnan(this->z());
+        }
+        bool has_inf() const noexcept {
+            return std::isinf(this->x()) || std::isinf(this->y()) || std::isinf(this->z());
+        }
+
+        constexpr TVec3 lerp(const TVec3& rhs, T t) const {
+            return *this + (rhs - *this) * t;
+        }
+
         constexpr T dot(const TVec3& rhs) const {
             return (this->x() * rhs.x()) + (this->y() * rhs.y()) + (this->z() * rhs.z());
         }
