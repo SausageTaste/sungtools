@@ -45,6 +45,7 @@ namespace sung {
             else {
                 last_state_changed_.check();
                 consumed_ = false;
+                return Type::none;
             }
             break;
         }

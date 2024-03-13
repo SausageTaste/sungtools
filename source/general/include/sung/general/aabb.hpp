@@ -185,11 +185,6 @@ namespace sung {
             y_.set(y0, y1);
         }
 
-        constexpr void add(T x, T y) {
-            x_.add(x);
-            y_.add(y);
-        }
-
         constexpr void expand_to_span(T x, T y) {
             x_.expand_to_span(x);
             y_.expand_to_span(y);
@@ -329,15 +324,6 @@ namespace sung {
         }
         constexpr void set(const TVec3<T>& min, const TVec3<T>& max) {
             this->set(min.x(), max.x(), min.y(), max.y(), min.z(), max.z());
-        }
-
-        constexpr add(T x, T y, T z) {
-            x_.add(x);
-            y_.add(y);
-            z_.add(z);
-        }
-        constexpr add(const TVec3<T>& point) {
-            this->add(point.x(), point.y(), point.z());
         }
 
         constexpr void expand_to_span(T x, T y, T z) {
