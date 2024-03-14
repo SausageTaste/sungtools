@@ -7,7 +7,8 @@ project(SungTools
 include(FetchContent)
 
 
-set(SUNG_ENABLE_TEST OFF CACHE BOOL "Enable testing")
+get_directory_property(hasParent PARENT_DIRECTORY)
+set(SUNG_ENABLE_TEST (NOT hasParent) CACHE BOOL "Enable testing")
 
 if(SUNG_ENABLE_TEST)
     enable_testing()
