@@ -9,40 +9,44 @@ namespace sung {
     class TDistance {
 
     public:
-        constexpr static TDistance from_metres(T metres) {
+        // Metres
+        constexpr static TDistance from_m(T metres) {
             return TDistance(metres);
         }
-        constexpr void set_metres(T metres) { metres_ = metres; }
-        constexpr T    metres() const { return metres_; }
+        constexpr void set_m(T metres) { metres_ = metres; }
+        constexpr T    m() const { return metres_; }
 
-        constexpr static TDistance from_feet(T feet) {
-            return TDistance(feet * METRES_PER_FOOT.value<T>());
+        // Feet
+        constexpr static TDistance from_ft(T feet) {
+            return TDistance(feet * M_PER_FT.value<T>());
         }
-        constexpr void set_feet(T feet) {
-            metres_ = feet * METRES_PER_FOOT.value<T>();
+        constexpr void set_ft(T feet) {
+            metres_ = feet * M_PER_FT.value<T>();
         }
-        constexpr T feet() const {
-            return metres_ * METRES_PER_FOOT.reciprocal<T>();
-        }
-
-        constexpr static TDistance from_miles(T miles) {
-            return TDistance(miles * METRES_PER_MILE.value<T>());
-        }
-        constexpr void set_miles(T miles) {
-            metres_ = miles * METRES_PER_MILE.value<T>();
-        }
-        constexpr T miles() const {
-            return metres_ * METRES_PER_MILE.reciprocal<T>();
+        constexpr T ft() const {
+            return metres_ * M_PER_FT.reciprocal<T>();
         }
 
-        constexpr static TDistance from_nautical_miles(T nm) {
-            return TDistance(nm * METRES_PER_NAUTICAL_MILE.value<T>());
+        // Miles
+        constexpr static TDistance from_mi(T miles) {
+            return TDistance(miles * M_PER_MI.value<T>());
         }
-        constexpr void set_nautical_miles(T nm) {
-            metres_ = nm * METRES_PER_NAUTICAL_MILE.value<T>();
+        constexpr void set_mi(T miles) {
+            metres_ = miles * M_PER_MI.value<T>();
         }
-        constexpr T nautical_miles() const {
-            return metres_ * METRES_PER_NAUTICAL_MILE.reciprocal<T>();
+        constexpr T mi() const {
+            return metres_ * M_PER_MI.reciprocal<T>();
+        }
+
+        // Nautical miles
+        constexpr static TDistance from_nm(T nm) {
+            return TDistance(nm * M_PER_NM.value<T>());
+        }
+        constexpr void set_nm(T nm) {
+            metres_ = nm * M_PER_NM.value<T>();
+        }
+        constexpr T nm() const {
+            return metres_ * M_PER_NM.reciprocal<T>();
         }
 
         constexpr TDistance() = default;
@@ -74,9 +78,12 @@ namespace sung {
         }
 
         // These are exact values
-        constexpr static Ratio<int> METRES_PER_FOOT{ 3048, 10000 };
-        constexpr static Ratio<int> METRES_PER_MILE{ 1609344, 1000 };
-        constexpr static Ratio<int> METRES_PER_NAUTICAL_MILE{ 1852 };
+        // metres per foot
+        constexpr static Ratio<int> M_PER_FT{ 3048, 10000 };
+        // metres per mile
+        constexpr static Ratio<int> M_PER_MI{ 1609344, 1000 };
+        // metres per nautical mile
+        constexpr static Ratio<int> M_PER_NM{ 1852 };
 
     private:
         constexpr explicit TDistance(T metres) : metres_(metres) {}
@@ -150,12 +157,11 @@ namespace sung {
             return metres_per_second_ != rhs.metres_per_second_;
         }
 
-        constexpr static Ratio<int> SEC_PER_HOUR{ 3600 };
+        // Seconds per hour
+        constexpr static Ratio<int> SEC_PER_H{ 3600 };
 
-        constexpr static auto MS_PER_KTS =
-            TDistance<T>::METRES_PER_NAUTICAL_MILE / SEC_PER_HOUR;
-        constexpr static auto MS_PER_MPH =
-            TDistance<T>::METRES_PER_MILE / SEC_PER_HOUR;
+        constexpr static auto MS_PER_KTS = TDistance<T>::M_PER_NM / SEC_PER_H;
+        constexpr static auto MS_PER_MPH = TDistance<T>::M_PER_MI / SEC_PER_H;
 
     private:
         constexpr explicit TSpeed(T value) : metres_per_second_(value) {}
