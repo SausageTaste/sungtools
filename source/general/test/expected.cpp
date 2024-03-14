@@ -16,7 +16,7 @@ namespace {
         return output;
     }
 
-}
+}  // namespace
 
 
 int main() {

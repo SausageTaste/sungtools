@@ -18,7 +18,9 @@ namespace {
         sung::TimeChecker sw;
         sw.set_min();
         if (sw.elapsed() < 0) {
-            std::cout << "Test `test_min` failed: Elapsed time of min is less than 0" << std::endl;
+            std::cout
+                << "Test `test_min` failed: Elapsed time of min is less than 0"
+                << std::endl;
             return TEST_RESULT_FAIL_INVALID_MIN;
         }
 
@@ -26,33 +28,32 @@ namespace {
     }
 
     TestResult test_sleep(std::function<void(double)> sleep_func) {
-        constexpr double EPSILON = 0.001;
+        constexpr double EPSILON   = 0.001;
         constexpr double SLEEP_SEC = 1;
 
         sung::TimeChecker sw;
         sleep_func(SLEEP_SEC);
-        const auto elapsed = sw.elapsed();
+        const auto elapsed  = sw.elapsed();
         const auto redisual = elapsed - SLEEP_SEC;
 
         if (redisual < -EPSILON || redisual > EPSILON) {
             std::cout << "Test `test_sleep` failed"
-                << "\n    elapsed: " << elapsed
-                << "\n    redisual: " << redisual
-                << "\n    redisual rate: " << redisual / SLEEP_SEC
-                << std::endl;
+                      << "\n    elapsed: " << elapsed
+                      << "\n    redisual: " << redisual
+                      << "\n    redisual rate: " << redisual / SLEEP_SEC
+                      << std::endl;
             return TEST_RESULT_FAIL_SLEEP;
-        }
-        else {
+        } else {
             std::cout << "Test `test_sleep` passed"
-                << "\n    elapsed: " << elapsed
-                << "\n    redisual: " << redisual
-                << "\n    redisual rate: " << redisual / SLEEP_SEC
-                << std::endl;
+                      << "\n    elapsed: " << elapsed
+                      << "\n    redisual: " << redisual
+                      << "\n    redisual rate: " << redisual / SLEEP_SEC
+                      << std::endl;
             return TEST_RESULT_SUCCESS;
         }
     }
 
-}
+}  // namespace
 
 
 int main() {
@@ -64,7 +65,8 @@ int main() {
     if (TEST_RESULT_SUCCESS != result)
         return result;
 
-    result = test_sleep([](double seconds){ sung::sleep_hybrid(seconds, 0.5); });
+    result =
+        test_sleep([](double seconds) { sung::sleep_hybrid(seconds, 0.5); });
     if (TEST_RESULT_SUCCESS != result)
         return result;
 

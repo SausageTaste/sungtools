@@ -16,7 +16,7 @@ namespace {
         }
 
         edge.notify_signal(true);
-        if (edge.check_any_edge()){
+        if (edge.check_any_edge()) {
             std::cout << 2 << std::endl;
             return 2;
         }
@@ -39,7 +39,7 @@ namespace {
 
     int test_rmm_realtime() {
         constexpr double TRUE_DURATION = 0.5498;
-        constexpr double TOLERANCE = 0.8465416345;
+        constexpr double TOLERANCE     = 0.8465416345;
         sung::RetriggerableMonostableMultivibrator<sung::TimeChecker> rmm;
         rmm.notify_signal(true);
 
@@ -49,16 +49,19 @@ namespace {
                 rmm.notify_signal(true);
         }
         const auto elapsed = timer.elapsed();
-        const auto success = sung::are_similiar(elapsed, TRUE_DURATION + TOLERANCE, 0.001);
-        std::cout << "test_rmm_realtime: " << elapsed << (success ? " = " : " != ") << TRUE_DURATION + TOLERANCE << " (" << 0.001 << ")\n";
+        const auto success =
+            sung::are_similiar(elapsed, TRUE_DURATION + TOLERANCE, 0.001);
+        std::cout << "test_rmm_realtime: " << elapsed
+                  << (success ? " = " : " != ") << TRUE_DURATION + TOLERANCE
+                  << " (" << 0.001 << ")\n";
 
         return success ? 0 : 5;
     }
 
     int test_rmm_accum() {
         constexpr double TRUE_DURATION = 2.15461;
-        constexpr double TOLERANCE = 0.54564;
-        constexpr double STEP = 0.01345;
+        constexpr double TOLERANCE     = 0.54564;
+        constexpr double STEP          = 0.01345;
 
         sung::RetriggerableMonostableMultivibrator<sung::TimeAccumulator> rmm;
         double accum = 0;
@@ -72,13 +75,15 @@ namespace {
             if (!rmm.poll_signal(TOLERANCE))
                 break;
         }
-        const auto success = sung::are_similiar(accum, TRUE_DURATION + TOLERANCE, STEP * 1.01);
-        std::cout << "test_rmm_accum: " << accum << (success ? " = " : " != ") << TRUE_DURATION + TOLERANCE << " (" << STEP * 1.01 << ")\n";
+        const auto success =
+            sung::are_similiar(accum, TRUE_DURATION + TOLERANCE, STEP * 1.01);
+        std::cout << "test_rmm_accum: " << accum << (success ? " = " : " != ")
+                  << TRUE_DURATION + TOLERANCE << " (" << STEP * 1.01 << ")\n";
 
         return success ? 0 : 6;
     }
 
-}
+}  // namespace
 
 
 int main() {

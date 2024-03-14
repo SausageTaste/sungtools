@@ -16,13 +16,18 @@ namespace {
         static_assert(!aabb.is_inside_op(2), "AABB1::is_inside_op failed");
         static_assert(aabb.is_inside_cl(2), "AABB1::is_inside_cl failed");
 
-        constexpr auto aabb2 = AABB1((T)-2.3, (T)1.4);
+        constexpr auto aabb2        = AABB1((T)-2.3, (T)1.4);
         constexpr auto intersection = aabb.make_intersection(aabb2);
-        static_assert(intersection->are_similar(AABB1(-1, (T)1.4), (T)0.001), "AABB1::make_intersection failed");
+        static_assert(
+            intersection->are_similar(AABB1(-1, (T)1.4), (T)0.001),
+            "AABB1::make_intersection failed"
+        );
 
-        constexpr auto aabb3 = AABB1((T)5.3, (T)2.4);
+        constexpr auto aabb3         = AABB1((T)5.3, (T)2.4);
         constexpr auto intersection2 = aabb.make_intersection(aabb3);
-        static_assert(intersection2 == sung::nullopt, "AABB1::make_intersection failed");
+        static_assert(
+            intersection2 == sung::nullopt, "AABB1::make_intersection failed"
+        );
 
         return 0;
     }
@@ -49,21 +54,27 @@ namespace {
         static_assert(!a.is_inside_op(2, 6), "AABB2::is_inside_cl failed");
 
         constexpr auto inter1 = a.make_intersection(b);
-        static_assert(inter1->are_similar(AABB2{ -1, (T)1.4, 5, (T)3.14 }, (T)0.001), "AABB2::make_intersection failed");
+        static_assert(
+            inter1->are_similar(AABB2{ -1, (T)1.4, 5, (T)3.14 }, (T)0.001),
+            "AABB2::make_intersection failed"
+        );
 
         constexpr auto a_expanded = a.get_expanded_to_span(12, -12);
-        static_assert(a_expanded.are_similar(AABB2{ 12, -1, -12, 5 }, (T)0.001), "AABB2::get_expanded_to_span failed");
+        static_assert(
+            a_expanded.are_similar(AABB2{ 12, -1, -12, 5 }, (T)0.001),
+            "AABB2::get_expanded_to_span failed"
+        );
 
         return 0;
     }
 
     template <typename T>
     int test_aabb3() {
-        using Vec3 = sung::TVec3<T>;
+        using Vec3  = sung::TVec3<T>;
         using AABB3 = sung::AABB3<T>;
 
         constexpr AABB3 a{ 2, -1, 3, 5, 7, 11 };
-        constexpr AABB3 b{ Vec3{-2, 7, 5}, Vec3{1, 3, 13} };
+        constexpr AABB3 b{ Vec3{ -2, 7, 5 }, Vec3{ 1, 3, 13 } };
 
         static_assert(a.x_min() == -1, "AABB3::x_min failed");
         static_assert(a.y_min() == 3, "AABB3::y_min failed");
@@ -77,10 +88,18 @@ namespace {
         static_assert(a.z_len() == 4, "AABB3::z_len failed");
         static_assert(a.volume() == 24, "AABB3::volume failed");
 
-        static_assert(a.is_inside_cl(Vec3{ 2, 5, 11 }), "AABB3::is_inside_cl failed");
-        static_assert(!a.is_inside_op(Vec3{ 2, 5, 11 }), "AABB3::is_inside_op failed");
-        static_assert(!a.is_inside_cl(Vec3{ 2, 5, 12 }), "AABB3::is_inside_cl failed");
-        static_assert(!a.is_inside_op(Vec3{ 2, 5, 12 }), "AABB3::is_inside_op failed");
+        static_assert(
+            a.is_inside_cl(Vec3{ 2, 5, 11 }), "AABB3::is_inside_cl failed"
+        );
+        static_assert(
+            !a.is_inside_op(Vec3{ 2, 5, 11 }), "AABB3::is_inside_op failed"
+        );
+        static_assert(
+            !a.is_inside_cl(Vec3{ 2, 5, 12 }), "AABB3::is_inside_cl failed"
+        );
+        static_assert(
+            !a.is_inside_op(Vec3{ 2, 5, 12 }), "AABB3::is_inside_op failed"
+        );
 
         constexpr auto inter1 = a.make_intersection(b);
         static_assert(
@@ -95,10 +114,9 @@ namespace {
         );
 
         return 0;
-
     }
 
-}
+}  // namespace
 
 
 int main() {

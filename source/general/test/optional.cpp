@@ -13,7 +13,7 @@ namespace {
             std::cout << "opt has no value" << std::endl;
     }
 
-}
+}  // namespace
 
 
 int main() {
