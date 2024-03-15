@@ -14,18 +14,14 @@ namespace sung {
             return TDistance(metres);
         }
         constexpr void set_m(T metres) { metres_ = metres; }
-        constexpr T    m() const { return metres_; }
+        constexpr T m() const { return metres_; }
 
         // Feet
         constexpr static TDistance from_ft(T feet) {
             return TDistance(feet * M_PER_FT.value<T>());
         }
-        constexpr void set_ft(T feet) {
-            metres_ = feet * M_PER_FT.value<T>();
-        }
-        constexpr T ft() const {
-            return metres_ * M_PER_FT.reciprocal<T>();
-        }
+        constexpr void set_ft(T feet) { metres_ = feet * M_PER_FT.value<T>(); }
+        constexpr T ft() const { return metres_ * M_PER_FT.reciprocal<T>(); }
 
         // Miles
         constexpr static TDistance from_mi(T miles) {
@@ -34,20 +30,14 @@ namespace sung {
         constexpr void set_mi(T miles) {
             metres_ = miles * M_PER_MI.value<T>();
         }
-        constexpr T mi() const {
-            return metres_ * M_PER_MI.reciprocal<T>();
-        }
+        constexpr T mi() const { return metres_ * M_PER_MI.reciprocal<T>(); }
 
         // Nautical miles
         constexpr static TDistance from_nm(T nm) {
             return TDistance(nm * M_PER_NM.value<T>());
         }
-        constexpr void set_nm(T nm) {
-            metres_ = nm * M_PER_NM.value<T>();
-        }
-        constexpr T nm() const {
-            return metres_ * M_PER_NM.reciprocal<T>();
-        }
+        constexpr void set_nm(T nm) { metres_ = nm * M_PER_NM.value<T>(); }
+        constexpr T nm() const { return metres_ * M_PER_NM.reciprocal<T>(); }
 
         constexpr TDistance() = default;
 
@@ -98,8 +88,8 @@ namespace sung {
     public:
         // Metres per second
         constexpr static TSpeed from_ms(T value) { return TSpeed(value); }
-        constexpr void          set_ms(T value) { metres_per_second_ = value; }
-        constexpr T             ms() const { return metres_per_second_; }
+        constexpr void set_ms(T value) { metres_per_second_ = value; }
+        constexpr T ms() const { return metres_per_second_; }
 
         // Knots (nautical miles per hour)
         constexpr static TSpeed from_kts(T value) {

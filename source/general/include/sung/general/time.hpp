@@ -21,7 +21,6 @@ namespace sung {
         virtual void check() = 0;
         virtual double check_get_elapsed() = 0;
         virtual bool check_if_elapsed(double seconds) = 0;
-
     };
 
 
@@ -44,7 +43,6 @@ namespace sung {
         static double duration_cast(Clock_t::duration duration);
 
         Clock_t::time_point last_checked_ = Clock_t::now();
-
     };
 
 
@@ -64,7 +62,6 @@ namespace sung {
     private:
         double accum_ = 0;
         double lasted_added_value_ = 0;
-
     };
 
-}
+}  // namespace sung

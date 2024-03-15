@@ -15,9 +15,7 @@ namespace sung {
 
     public:
         constexpr AABB1() = default;
-        constexpr AABB1(T val0, T val1) {
-            this->set(val0, val1);
-        }
+        constexpr AABB1(T val0, T val1) { this->set(val0, val1); }
 
         constexpr AABB1 operator+(T val) const {
             return AABB1{ min_ + val, max_ + val };
@@ -51,8 +49,8 @@ namespace sung {
         }
 
         constexpr bool are_similar(const AABB1& rhs, T epsilon) const {
-            return sung::are_similiar(min_, rhs.min_, epsilon)
-                && sung::are_similiar(max_, rhs.max_, epsilon);
+            return sung::are_similiar(min_, rhs.min_, epsilon) &&
+                   sung::are_similiar(max_, rhs.max_, epsilon);
         }
 
         constexpr bool is_intersecting_op(const AABB1& rhs) const {
@@ -88,8 +86,7 @@ namespace sung {
             if (val0 < val1) {
                 min_ = val0;
                 max_ = val1;
-            }
-            else {
+            } else {
                 min_ = val1;
                 max_ = val0;
             }
@@ -110,7 +107,6 @@ namespace sung {
     private:
         T min_{};
         T max_{};
-
     };
 
 
@@ -120,9 +116,7 @@ namespace sung {
 
     public:
         constexpr AABB2() = default;
-        constexpr AABB2(T x0, T x1, T y0, T y1) {
-            this->set(x0, x1, y0, y1);
-        }
+        constexpr AABB2(T x0, T x1, T y0, T y1) { this->set(x0, x1, y0, y1); }
 
         constexpr T x_min() const { return x_.mini(); }
         constexpr T x_max() const { return x_.maxi(); }
@@ -131,13 +125,11 @@ namespace sung {
 
         constexpr T width() const { return x_.len(); }
         constexpr T height() const { return y_.len(); }
-        constexpr T area() const {
-            return this->width() * this->height();
-        }
+        constexpr T area() const { return this->width() * this->height(); }
 
         constexpr bool are_similar(const AABB2& rhs, T epsilon) const {
-            return x_.are_similar(rhs.x_, epsilon)
-                && y_.are_similar(rhs.y_, epsilon);
+            return x_.are_similar(rhs.x_, epsilon) &&
+                   y_.are_similar(rhs.y_, epsilon);
         }
 
         constexpr bool is_inside_op(T x, T y) const {
@@ -148,12 +140,12 @@ namespace sung {
         }
 
         constexpr bool is_intersecting_op(const AABB2& rhs) const {
-            return x_.is_intersecting_op(rhs.x_)
-                && y_.is_intersecting_op(rhs.y_);
+            return x_.is_intersecting_op(rhs.x_) &&
+                   y_.is_intersecting_op(rhs.y_);
         }
         constexpr bool is_intersecting_cl(const AABB2& rhs) const {
-            return x_.is_intersecting_cl(rhs.x_)
-                && y_.is_intersecting_cl(rhs.y_);
+            return x_.is_intersecting_cl(rhs.x_) &&
+                   y_.is_intersecting_cl(rhs.y_);
         }
 
         constexpr bool make_intersection(const AABB2& rhs, AABB2& out) const {
@@ -197,7 +189,6 @@ namespace sung {
 
     private:
         AABB1<T> x_, y_;
-
     };
 
 
@@ -254,37 +245,35 @@ namespace sung {
         }
 
         constexpr bool are_similar(const AABB3& rhs, T epsilon) const {
-            return x_.are_similar(rhs.x_, epsilon)
-                && y_.are_similar(rhs.y_, epsilon)
-                && z_.are_similar(rhs.z_, epsilon);
+            return x_.are_similar(rhs.x_, epsilon) &&
+                   y_.are_similar(rhs.y_, epsilon) &&
+                   z_.are_similar(rhs.z_, epsilon);
         }
 
         constexpr bool is_inside_op(T x, T y, T z) const {
-            return x_.is_inside_op(x)
-                && y_.is_inside_op(y)
-                && z_.is_inside_op(z);
+            return x_.is_inside_op(x) && y_.is_inside_op(y) &&
+                   z_.is_inside_op(z);
         }
         constexpr bool is_inside_op(const TVec3<T>& point) const {
             return this->is_inside_op(point.x(), point.y(), point.z());
         }
         constexpr bool is_inside_cl(T x, T y, T z) const {
-            return x_.is_inside_cl(x)
-                && y_.is_inside_cl(y)
-                && z_.is_inside_cl(z);
+            return x_.is_inside_cl(x) && y_.is_inside_cl(y) &&
+                   z_.is_inside_cl(z);
         }
         constexpr bool is_inside_cl(const TVec3<T>& point) const {
             return this->is_inside_cl(point.x(), point.y(), point.z());
         }
 
         constexpr bool is_intersecting_op(const AABB3& rhs) const {
-            return x_.is_intersecting_op(rhs.x_)
-                && y_.is_intersecting_op(rhs.y_)
-                && z_.is_intersecting_op(rhs.z_);
+            return x_.is_intersecting_op(rhs.x_) &&
+                   y_.is_intersecting_op(rhs.y_) &&
+                   z_.is_intersecting_op(rhs.z_);
         }
         constexpr bool is_intersecting_cl(const AABB3& rhs) const {
-            return x_.is_intersecting_cl(rhs.x_)
-                && y_.is_intersecting_cl(rhs.y_)
-                && z_.is_intersecting_cl(rhs.z_);
+            return x_.is_intersecting_cl(rhs.x_) &&
+                   y_.is_intersecting_cl(rhs.y_) &&
+                   z_.is_intersecting_cl(rhs.z_);
         }
 
         constexpr bool make_intersection(const AABB3& rhs, AABB3& out) const {
@@ -345,7 +334,6 @@ namespace sung {
 
     private:
         AABB1<T> x_, y_, z_;
-
     };
 
-}
+}  // namespace sung

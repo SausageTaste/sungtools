@@ -20,8 +20,8 @@ namespace sung {
         bool signal() const;
         void notify_signal(bool v);
 
-        // Methods with names starting with `check_` will update the internal state.
-        // Call one of these periodically to poll the signal.
+        // Methods with names starting with `check_` will update the internal
+        // state. Call one of these periodically to poll the signal.
         Type check_edge();
         bool check_rising() { return Type::rising == this->check_edge(); }
         bool check_falling() { return Type::falling == this->check_edge(); }
@@ -38,7 +38,6 @@ namespace sung {
 
         bool signal_ = false;
         bool last_checked_signal_ = false;
-
     };
 
 
@@ -46,9 +45,7 @@ namespace sung {
     class RetriggerableMonostableMultivibrator {
 
     public:
-        RetriggerableMonostableMultivibrator() {
-            timer_.set_min();
-        }
+        RetriggerableMonostableMultivibrator() { timer_.set_min(); }
 
         void notify_signal(bool value) {
             if (value) {
@@ -66,7 +63,8 @@ namespace sung {
             if (timer_.elapsed() <= tolerance_sec)
                 return true;
 
-            timer_.set_min();  // To prevent false positive after tolerance time increased
+            // To prevent false positive after tolerance time increased
+            timer_.set_min();
             return false;
         }
 
@@ -74,8 +72,9 @@ namespace sung {
 
     private:
         TTimer timer_;
-        bool signal_once_ = false;  // Ensure at least one true signal to be reported
 
+        // Ensure at least one true signal to be reported
+        bool signal_once_ = false;
     };
 
 
@@ -83,19 +82,24 @@ namespace sung {
     class RetriggerableMonostableMultivibratorCompact {
 
     public:
-        RetriggerableMonostableMultivibratorCompact(double tolerance_sec) : tolerance_sec_(tolerance_sec) {}
+        RetriggerableMonostableMultivibratorCompact(double tolerance_sec)
+            : tolerance_sec_(tolerance_sec) {}
         void notify_signal(bool value) { rmm_.notify_signal(value); }
-        bool poll_signal(double tolerance_sec) { return rmm_.poll_signal(tolerance_sec); }
+        bool poll_signal(double tolerance_sec) {
+            return rmm_.poll_signal(tolerance_sec);
+        }
 
         double tolerance() const { return tolerance_sec_; }
-        void set_tolerance(double tolerance_sec) { tolerance_sec_ = tolerance_sec; }
+        void set_tolerance(double tolerance_sec) {
+            tolerance_sec_ = tolerance_sec;
+        }
 
         TTimer& timer() { return rmm_.timer_; }
 
     private:
         RetriggerableMonostableMultivibrator<TTimer> rmm_;
-        double tolerance_sec_ = 0;
 
+        double tolerance_sec_ = 0;
     };
 
 
@@ -111,7 +115,6 @@ namespace sung {
         EdgeDetector edge_detector_;
         TimeChecker last_state_changed_;
         bool consumed_ = false;
-
     };
 
 
@@ -124,7 +127,6 @@ namespace sung {
     private:
         class Record;
         std::vector<Record> records_;
-
     };
 
-}
+}  // namespace sung

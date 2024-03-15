@@ -25,4 +25,4 @@ namespace sung {
     #pragma message("[SUNG] tl::optional will be used")
 #endif
 
-}
+}  // namespace sung

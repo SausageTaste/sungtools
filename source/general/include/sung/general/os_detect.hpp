@@ -17,20 +17,20 @@
 #elif __APPLE__
     #include <TargetConditionals.h>
     #if TARGET_IPHONE_SIMULATOR
-         // iOS Simulator
+    // iOS Simulator
     #elif TARGET_OS_IPHONE
-        // iOS device
+    // iOS device
     #elif TARGET_OS_MAC
-        // Other kinds of Mac OS
+    // Other kinds of Mac OS
     #else
         #error "Unknown Apple platform"
     #endif
 #elif __linux__
     #define SUNG_OS_LINUX
-#elif __unix__ // all unices not caught above
+#elif __unix__  // all unices not caught above
     #define SUNG_OS_UNIX
 #elif defined(_POSIX_VERSION)
-    // POSIX
+// POSIX
 #else
     #error "Unknown compiler"
 #endif

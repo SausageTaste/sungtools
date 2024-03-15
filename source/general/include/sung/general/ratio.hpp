@@ -5,8 +5,8 @@
 
 namespace sung {
 
-    template<class M, class N> constexpr
-    std::common_type_t<M, N> gcd(M a, N b) {
+    template <class M, class N>
+    constexpr std::common_type_t<M, N> gcd(M a, N b) {
 #ifdef __cpp_lib_gcd_lcm
         return std::gcd(a, b);
 #else
@@ -27,21 +27,15 @@ namespace sung {
     class Ratio {
 
     public:
-        constexpr Ratio(T num = 0, T den = 1)
-            : num_(num), den_(den)
-        {
+        constexpr Ratio(T num = 0, T den = 1) : num_(num), den_(den) {
             const auto g = gcd(num_, den_);
             num_ /= g;
             den_ /= g;
         }
 
-        constexpr T num() const {
-            return num_;
-        }
+        constexpr T num() const { return num_; }
 
-        constexpr T den() const {
-            return den_;
-        }
+        constexpr T den() const { return den_; }
 
         template <typename U>
         constexpr U value() const {
@@ -72,7 +66,6 @@ namespace sung {
     private:
         T num_;
         T den_;
-
     };
 
-}
+}  // namespace sung

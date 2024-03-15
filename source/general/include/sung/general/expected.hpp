@@ -29,4 +29,4 @@ namespace sung {
 
 #endif
 
-}
+}  // namespace sung
