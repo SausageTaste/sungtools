@@ -24,42 +24,48 @@ namespace {
 
     public:
         RandomDoubleGenerator(T lower_bound, T upper_bound)
-            : unif_(lower_bound, upper_bound)
-        {
-            const auto time_seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-            std::seed_seq ss{ uint32_t(time_seed & 0xffffffff), uint32_t(time_seed >> 32) };
+            : unif_(lower_bound, upper_bound) {
+            const auto time_seed = std::chrono::high_resolution_clock::now()
+                                       .time_since_epoch()
+                                       .count();
+            std::seed_seq ss{ uint32_t(time_seed & 0xffffffff),
+                              uint32_t(time_seed >> 32) };
             rng_.seed(ss);
         }
 
-        T gen() {
-            return unif_(rng_);
-        }
+        T gen() { return unif_(rng_); }
 
     private:
         std::mt19937_64 rng_;
         std::uniform_real_distribution<T> unif_;
-
     };
 
-}
+}  // namespace
 
 
 // Diff calculation test
 namespace {
 
     template <typename T>
-    void print_diff_test_variables(const sung::TAngle<T> a, const sung::TAngle<T> b) {
+    void print_diff_test_variables(
+        const sung::TAngle<T> a, const sung::TAngle<T> b
+    ) {
         const auto d = a.calc_short_diff_to(b);
         const auto a_plus_d = a + d;
         const auto b_ad_diff = b.calc_short_diff_to(a_plus_d);
 
-        std::cout << "Test `randomized_test` failed (T = " << typeid(T).name() << ")"
-            << "\n    a:              " << a.rad() << " (" << a.normalize_neg().rad() << ")"
-            << "\n    b:              " << b.rad() << " (" << b.normalize_neg().rad() << ")"
-            << "\n    d:              " << d.rad() << " (" << d.normalize_neg().rad() << ")"
-            << "\n    a+d:            " << a_plus_d.rad() << " (" << a_plus_d.normalize_neg().rad()     << ")"
-            << "\n    Diff of a+d, b: " << b_ad_diff.rad() << " (" << b_ad_diff.normalize_neg().rad() << ")"
-            << std::endl;
+        std::cout << "Test `randomized_test` failed (T = " << typeid(T).name()
+                  << ")"
+                  << "\n    a:              " << a.rad() << " ("
+                  << a.normalize_neg().rad() << ")"
+                  << "\n    b:              " << b.rad() << " ("
+                  << b.normalize_neg().rad() << ")"
+                  << "\n    d:              " << d.rad() << " ("
+                  << d.normalize_neg().rad() << ")"
+                  << "\n    a+d:            " << a_plus_d.rad() << " ("
+                  << a_plus_d.normalize_neg().rad() << ")"
+                  << "\n    Diff of a+d, b: " << b_ad_diff.rad() << " ("
+                  << b_ad_diff.normalize_neg().rad() << ")" << std::endl;
     }
 
 
@@ -83,8 +89,12 @@ namespace {
                 return TEST_RESULT_TEST_DIFF_DOUBLE_FAIL;
             }
 
-            const auto af = sung::TAngle<float>::from_rad(static_cast<float>(a_deg));
-            const auto bf = sung::TAngle<float>::from_rad(static_cast<float>(b_deg));
+            const auto af = sung::TAngle<float>::from_rad(
+                static_cast<float>(a_deg)
+            );
+            const auto bf = sung::TAngle<float>::from_rad(
+                static_cast<float>(b_deg)
+            );
             const auto df = af.calc_short_diff_to(bf);
             const auto a_plus_d_f = af + df;
             if (!bf.is_equivalent(a_plus_d_f, 1e-3f)) {
@@ -93,12 +103,17 @@ namespace {
             }
 
             ++count;
-            if (std::chrono::high_resolution_clock::now() - start_time > TEST_DURATION)
+            if (std::chrono::high_resolution_clock::now() - start_time >
+                TEST_DURATION)
                 break;
         }
 
-        const auto seconds = std::chrono::duration_cast<std::chrono::milliseconds>(TEST_DURATION).count() / 1000.0;
-        std::cout << "`diff_calc_test` passed " << std::fixed << count / seconds << " times per seconds" << std::endl;
+        const auto seconds =
+            std::chrono::duration_cast<std::chrono::milliseconds>(TEST_DURATION)
+                .count() /
+            1000.0;
+        std::cout << "`diff_calc_test` passed " << std::fixed << count / seconds
+                  << " times per seconds" << std::endl;
         return TEST_RESULT_SUCCESS;
     }
 
@@ -121,35 +136,49 @@ namespace {
             const auto b_rad = sung::to_radians(b_deg);
 
             timer.check();
-            const auto diff_mod = sung::calc_rad_shortest_diff_mod(a_rad, b_rad);
+            const auto diff_mod = sung::calc_rad_shortest_diff_mod(
+                a_rad, b_rad
+            );
             accum_mod += timer.elapsed();
 
             timer.check();
-            const auto diff_floor = sung::calc_rad_shortest_diff_floor(a_rad, b_rad);
+            const auto diff_floor = sung::calc_rad_shortest_diff_floor(
+                a_rad, b_rad
+            );
             accum_floor += timer.elapsed();
 
             if (!sung::are_similiar(diff_mod, diff_floor, 1e-10)) {
-                std::cout << "Test `diff_calc_func_test` failed (T = " << typeid(double).name() << ")"
-                    << "\n    a:            " << a_rad << " (" << sung::to_degrees(a_rad) << ")"
-                    << "\n    b:            " << b_rad << " (" << sung::to_degrees(b_rad) << ")"
-                    << "\n    diff_mod:     " << diff_mod << " (" << sung::to_degrees(diff_mod) << ")"
-                    << "\n    diff_floor:   " << diff_floor << " (" << sung::to_degrees(diff_floor) << ")"
-                    << std::endl;
+                std::cout << "Test `diff_calc_func_test` failed (T = "
+                          << typeid(double).name() << ")"
+                          << "\n    a:            " << a_rad << " ("
+                          << sung::to_degrees(a_rad) << ")"
+                          << "\n    b:            " << b_rad << " ("
+                          << sung::to_degrees(b_rad) << ")"
+                          << "\n    diff_mod:     " << diff_mod << " ("
+                          << sung::to_degrees(diff_mod) << ")"
+                          << "\n    diff_floor:   " << diff_floor << " ("
+                          << sung::to_degrees(diff_floor) << ")" << std::endl;
                 return TEST_RESULT_TEST_DIFF_FUNC_FAIL;
             }
 
             ++count;
-            if (std::chrono::high_resolution_clock::now() - start_time > TEST_DURATION)
+            if (std::chrono::high_resolution_clock::now() - start_time >
+                TEST_DURATION)
                 break;
         }
 
-        const auto seconds = std::chrono::duration_cast<std::chrono::milliseconds>(TEST_DURATION).count() / 1000.0;
-        std::cout << "`diff_calc_func_test` passed " << std::fixed << count / seconds << " times per seconds" << std::endl;
-        std::cout << "    mod took " << accum_mod << " seconds, floor took " << accum_floor <<  " seconds" << std::endl;
+        const auto seconds =
+            std::chrono::duration_cast<std::chrono::milliseconds>(TEST_DURATION)
+                .count() /
+            1000.0;
+        std::cout << "`diff_calc_func_test` passed " << std::fixed
+                  << count / seconds << " times per seconds" << std::endl;
+        std::cout << "    mod took " << accum_mod << " seconds, floor took "
+                  << accum_floor << " seconds" << std::endl;
         return TEST_RESULT_SUCCESS;
     }
 
-}
+}  // namespace
 
 
 // Addition test
@@ -167,10 +196,10 @@ namespace {
     template <typename T>
     TestResult addition_test(T epsilon) {
         const std::vector<AdditionTestCase<T>> test_cases{
-            {20, 60, 80},
-            {370, 230, 240},
-            {370, 230, -120},
-            {(T)15.47, (T)-84.354, (T)-68.884},
+            { 20, 60, 80 },
+            { 370, 230, 240 },
+            { 370, 230, -120 },
+            { (T)15.47, (T)-84.354, (T)-68.884 },
         };
 
         for (auto& test_case : test_cases) {
@@ -178,13 +207,15 @@ namespace {
             const auto b = sung::TAngle<T>::from_deg(test_case.b_);
             const auto sum = a + b;
 
-            if (!sum.is_equivalent(sung::TAngle<T>::from_deg(test_case.sum_), epsilon)) {
-                std::cout << "Test `addition_test` failed (T = " << typeid(T).name() << ")"
-                    << "\n    a: " << a.deg()
-                    << "\n    b: " << b.deg()
-                    << "\n    sum: " << sum.deg()
-                    << "\n    expected sum: " << test_case.sum_
-                    << std::endl;
+            if (!sum.is_equivalent(
+                    sung::TAngle<T>::from_deg(test_case.sum_), epsilon
+                )) {
+                std::cout << "Test `addition_test` failed (T = "
+                          << typeid(T).name() << ")"
+                          << "\n    a: " << a.deg() << "\n    b: " << b.deg()
+                          << "\n    sum: " << sum.deg()
+                          << "\n    expected sum: " << test_case.sum_
+                          << std::endl;
                 return TEST_RESULT_TEST_ADD_FAIL;
             }
         }
@@ -192,7 +223,7 @@ namespace {
         return TEST_RESULT_SUCCESS;
     }
 
-}
+}  // namespace
 
 
 // Angle conversion test
@@ -211,25 +242,31 @@ namespace {
             const auto angle = sung::TAngle<T>::from_deg(deg_value);
             const auto error = std::abs(angle.deg() - deg_value);
             if (error > error_tolerance) {
-                std::cout << "Test `conversion_test` failed (T = " << typeid(T).name() << ")"
-                    << "\n    deg_value: " << deg_value
-                    << "\n    angle.deg(): " << angle.deg()
-                    << "\n    error: " << error
-                    << std::endl;
+                std::cout << "Test `conversion_test` failed (T = "
+                          << typeid(T).name() << ")"
+                          << "\n    deg_value: " << deg_value
+                          << "\n    angle.deg(): " << angle.deg()
+                          << "\n    error: " << error << std::endl;
                 return TEST_RESULT_TEST_CONVERSION_FAIL;
             }
 
             ++count;
-            if (std::chrono::high_resolution_clock::now() - start_time > TEST_DURATION)
+            if (std::chrono::high_resolution_clock::now() - start_time >
+                TEST_DURATION)
                 break;
         }
 
-        const auto seconds = std::chrono::duration_cast<std::chrono::milliseconds>(TEST_DURATION).count() / 1000.0;
-        std::cout << "Conversion test (" << typeid(T).name() << ") passed " << std::fixed << count / seconds << " times per seconds" << std::endl;
+        const auto seconds =
+            std::chrono::duration_cast<std::chrono::milliseconds>(TEST_DURATION)
+                .count() /
+            1000.0;
+        std::cout << "Conversion test (" << typeid(T).name() << ") passed "
+                  << std::fixed << count / seconds << " times per seconds"
+                  << std::endl;
         return TEST_RESULT_SUCCESS;
     }
 
-}
+}  // namespace
 
 
 int main() {

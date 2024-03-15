@@ -7,9 +7,9 @@ namespace {
     int test_distance_conversions() {
         using Distance = sung::TDistance<float>;
 
-        constexpr auto distance_m              = Distance::from_m(1000);
-        constexpr auto distance_ft             = Distance::from_ft(3280.84f);
-        constexpr auto distance_miles          = Distance::from_mi(0.621371f);
+        constexpr auto distance_m = Distance::from_m(1000);
+        constexpr auto distance_ft = Distance::from_ft(3280.84f);
+        constexpr auto distance_miles = Distance::from_mi(0.621371f);
         constexpr auto distance_nautical_miles = Distance::from_nm(0.539957f);
 
         static_assert(
@@ -34,7 +34,7 @@ namespace {
     int test_speed_conversions() {
         using Speed = sung::TSpeed<float>;
 
-        constexpr auto speed_ms  = Speed::from_ms(100);
+        constexpr auto speed_ms = Speed::from_ms(100);
         constexpr auto speed_kts = Speed::from_kts(194.384f);
         constexpr auto speed_mph = Speed::from_mph(223.694f);
 

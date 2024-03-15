@@ -28,12 +28,12 @@ namespace {
     }
 
     TestResult test_sleep(std::function<void(double)> sleep_func) {
-        constexpr double EPSILON   = 0.001;
+        constexpr double EPSILON = 0.001;
         constexpr double SLEEP_SEC = 1;
 
         sung::TimeChecker sw;
         sleep_func(SLEEP_SEC);
-        const auto elapsed  = sw.elapsed();
+        const auto elapsed = sw.elapsed();
         const auto redisual = elapsed - SLEEP_SEC;
 
         if (redisual < -EPSILON || redisual > EPSILON) {
@@ -65,8 +65,8 @@ int main() {
     if (TEST_RESULT_SUCCESS != result)
         return result;
 
-    result =
-        test_sleep([](double seconds) { sung::sleep_hybrid(seconds, 0.5); });
+    result = test_sleep([](double seconds) { sung::sleep_hybrid(seconds, 0.5); }
+    );
     if (TEST_RESULT_SUCCESS != result)
         return result;
 

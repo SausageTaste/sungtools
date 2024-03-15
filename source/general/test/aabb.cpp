@@ -16,14 +16,14 @@ namespace {
         static_assert(!aabb.is_inside_op(2), "AABB1::is_inside_op failed");
         static_assert(aabb.is_inside_cl(2), "AABB1::is_inside_cl failed");
 
-        constexpr auto aabb2        = AABB1((T)-2.3, (T)1.4);
+        constexpr auto aabb2 = AABB1((T)-2.3, (T)1.4);
         constexpr auto intersection = aabb.make_intersection(aabb2);
         static_assert(
             intersection->are_similar(AABB1(-1, (T)1.4), (T)0.001),
             "AABB1::make_intersection failed"
         );
 
-        constexpr auto aabb3         = AABB1((T)5.3, (T)2.4);
+        constexpr auto aabb3 = AABB1((T)5.3, (T)2.4);
         constexpr auto intersection2 = aabb.make_intersection(aabb3);
         static_assert(
             intersection2 == sung::nullopt, "AABB1::make_intersection failed"
@@ -70,7 +70,7 @@ namespace {
 
     template <typename T>
     int test_aabb3() {
-        using Vec3  = sung::TVec3<T>;
+        using Vec3 = sung::TVec3<T>;
         using AABB3 = sung::AABB3<T>;
 
         constexpr AABB3 a{ 2, -1, 3, 5, 7, 11 };

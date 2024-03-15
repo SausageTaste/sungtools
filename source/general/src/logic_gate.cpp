@@ -4,13 +4,9 @@
 // EdgeDetector
 namespace sung {
 
-    bool EdgeDetector::signal() const {
-        return signal_;
-    }
+    bool EdgeDetector::signal() const { return signal_; }
 
-    void EdgeDetector::notify_signal(bool v) {
-        signal_ = v;
-    }
+    void EdgeDetector::notify_signal(bool v) { signal_ = v; }
 
     EdgeDetector::Type EdgeDetector::check_edge() {
         const auto output = this->edge_type();
@@ -25,34 +21,35 @@ namespace sung {
             return Type::none;
     }
 
-}
+}  // namespace sung
 
 
 // LongPressDetector
 namespace sung {
 
-    LongPressDetector::Type LongPressDetector::notify_poll(bool pressed, double threshold_sec) {
+    LongPressDetector::Type LongPressDetector::notify_poll(
+        bool pressed, double threshold
+    ) {
         switch (edge_detector_.notify_check_edge(pressed)) {
-        case EdgeDetector::Type::rising:
-            last_state_changed_.check();
-            break;
-        case EdgeDetector::Type::falling:
-            if (!consumed_ && last_state_changed_.elapsed() < threshold_sec) {
+            case EdgeDetector::Type::rising:
                 last_state_changed_.check();
-                consumed_ = false;
-                return Type::short_press;
-            }
-            else {
-                last_state_changed_.check();
-                consumed_ = false;
-                return Type::none;
-            }
-            break;
+                break;
+            case EdgeDetector::Type::falling:
+                if (!consumed_ && last_state_changed_.elapsed() < threshold) {
+                    last_state_changed_.check();
+                    consumed_ = false;
+                    return Type::short_press;
+                } else {
+                    last_state_changed_.check();
+                    consumed_ = false;
+                    return Type::none;
+                }
+                break;
         }
 
         if (consumed_)
             return Type::none;
-        if (pressed && last_state_changed_.elapsed() >= threshold_sec) {
+        if (pressed && last_state_changed_.elapsed() >= threshold) {
             consumed_ = true;
             return Type::long_press;
         }
@@ -60,7 +57,7 @@ namespace sung {
         return Type::none;
     }
 
-}
+}  // namespace sung
 
 
 // PulseResponseFuture
@@ -69,19 +66,13 @@ namespace sung {
     class PulseResponseFuture::Record {
 
     public:
-        explicit
-        Record(double delay_sec)
-            : delay_sec_(delay_sec)
-        { }
+        explicit Record(double delay_sec) : delay_sec_(delay_sec) {}
 
-        bool expired() const {
-            return timer_.elapsed() >= delay_sec_;
-        }
+        bool expired() const { return timer_.elapsed() >= delay_sec_; }
 
     private:
         TimeChecker timer_;
         double delay_sec_;
-
     };
 
 
@@ -99,4 +90,4 @@ namespace sung {
         return false;
     }
 
-}
+}  // namespace sung

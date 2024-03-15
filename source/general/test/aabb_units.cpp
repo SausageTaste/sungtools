@@ -8,8 +8,8 @@ namespace {
     int test_distance_aabb1() {
         using Distance = sung::TDistance<T>;
 
-        constexpr auto                  MIN_RANGE = Distance::from_nm(1);
-        constexpr auto                  MAX_RANGE = Distance::from_nm(2);
+        constexpr auto MIN_RANGE = Distance::from_nm(1);
+        constexpr auto MAX_RANGE = Distance::from_nm(2);
         constexpr sung::AABB1<Distance> aabb(MIN_RANGE, MAX_RANGE);
 
         static_assert(
