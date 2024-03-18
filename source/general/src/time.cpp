@@ -1,6 +1,7 @@
 #include "sung/general/time.hpp"
 
 #include <thread>
+#include <ctime>
 
 
 namespace sung {
@@ -43,7 +44,7 @@ namespace sung {
     TimePoint TimePoint::from_total_sec(double total_seconds) {
         namespace chr = std::chrono;
         const auto duration = chr::duration<double>(total_seconds);
-        const auto nanoseconds = chr::duration_cast<chr::nanoseconds>(duration);
+        const auto nanoseconds = chr::duration_cast<Clock_t::duration>(duration);
         return TimePoint{ Clock_t::time_point{ nanoseconds } };
     }
 

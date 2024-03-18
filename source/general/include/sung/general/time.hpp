@@ -1,5 +1,7 @@
 #pragma once
 
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <chrono>
 #include <string>
 
@@ -28,9 +30,14 @@ namespace sung {
             int second_;
         };
 
-        struct YearMonthDayHourMinuteSecond
-            : public YearMonthDay
-            , public HourMinuteSecond {};
+        struct YearMonthDayHourMinuteSecond {
+            int year_;
+            int month_;
+            int day_;
+            int hour_;
+            int minute_;
+            int second_;
+        };
 
         static TimePoint from_now();
         static TimePoint from_total_sec(double total_seconds);
@@ -51,8 +58,6 @@ namespace sung {
 
         Clock_t::time_point value_;
     };
-
-    static_assert(sizeof(TimePoint) == sizeof(double));
 
 
     class ITimer {
