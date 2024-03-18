@@ -35,6 +35,69 @@ namespace sung {
 }  // namespace sung
 
 
+// TimePoint
+namespace sung {
+
+    TimePoint TimePoint::from_now() { return TimePoint{ Clock_t::now() }; }
+
+    TimePoint TimePoint::from_total_sec(double total_seconds) {
+        namespace chr = std::chrono;
+        const auto duration = chr::duration<double>(total_seconds);
+        const auto nanoseconds = chr::duration_cast<chr::nanoseconds>(duration);
+        return TimePoint{ Clock_t::time_point{ nanoseconds } };
+    }
+
+    TimePoint TimePoint::from_time_point(Clock_t::time_point time_point) {
+        return TimePoint{ time_point };
+    }
+
+    TimePoint TimePoint::from_time_t(time_t time) {
+        return TimePoint{ Clock_t::from_time_t(time) };
+    }
+
+    double TimePoint::to_total_seconds() const {
+        namespace chr = std::chrono;
+        const auto since = Clock_t::now().time_since_epoch();
+        const auto nanoseconds = chr::duration_cast<chr::nanoseconds>(since);
+        return nanoseconds.count() / 1e9;
+    }
+
+    TimePoint::Clock_t::time_point TimePoint::to_time_point() const {
+        return value_;
+    }
+
+    time_t TimePoint::to_time_t() const {
+        return std::chrono::system_clock::to_time_t(this->to_time_point());
+    }
+
+    std::string TimePoint::to_datetime_text() const {
+        const auto time = this->to_time_t();
+        auto output = std::string{ std::ctime(&time) };
+        if (output.back() == '\n')
+            output.pop_back();
+
+        return output;
+    }
+
+    TimePoint::YearMonthDayHourMinuteSecond TimePoint::local_time() const {
+        const auto time = this->to_time_t();
+        const auto tm = localtime(&time);
+        return YearMonthDayHourMinuteSecond{ tm->tm_year + 1900, tm->tm_mon + 1,
+                                             tm->tm_mday,        tm->tm_hour,
+                                             tm->tm_min,         tm->tm_sec };
+    }
+
+    TimePoint::YearMonthDayHourMinuteSecond TimePoint::utc_time() const {
+        const auto time = this->to_time_t();
+        const auto tm = gmtime(&time);
+        return YearMonthDayHourMinuteSecond{ tm->tm_year + 1900, tm->tm_mon + 1,
+                                             tm->tm_mday,        tm->tm_hour,
+                                             tm->tm_min,         tm->tm_sec };
+    }
+
+}  // namespace sung
+
+
 // TimeChecker
 namespace sung {
 

@@ -14,6 +14,24 @@ namespace {
     };
 
 
+    TestResult test_timepoint() {
+        const auto tp = sung::TimePoint::from_now();
+        std::cout << "Time point of now      : " << tp.to_datetime_text()
+                  << " (" << std::fixed << tp.to_total_seconds() << ")\n";
+
+        const auto via_total_sec = sung::TimePoint::from_total_sec(
+            tp.to_total_seconds()
+        );
+        std::cout << "Time point of total sec: " << tp.to_datetime_text()
+                  << " (" << via_total_sec.to_total_seconds() << ")\n";
+
+        const auto via_time_t = sung::TimePoint::from_time_t(tp.to_time_t());
+        std::cout << "Time point of time_t   : " << tp.to_datetime_text()
+                  << " (" << via_time_t.to_total_seconds() << ")\n";
+
+        return TEST_RESULT_SUCCESS;
+    }
+
     TestResult test_min() {
         sung::TimeChecker sw;
         sw.set_min();
@@ -57,7 +75,11 @@ namespace {
 
 
 int main() {
-    auto result = test_min();
+    auto result = test_timepoint();
+    if (TEST_RESULT_SUCCESS != result)
+        return result;
+
+    result = test_min();
     if (TEST_RESULT_SUCCESS != result)
         return result;
 
@@ -65,8 +87,7 @@ int main() {
     if (TEST_RESULT_SUCCESS != result)
         return result;
 
-    result = test_sleep([](double seconds) { sung::sleep_hybrid(seconds, 0.5); }
-    );
+    result = test_sleep([](double sec) { sung::sleep_hybrid(sec, 0.5); });
     if (TEST_RESULT_SUCCESS != result)
         return result;
 

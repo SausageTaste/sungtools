@@ -1,6 +1,7 @@
 #pragma once
 
 #include <chrono>
+#include <string>
 
 
 namespace sung {
@@ -8,6 +9,50 @@ namespace sung {
     void sleep_naive(double seconds);
     void sleep_loop(double seconds);
     void sleep_hybrid(double seconds, double proportion = 0.5);
+
+
+    class TimePoint {
+
+    public:
+        using Clock_t = std::chrono::system_clock;
+
+        struct YearMonthDay {
+            int year_;
+            int month_;
+            int day_;
+        };
+
+        struct HourMinuteSecond {
+            int hour_;
+            int minute_;
+            int second_;
+        };
+
+        struct YearMonthDayHourMinuteSecond
+            : public YearMonthDay
+            , public HourMinuteSecond {};
+
+        static TimePoint from_now();
+        static TimePoint from_total_sec(double total_seconds);
+        static TimePoint from_time_point(Clock_t::time_point time_point);
+        static TimePoint from_time_t(time_t time);
+
+        // Since epoch
+        auto to_total_seconds() const -> double;
+        auto to_time_point() const -> Clock_t::time_point;
+        auto to_time_t() const -> time_t;
+        auto to_datetime_text() const -> std::string;
+
+        YearMonthDayHourMinuteSecond local_time() const;
+        YearMonthDayHourMinuteSecond utc_time() const;
+
+    private:
+        TimePoint(Clock_t::time_point value) : value_(value) {}
+
+        Clock_t::time_point value_;
+    };
+
+    static_assert(sizeof(TimePoint) == sizeof(double));
 
 
     class ITimer {
