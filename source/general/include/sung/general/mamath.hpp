@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdint>
 
 #define SUNG_PI (3.14159265358979323846)
 #define SUNG_TAU (SUNG_PI * 2)
