@@ -39,6 +39,14 @@ namespace sung {
 // TimePoint
 namespace sung {
 
+    bool TimePoint::operator==(const TimePoint& rhs) const {
+        return value_ == rhs.value_;
+    }
+
+    bool TimePoint::operator!=(const TimePoint& rhs) const {
+        return value_ != rhs.value_;
+    }
+
     TimePoint TimePoint::from_now() { return TimePoint{ Clock_t::now() }; }
 
     TimePoint TimePoint::from_total_sec(double total_seconds) {

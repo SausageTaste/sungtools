@@ -39,6 +39,11 @@ namespace sung {
             int second_;
         };
 
+        TimePoint() = default;
+
+        bool operator==(const TimePoint& rhs) const;
+        bool operator!=(const TimePoint& rhs) const;
+
         static TimePoint from_now();
         static TimePoint from_total_sec(double total_seconds);
         static TimePoint from_time_point(Clock_t::time_point time_point);
