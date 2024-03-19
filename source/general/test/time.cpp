@@ -17,11 +17,13 @@ namespace {
         EXPECT_EQ(tp.to_time_point(), tp_move.to_time_point());
     }
 
+
     TEST(Timer, TimeCheckerMin) {
         sung::TimeChecker sw;
         sw.set_min();
         EXPECT_GE(sw.elapsed(), 0) << "Elapsed time of min is less than 0";
     }
+
 
     TEST(Timer, Sleep) {
         constexpr double SLEEP_SEC = 1;

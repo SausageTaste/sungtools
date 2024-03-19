@@ -1,30 +1,30 @@
-#include <iostream>
 #include <string>
+
+#include <gtest/gtest.h>
 
 #include "sung/general/optional.hpp"
 
 
 namespace {
 
-    void try_print(const sung::Optional<std::string>& opt) {
-        if (opt)
-            std::cout << "opt has value: " << *opt << std::endl;
-        else
-            std::cout << "opt has no value" << std::endl;
+    TEST(Optional, Basic) {
+        sung::Optional<std::string> opt_int;
+        EXPECT_FALSE(opt_int.has_value());
+        EXPECT_THROW(opt_int.value().clear(), sung::bad_optional_access);
+
+        opt_int = "Hello, World!";
+        EXPECT_TRUE(opt_int.has_value());
+        EXPECT_STREQ(opt_int->c_str(), "Hello, World!");
+
+        opt_int = sung::nullopt;
+        EXPECT_FALSE(opt_int.has_value());
+        EXPECT_THROW(opt_int.value().clear(), sung::bad_optional_access);
     }
 
 }  // namespace
 
 
-int main() {
-    sung::Optional<std::string> opt_int;
-    ::try_print(opt_int);
-
-    opt_int = "Hello, World!";
-    ::try_print(opt_int);
-
-    opt_int = sung::nullopt;
-    ::try_print(opt_int);
-
-    return 0;
+int main(int argc, char** argv) {
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

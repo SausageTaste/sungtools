@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 
+#include <gtest/gtest.h>
+
 #include "sung/general/expected.hpp"
 #include "sung/general/os_detect.hpp"
 
@@ -16,21 +18,18 @@ namespace {
         return output;
     }
 
+
+    TEST(Expected, Basic) {
+        const auto result0 = ::divide(1.0, 0.0);
+        EXPECT_THROW(result0.value(), sung::bad_expected_access<std::string>);
+        const auto result1 = ::divide(1.0, 2.0);
+        EXPECT_DOUBLE_EQ(result1.value(), 0.5);
+    }
+
 }  // namespace
 
 
-int main() {
-    const auto result0 = ::divide(1.0, 0.0);
-    if (result0.has_value())
-        std::cout << "Result: " << result0.value() << std::endl;
-    else
-        std::cout << "Error: " << result0.error() << std::endl;
-
-    const auto result1 = ::divide(1.0, 2.0);
-    if (result1.has_value())
-        std::cout << "Result: " << result1.value() << std::endl;
-    else
-        std::cout << "Error: " << result1.error() << std::endl;
-
-    return 0;
+int main(int argc, char** argv) {
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

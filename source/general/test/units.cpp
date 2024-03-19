@@ -1,10 +1,12 @@
+#include <gtest/gtest.h>
+
 #include "sung/general/units.hpp"
 #include "sung/general/mamath.hpp"
 
 
 namespace {
 
-    int test_distance_conversions() {
+    TEST(Units, DistanceConversions) {
         using Distance = sung::TDistance<float>;
 
         constexpr auto distance_m = Distance::from_m(1000);
@@ -26,12 +28,10 @@ namespace {
             ),
             "Distance conversion failed"
         );
-
-        return 0;
     }
 
 
-    int test_speed_conversions() {
+    TEST(Units, SpeedConversions) {
         using Speed = sung::TSpeed<float>;
 
         constexpr auto speed_ms = Speed::from_ms(100);
@@ -46,18 +46,12 @@ namespace {
             sung::are_similiar(speed_ms.mph(), speed_mph.mph(), 0.001f),
             "Speed conversion failed"
         );
-
-        return 0;
     }
 
 }  // namespace
 
 
-int main() {
-    if (0 != test_distance_conversions())
-        return 1;
-    if (0 != test_speed_conversions())
-        return 2;
-
-    return 0;
+int main(int argc, char** argv) {
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

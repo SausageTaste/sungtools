@@ -1,12 +1,13 @@
+#include <gtest/gtest.h>
+
 #include "sung/general/aabb.hpp"
 #include "sung/general/units.hpp"
 
 
 namespace {
 
-    template <typename T>
-    int test_distance_aabb1() {
-        using Distance = sung::TDistance<T>;
+    TEST(AABB, WithDistance) {
+        using Distance = sung::TDistance<float>;
 
         constexpr auto MIN_RANGE = Distance::from_nm(1);
         constexpr auto MAX_RANGE = Distance::from_nm(2);
@@ -25,18 +26,12 @@ namespace {
         static_assert(
             aabb.len() == Distance::from_nm(1), "AABB1 length failed"
         );
-
-        return 0;
     }
 
 }  // namespace
 
 
-int main() {
-    if (0 != test_distance_aabb1<double>())
-        return 1;
-    if (0 != test_distance_aabb1<float>())
-        return 1;
-
-    return 0;
+int main(int argc, char** argv) {
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

@@ -1,10 +1,12 @@
+#include <gtest/gtest.h>
+
 #include "sung/general/aabb.hpp"
 
 
 namespace {
 
-    template <typename T>
-    int test_aabb1() {
+    TEST(AABB, FloatAABB1) {
+        using T = float;
         using AABB1 = sung::AABB1<T>;
 
         constexpr AABB1 aabb{ -1, 2 };
@@ -28,12 +30,11 @@ namespace {
         static_assert(
             intersection2 == sung::nullopt, "AABB1::make_intersection failed"
         );
-
-        return 0;
     }
 
-    template <typename T>
-    int test_aabb2() {
+
+    TEST(AABB, FloatAABB2) {
+        using T = float;
         using AABB2 = sung::AABB2<T>;
 
         constexpr AABB2 a{ 2, -1, 3, 5 };
@@ -64,12 +65,11 @@ namespace {
             a_expanded.are_similar(AABB2{ 12, -1, -12, 5 }, (T)0.001),
             "AABB2::get_expanded_to_span failed"
         );
-
-        return 0;
     }
 
-    template <typename T>
-    int test_aabb3() {
+
+    TEST(AABB, FloatAABB3) {
+        using T = float;
         using Vec3 = sung::TVec3<T>;
         using AABB3 = sung::AABB3<T>;
 
@@ -112,37 +112,12 @@ namespace {
             a_expanded.are_similar(AABB3{ 12, -1, -12, 5, 0, 11 }, (T)0.001),
             "AABB3::get_expanded_to_span failed"
         );
-
-        return 0;
     }
 
 }  // namespace
 
 
-int main() {
-    auto result = ::test_aabb1<float>();
-    if (0 != result)
-        return result;
-
-    result = ::test_aabb1<double>();
-    if (0 != result)
-        return result;
-
-    result = ::test_aabb2<float>();
-    if (0 != result)
-        return result;
-
-    result = ::test_aabb2<double>();
-    if (0 != result)
-        return result;
-
-    result = ::test_aabb3<float>();
-    if (0 != result)
-        return result;
-
-    result = ::test_aabb3<double>();
-    if (0 != result)
-        return result;
-
-    return 0;
+int main(int argc, char** argv) {
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
