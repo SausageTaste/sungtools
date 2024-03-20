@@ -1,4 +1,5 @@
 import os
+import datetime
 import shutil
 
 
@@ -8,7 +9,7 @@ def get_root_path():
 
 def main():
     root_path = get_root_path()
-    bundle_path = os.path.join(root_path, "bundle")
+    bundle_path = os.path.join(root_path, f"bundle_{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}")
     source_path = os.path.join(root_path, "source")
     bundle_include_path = os.path.join(bundle_path, "include")
 
