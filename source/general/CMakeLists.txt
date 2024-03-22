@@ -19,6 +19,7 @@ if (SUNG_ENABLE_TEST)
     sungtools_add_test(linalg test/linalg.cpp)
     sungtools_add_test(logicgate test/logic_gate.cpp)
     sungtools_add_test(optional test/optional.cpp)
+    sungtools_add_test(random test/random.cpp)
     sungtools_add_test(time test/time.cpp)
     sungtools_add_test(units test/units.cpp)
 

@@ -1,41 +1,14 @@
-#include <chrono>
-#include <random>
-
 #include <gtest/gtest.h>
 
 #include "sung/general/angle.hpp"
-
-
-namespace {
-
-    template <typename T>
-    class RandomDoubleGenerator {
-
-    public:
-        RandomDoubleGenerator(T lower_bound, T upper_bound)
-            : unif_(lower_bound, upper_bound) {
-            const auto now = std::chrono::high_resolution_clock::now();
-            const auto time_seed = now.time_since_epoch().count();
-            std::seed_seq ss{ uint32_t(time_seed & 0xffffffff),
-                              uint32_t(time_seed >> 32) };
-            rng_.seed(ss);
-        }
-
-        T gen() { return unif_(rng_); }
-
-    private:
-        std::mt19937_64 rng_;
-        std::uniform_real_distribution<T> unif_;
-    };
-
-}  // namespace
+#include "sung/general/random.hpp"
 
 
 // Diff calculation test
 namespace {
 
     TEST(Angle, ShortestDiffCalcEq) {
-        ::RandomDoubleGenerator<double> rng{ -1e3, 1e3 };
+        sung::RandomRealNumGenerator<double> rng{ -1e3, 1e3 };
 
         for (int i = 0; i < 100; ++i) {
             const auto a_deg = rng.gen();
@@ -53,7 +26,7 @@ namespace {
 
     TEST(Angle, BinaryOperation) {
         using Angle = sung::TAngle<double>;
-        ::RandomDoubleGenerator<double> rng{ -1e3, 1e3 };
+        sung::RandomRealNumGenerator<double> rng{ -1e3, 1e3 };
 
         for (int i = 0; i < 100; ++i) {
             const auto a_deg = rng.gen();
