@@ -1,7 +1,9 @@
 #include "sung/general/time.hpp"
 
-#include <thread>
 #include <ctime>
+#include <iomanip>
+#include <sstream>
+#include <thread>
 
 
 namespace sung {
@@ -52,8 +54,8 @@ namespace sung {
     TimePoint TimePoint::from_total_sec(double total_seconds) {
         namespace chr = std::chrono;
         const auto duration = chr::duration<double>(total_seconds);
-        const auto nanoseconds = chr::duration_cast<Clock_t::duration>(duration);
-        return TimePoint{ Clock_t::time_point{ nanoseconds } };
+        const auto ns = chr::duration_cast<Clock_t::duration>(duration);
+        return TimePoint{ Clock_t::time_point{ ns } };
     }
 
     TimePoint TimePoint::from_time_point(Clock_t::time_point time_point) {
@@ -76,10 +78,10 @@ namespace sung {
     }
 
     time_t TimePoint::to_time_t() const {
-        return std::chrono::system_clock::to_time_t(this->to_time_point());
+        return std::chrono::system_clock::to_time_t(value_);
     }
 
-    std::string TimePoint::to_datetime_text() const {
+    std::string TimePoint::make_locale_text() const {
         const auto time = this->to_time_t();
         auto output = std::string{ std::ctime(&time) };
         if (output.back() == '\n')
@@ -88,20 +90,28 @@ namespace sung {
         return output;
     }
 
+    std::string TimePoint::make_sortable_text(bool utc) const {
+        const auto time = this->to_time_t();
+        const auto tm = *(utc ? gmtime(&time) : localtime(&time));
+        std::stringstream ss;
+        ss << std::put_time(&tm, "%Y-%m-%d_%H-%M-%S");
+        return ss.str();
+    }
+
     TimePoint::YearMonthDayHourMinuteSecond TimePoint::local_time() const {
         const auto time = this->to_time_t();
-        const auto tm = localtime(&time);
-        return YearMonthDayHourMinuteSecond{ tm->tm_year + 1900, tm->tm_mon + 1,
-                                             tm->tm_mday,        tm->tm_hour,
-                                             tm->tm_min,         tm->tm_sec };
+        const auto tm = *localtime(&time);
+        return YearMonthDayHourMinuteSecond{ tm.tm_year + 1900, tm.tm_mon + 1,
+                                             tm.tm_mday,        tm.tm_hour,
+                                             tm.tm_min,         tm.tm_sec };
     }
 
     TimePoint::YearMonthDayHourMinuteSecond TimePoint::utc_time() const {
         const auto time = this->to_time_t();
-        const auto tm = gmtime(&time);
-        return YearMonthDayHourMinuteSecond{ tm->tm_year + 1900, tm->tm_mon + 1,
-                                             tm->tm_mday,        tm->tm_hour,
-                                             tm->tm_min,         tm->tm_sec };
+        const auto tm = *gmtime(&time);
+        return YearMonthDayHourMinuteSecond{ tm.tm_year + 1900, tm.tm_mon + 1,
+                                             tm.tm_mday,        tm.tm_hour,
+                                             tm.tm_min,         tm.tm_sec };
     }
 
 }  // namespace sung

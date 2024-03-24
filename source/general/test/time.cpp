@@ -15,6 +15,10 @@ namespace {
         sung::TimePoint tp_move;
         tp_move = std::move(tp_copy);
         EXPECT_EQ(tp.to_time_point(), tp_move.to_time_point());
+
+        std::cout << tp.make_sortable_text(false) << std::endl;
+        std::cout << tp.make_sortable_text(true) << std::endl;
+        std::cout << tp.make_locale_text() << std::endl;
     }
 
 

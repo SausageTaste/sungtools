@@ -53,7 +53,9 @@ namespace sung {
         auto to_total_seconds() const -> double;
         auto to_time_point() const -> Clock_t::time_point;
         auto to_time_t() const -> time_t;
-        auto to_datetime_text() const -> std::string;
+
+        std::string make_locale_text() const;
+        std::string make_sortable_text(bool utc) const;
 
         YearMonthDayHourMinuteSecond local_time() const;
         YearMonthDayHourMinuteSecond utc_time() const;
