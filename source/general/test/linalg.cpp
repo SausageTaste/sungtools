@@ -22,6 +22,29 @@ namespace {
     }
 
 
+    TEST(Linalg, MatrixOperators) {
+        using T = float;
+        using Mat4 = sung::TMat4<T>;
+
+        Mat4 m0{ { 1, 2, 3, 4 },
+                 { 5, 6, 7, 8 },
+                 { 9, 10, 11, 12 },
+                 { 13, 14, 15, 16 } };
+
+        m0.set_column(3, 101, 102, 103, 104);
+        EXPECT_FLOAT_EQ(m0.at(0, 3), 101);
+        EXPECT_FLOAT_EQ(m0.at(1, 3), 102);
+        EXPECT_FLOAT_EQ(m0.at(2, 3), 103);
+        EXPECT_FLOAT_EQ(m0.at(3, 3), 104);
+
+        m0.set_row(3, 201, 202, 203, 204);
+        EXPECT_FLOAT_EQ(m0.at(3, 0), 201);
+        EXPECT_FLOAT_EQ(m0.at(3, 1), 202);
+        EXPECT_FLOAT_EQ(m0.at(3, 2), 203);
+        EXPECT_FLOAT_EQ(m0.at(3, 3), 204);
+    }
+
+
     TEST(Linalg, MatrixTransform) {
         using Vec3 = sung::TVec4<float>;
         using Vec4 = sung::TVec4<float>;

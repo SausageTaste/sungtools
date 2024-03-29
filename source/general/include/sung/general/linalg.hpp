@@ -280,7 +280,17 @@ namespace sung {
     class TMat4 {
 
     public:
+        using Vec4 = TVec4<T>;
+
         constexpr TMat4() = default;
+
+        constexpr TMat4(
+            const Vec4& row0,
+            const Vec4& row1,
+            const Vec4& row2,
+            const Vec4& row3
+        )
+            : elements_{ row0, row1, row2, row3 } {}
 
         constexpr static TMat4 identity() {
             TMat4 m;
@@ -328,17 +338,39 @@ namespace sung {
         constexpr T at(size_t row, size_t col) const {
             return elements_[row][col];
         }
-        constexpr TVec4<T>& row(size_t r) { return elements_[r]; }
-        constexpr const TVec4<T>& row(size_t r) const { return elements_[r]; }
 
-        constexpr TVec4<T> column(size_t c) const {
-            return TVec4<T>{
+        constexpr const Vec4& row(size_t r) const { return elements_[r]; }
+        constexpr void set_row(size_t r, const Vec4& v) { elements_[r] = v; }
+        constexpr void set_row(size_t r, T x, T y, T z, T w) {
+            elements_[r] = Vec4{ x, y, z, w };
+        }
+
+        constexpr Vec4 column(size_t c) const {
+            return Vec4{
                 this->at(0, c), this->at(1, c), this->at(2, c), this->at(3, c)
             };
         }
+        constexpr void set_column(size_t c, const Vec4& v) {
+            this->at(0, c) = v.x();
+            this->at(1, c) = v.y();
+            this->at(2, c) = v.z();
+            this->at(3, c) = v.w();
+        }
+        constexpr void set_column(size_t c, T x, T y, T z, T w) {
+            this->at(0, c) = x;
+            this->at(1, c) = y;
+            this->at(2, c) = z;
+            this->at(3, c) = w;
+        }
+
+        constexpr TMat4 inverse() const {
+            TMat4 result;
+            const auto& m = *this;
+
+        }
 
     private:
-        TVec4<T> elements_[4];
+        Vec4 elements_[4];
     };
 
     static_assert(
