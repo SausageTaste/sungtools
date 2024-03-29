@@ -3,6 +3,10 @@
 #include "sung/general/angle.hpp"
 #include "sung/general/linalg.hpp"
 
+// Static ASSERT SIMILAR Double
+#define SASSERT_SIMILARD(a, b) \
+    static_assert(sung::are_similiar((T)(a), (T)(b), (T)(1e-10)), "")
+
 
 namespace {
 
@@ -22,7 +26,66 @@ namespace {
     }
 
 
-    TEST(Linalg, MatrixOperators) {
+    TEST(Linalg, Matrix3x3Operators) {
+        using T = double;
+        using Mat3 = sung::TMat3<T>;
+
+        {
+            constexpr Mat3 m{ { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
+
+            constexpr auto det = m.determinant();
+            SASSERT_SIMILARD(det, 0);
+
+            constexpr auto inv = m.inverse();
+            static_assert(!inv.has_value(), "");
+        }
+
+        {
+            constexpr Mat3 m{ { 456, 231, 8 }, { 635, 2, 4 }, { 632, 48, 9 } };
+            constexpr auto det = m.determinant();
+            SASSERT_SIMILARD(det, -581813.0, 0);
+
+            constexpr auto inv = m.inverse();
+            SASSERT_SIMILARD(inv->at(0, 0), 0.00029906516354911285965);
+            SASSERT_SIMILARD(inv->at(0, 1), 0.002913307196642220095);
+            SASSERT_SIMILARD(inv->at(0, 2), -0.0015606388994401981396);
+            SASSERT_SIMILARD(inv->at(1, 0), 0.0054777050358104751868);
+            SASSERT_SIMILARD(inv->at(1, 1), 0.0016362645729813531142);
+            SASSERT_SIMILARD(inv->at(1, 2), -0.0055962998420454682165);
+            SASSERT_SIMILARD(inv->at(2, 0), -0.050215447231326904026);
+            SASSERT_SIMILARD(inv->at(2, 1), -0.2133056497534431166);
+            SASSERT_SIMILARD(inv->at(2, 2), 0.25054957520715418872);
+
+            static_assert(Mat3::identity().are_similar(m * (*inv), 1e-10), "");
+            static_assert(m.are_similar(*inv->inverse(), 1e-10), "");
+        }
+
+        {
+            constexpr Mat3 m{ { -0.123, 0.456, 1.2 },
+                              { 1.635, -0.0002, 0 },
+                              { 0.748, -2.2, 155 } };
+
+            constexpr auto det = m.determinant();
+            SASSERT_SIMILARD(det, -119.87420748);
+
+            constexpr auto inv = m.inverse();
+            SASSERT_SIMILARD(inv->at(0, 0), 0.00025860442084817989919);
+            SASSERT_SIMILARD(inv->at(0, 1), 0.61164116569640573693);
+            SASSERT_SIMILARD(inv->at(0, 2), -0.0000020020987420504277357);
+            SASSERT_SIMILARD(inv->at(1, 0), 2.1140911404338737571);
+            SASSERT_SIMILARD(inv->at(1, 1), 0.16652956811689947032);
+            SASSERT_SIMILARD(inv->at(1, 2), -0.016367157216262248444);
+            SASSERT_SIMILARD(inv->at(2, 0), 0.030005206921598244049);
+            SASSERT_SIMILARD(inv->at(2, 1), -0.00058801640054021068715);
+            SASSERT_SIMILARD(inv->at(2, 2), 0.0062193145270585942399);
+
+            static_assert(Mat3::identity().are_similar(m * (*inv), 1e-10), "");
+            static_assert(m.are_similar(*inv->inverse(), 1e-10), "");
+        }
+    }
+
+
+    TEST(Linalg, Matrix4x4Operators) {
         using T = float;
         using Mat4 = sung::TMat4<T>;
 
@@ -45,7 +108,7 @@ namespace {
     }
 
 
-    TEST(Linalg, MatrixTransform) {
+    TEST(Linalg, Matrix4x4Transform) {
         using Vec3 = sung::TVec4<float>;
         using Vec4 = sung::TVec4<float>;
         using Mat = sung::TMat4<float>;
