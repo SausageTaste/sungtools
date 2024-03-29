@@ -43,7 +43,7 @@ namespace {
         {
             constexpr Mat3 m{ { 456, 231, 8 }, { 635, 2, 4 }, { 632, 48, 9 } };
             constexpr auto det = m.determinant();
-            SASSERT_SIMILARD(det, -581813.0, 0);
+            SASSERT_SIMILARD(det, -581813.0);
 
             constexpr auto inv = m.inverse();
             SASSERT_SIMILARD(inv->at(0, 0), 0.00029906516354911285965);
@@ -58,6 +58,9 @@ namespace {
 
             static_assert(Mat3::identity().are_similar(m * (*inv), 1e-10), "");
             static_assert(m.are_similar(*inv->inverse(), 1e-10), "");
+
+            constexpr Mat3::Vec3 v{ 1, 2, 3 };
+            static_assert(v.are_similar(inv.value() * m * v, 1e-10), "");
         }
 
         {
@@ -81,6 +84,9 @@ namespace {
 
             static_assert(Mat3::identity().are_similar(m * (*inv), 1e-10), "");
             static_assert(m.are_similar(*inv->inverse(), 1e-10), "");
+
+            constexpr Mat3::Vec3 v{ 1, 2, 3 };
+            static_assert(v.are_similar(inv.value() * m * v, 1e-10), "");
         }
     }
 

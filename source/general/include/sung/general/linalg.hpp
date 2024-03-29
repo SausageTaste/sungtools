@@ -382,6 +382,13 @@ namespace sung {
         return result;
     }
 
+    template <typename T>
+    constexpr TVec3<T> operator*(const TMat3<T>& m, const TVec3<T>& v) {
+        return TVec3<T>{
+            m.row(0).dot(v), m.row(1).dot(v), m.row(2).dot(v)
+        };
+    }
+
 
     template <typename T>
     class TMat4 {
@@ -495,7 +502,6 @@ namespace sung {
         }
         return result;
     }
-
 
     template <typename T>
     constexpr TVec4<T> operator*(const TMat4<T>& m, const TVec4<T>& v) {
