@@ -24,46 +24,77 @@ namespace {
         return glm::vec4(v.x(), v.y(), v.z(), v.w());
     }
 
+
+    class RandomTestGen {
+
+    public:
+        auto gen_scalar() { return rng_.gen(); }
+
+        auto gen_vec3() {
+            return sung::TVec3<float>{ rng_.gen(), rng_.gen(), rng_.gen() };
+        }
+
+        auto gen_vec4() {
+            return sung::TVec4<float>{
+                rng_.gen(), rng_.gen(), rng_.gen(), rng_.gen()
+            };
+        }
+
+    private:
+        sung::RandomRealNumGenerator<float> rng_{ -10000.f, 10000.f };
+    };
+
 }  // namespace
 
 
 namespace {
 
     TEST(LinalgGlm, Vec3) {
-        sung::RandomRealNumGenerator<float> rng(-10000.f, 10000.f);
+        ::RandomTestGen rng;
 
         for (int i = 0; i < 1000; ++i) {
-            const glm::vec3 vg0(rng.gen(), rng.gen(), rng.gen());
-            const auto vs0 = vec_cast(vg0);
-
+            const auto vs0 = rng.gen_vec3();
+            const auto vg0 = vec_cast(vs0);
             EXPECT_FLOAT_EQ(vg0.x, vs0.x());
             EXPECT_FLOAT_EQ(vg0.y, vs0.y());
             EXPECT_FLOAT_EQ(vg0.z, vs0.z());
 
-            const sung::TVec3<float> vs1(rng.gen(), rng.gen(), rng.gen());
+            const auto vs1 = rng.gen_vec3();
             const auto vg1 = vec_cast(vs1);
-
             EXPECT_FLOAT_EQ(vg1.x, vs1.x());
             EXPECT_FLOAT_EQ(vg1.y, vs1.y());
             EXPECT_FLOAT_EQ(vg1.z, vs1.z());
-
             EXPECT_FLOAT_EQ(glm::dot(vg0, vg1), sung::dot(vs0, vs1));
+
+            const auto vs_add = vs0 + vs1;
+            const auto vg_add = vg0 + vg1;
+            EXPECT_FLOAT_EQ(vg_add.x, vs_add.x());
+            EXPECT_FLOAT_EQ(vg_add.y, vs_add.y());
+            EXPECT_FLOAT_EQ(vg_add.z, vs_add.z());
+
+            const auto vs_cross = sung::cross(vs0, vs1);
+            const auto vg_cross = glm::cross(vg0, vg1);
+            EXPECT_FLOAT_EQ(vg_cross.x, vs_cross.x());
+            EXPECT_FLOAT_EQ(vg_cross.y, vs_cross.y());
+            EXPECT_FLOAT_EQ(vg_cross.z, vs_cross.z());
         }
+
+        return;
     }
 
 
     TEST(LinalgGlm, VectorTranslation) {
         using Vec3 = sung::TVec3<float>;
         using Mat4 = sung::TMat4<float>;
-        sung::RandomRealNumGenerator<float> rng(-10000.f, 10000.f);
+        ::RandomTestGen rng;
 
         for (int i = 0; i < 1000; ++i) {
-            const glm::vec4 v_glm(rng.gen(), rng.gen(), rng.gen(), 1);
-            const auto v_sung = vec_cast(v_glm);
+            const auto v_sung = rng.gen_vec4();
+            const auto v_glm = vec_cast(v_sung);
 
-            const glm::vec3 offset(rng.gen(), rng.gen(), rng.gen());
-            const auto mat_glm = glm::translate(glm::mat4(1.f), offset);
-            const auto mat_sung = Mat4::translate(offset.x, offset.y, offset.z);
+            const auto offset = rng.gen_vec3();
+            const auto mat_glm = glm::translate(glm::mat4(1), vec_cast(offset));
+            const auto mat_sung = Mat4::translate(offset);
 
             const auto col_glm = mat_glm[3];  // glm is column major
             const auto col_sung = mat_sung.column(3);
@@ -81,6 +112,8 @@ namespace {
             EXPECT_FLOAT_EQ(v2_glm.z, v2_sung.z());
             EXPECT_FLOAT_EQ(v2_glm.w, v2_sung.w());
         }
+
+        return;
     }
 
 
@@ -88,22 +121,18 @@ namespace {
         using Vec3 = sung::TVec3<float>;
         using Mat4 = sung::TMat4<float>;
         constexpr float EPSILON = 1e-2f;
-        sung::RandomRealNumGenerator<float> rng(-10000.f, 10000.f);
+        ::RandomTestGen rng;
 
         for (int i = 0; i < 1000; ++i) {
-            const glm::vec4 v_glm(rng.gen(), rng.gen(), rng.gen(), 0);
-            const auto v_sung = vec_cast(v_glm);
+            const auto v_sung = rng.gen_vec4();
+            const auto v_glm = vec_cast(v_sung);
+            const auto axis_sung = rng.gen_vec3().normalize();
+            const auto axis_glm = vec_cast(axis_sung);
+            const auto angle = rng.gen_scalar();
 
-            const glm::vec3 axis_glm(rng.gen(), rng.gen(), rng.gen());
-            const auto axis_glm_n = glm::normalize(axis_glm);
-            const auto axis_sung_n = vec_cast(axis_glm_n);
-
-            const auto angle = rng.gen();
-
-            const auto rot_glm = glm::mat4_cast(
-                glm::angleAxis(angle, axis_glm_n)
-            );
-            const auto rot_sung = Mat4::rotate_axis(axis_sung_n, angle);
+            const auto rot_sung = Mat4::rotate_axis(axis_sung, angle);
+            const auto rot_quat = glm::angleAxis(angle, axis_glm);
+            const auto rot_glm = glm::mat4_cast(rot_quat);
 
             const auto v2_glm = rot_glm * v_glm;
             const auto v2_sung = rot_sung * v_sung;
@@ -120,6 +149,8 @@ namespace {
             EXPECT_NEAR(v2_glm.z, v2_sung.z(), EPSILON);
             EXPECT_NEAR(v2_glm.w, v2_sung.w(), EPSILON);
         }
+
+        return;
     }
 
 }  // namespace

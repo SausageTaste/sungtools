@@ -394,6 +394,7 @@ namespace sung {
     class TMat4 {
 
     public:
+        using Vec3 = TVec3<T>;
         using Vec4 = TVec4<T>;
 
         constexpr TMat4() = default;
@@ -420,6 +421,14 @@ namespace sung {
             m.at(0, 3) = x;
             m.at(1, 3) = y;
             m.at(2, 3) = z;
+            return m;
+        }
+
+        constexpr static TMat4 translate(const Vec3& v) {
+            auto m = TMat4::identity();
+            m.at(0, 3) = v.x();
+            m.at(1, 3) = v.y();
+            m.at(2, 3) = v.z();
             return m;
         }
 
