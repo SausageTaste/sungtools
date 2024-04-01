@@ -445,6 +445,8 @@ namespace sung {
             output.elements_[2][0] = t * x * z - y * s;
             output.elements_[2][1] = t * y * z + x * s;
             output.elements_[2][2] = t * z * z + c;
+
+            output.elements_[3][3] = 1;
             return output;
         }
 
