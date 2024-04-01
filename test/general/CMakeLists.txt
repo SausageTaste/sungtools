@@ -21,6 +21,10 @@ add_executable(sungtest_general_linalg linalg.cpp)
 add_test(sungtest_general_linalg sungtest_general_linalg)
 target_link_libraries(sungtest_general_linalg ${LIB_GENERAL})
 
+add_executable(sungtest_general_linalg_glm linalg_glm.cpp)
+add_test(sungtest_general_linalg_glm sungtest_general_linalg_glm)
+target_link_libraries(sungtest_general_linalg_glm ${LIB_GENERAL} glm::glm)
+
 add_executable(sungtest_general_logicgate logic_gate.cpp)
 add_test(sungtest_general_logicgate sungtest_general_logicgate)
 target_link_libraries(sungtest_general_logicgate ${LIB_GENERAL})
