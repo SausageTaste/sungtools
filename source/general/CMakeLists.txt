@@ -1,6 +1,7 @@
 add_library(sungtools_general STATIC
     src/angle.cpp
     src/logic_gate.cpp
+    src/stringtool.cpp
     src/time.cpp
 )
 add_library(sungtools::general ALIAS sungtools_general)
