@@ -37,6 +37,10 @@ add_executable(sungtest_general_random random.cpp)
 add_test(sungtest_general_random sungtest_general_random)
 target_link_libraries(sungtest_general_random ${LIB_GENERAL})
 
+add_executable(sungtest_general_static_arr static_arr.cpp)
+add_test(sungtest_general_static_arr sungtest_general_static_arr)
+target_link_libraries(sungtest_general_static_arr ${LIB_GENERAL})
+
 add_executable(sungtest_general_stringtool stringtool.cpp)
 add_test(sungtest_general_stringtool sungtest_general_stringtool)
 target_link_libraries(sungtest_general_stringtool ${LIB_GENERAL})
