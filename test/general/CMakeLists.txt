@@ -17,6 +17,10 @@ add_executable(sungtest_general_expected expected.cpp)
 add_test(sungtest_general_expected sungtest_general_expected)
 target_link_libraries(sungtest_general_expected ${LIB_GENERAL})
 
+add_executable(sungtest_general_geometry3d geometry3d.cpp)
+add_test(sungtest_general_geometry3d sungtest_general_geometry3d)
+target_link_libraries(sungtest_general_geometry3d ${LIB_GENERAL})
+
 add_executable(sungtest_general_linalg linalg.cpp)
 add_test(sungtest_general_linalg sungtest_general_linalg)
 target_link_libraries(sungtest_general_linalg ${LIB_GENERAL})
