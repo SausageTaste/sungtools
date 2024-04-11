@@ -14,6 +14,7 @@ namespace {
         static_assert(aabb.mini() == -1, "AABB1::mini failed");
         static_assert(aabb.maxi() == 2, "AABB1::maxi failed");
         static_assert(aabb.len() == 3, "AABB1::len failed");
+        static_assert(aabb.mid() == 0.5, "AABB1::mid failed");
 
         static_assert(!aabb.is_inside_op(2), "AABB1::is_inside_op failed");
         static_assert(aabb.is_inside_cl(2), "AABB1::is_inside_cl failed");

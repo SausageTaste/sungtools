@@ -23,6 +23,8 @@ namespace {
             aabb.is_inside_cl(MAX_RANGE), "AABB1 is_contacting failed"
         );
         static_assert(!aabb.is_inside_op(MAX_RANGE), "AABB1 is_inside failed");
+
+        static_assert(aabb.mid() == Distance::from_nm(1.5), "AABB1 mid failed");
         static_assert(
             aabb.len() == Distance::from_nm(1), "AABB1 length failed"
         );

@@ -37,7 +37,7 @@ namespace sung {
         constexpr T mini() const { return min_; }
         constexpr T maxi() const { return max_; }
 
-        constexpr T mid() const { return (min_ + max_) / static_cast<T>(2); }
+        constexpr T mid() const { return (min_ + max_) / 2; }
         constexpr T len() const { return max_ - min_; }
 
         // Open interval
