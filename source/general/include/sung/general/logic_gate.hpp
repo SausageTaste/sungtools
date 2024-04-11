@@ -7,6 +7,17 @@
 
 namespace sung {
 
+    /*
+    Call `notify_signal` methods to notify the signal to the detector. The
+    signal is considered to be in the rising state when the input signal changes
+    from false to true. The signal is considered to be in the falling state when
+    the input signal changes from true to false. The signal is considered to be
+    in the none state when the input signal does not change.
+
+    Call one of the `check_*` methods periodically to poll the type of the
+    signal edge. Those methods with `check_` prefix will update the internal
+    state so you must not call it more than once in a loop.
+    */
     class EdgeDetector {
 
     public:
@@ -26,6 +37,8 @@ namespace sung {
         bool check_rising() { return Type::rising == this->check_edge(); }
         bool check_falling() { return Type::falling == this->check_edge(); }
         bool check_any_edge() { return Type::none != this->check_edge(); }
+
+        // This to to discard any edges currently detected
         void check() { last_checked_signal_ = signal_; }
 
         Type notify_check_edge(bool v) {
@@ -41,6 +54,26 @@ namespace sung {
     };
 
 
+    /*
+    Monostable Multivibrator (MMV) is an electronic circuit that has two states:
+    stable and unstable. When the input signal changes, the MMV will change its
+    state to unstable for a certain period of time. After that, it will return
+    to the stable state. False is the unstable state, and true is the stable
+    state.
+
+    This class is a retriggerable MMV. It will stay in the unstable state as
+    long as the input signal is true. If the input signal is false, the MMV will
+    return to the stable state after a certain period of time.
+
+    You can search for "monostable multivibrator" on the internet to get more
+    information.
+
+    You may use `sung::TimeChecker` for template parameter `TTimer` if your use
+    case needs a real time clock. But if you need to manually control the timer,
+    you may use `sung::TimeAccumulator` instead, in which case you need to
+    manually control the timer. You can access the timer object using the
+    `timer()` method.
+    */
     template <typename TTimer>
     class RetriggerableMonostableMultivibrator {
 
@@ -78,12 +111,17 @@ namespace sung {
     };
 
 
+    /*
+    This is same as `RetriggerableMonostableMultivibrator` but with a tolerance
+    parameter embedded in the class.
+    */
     template <typename TTimer>
     class RetriggerableMonostableMultivibratorCompact {
 
     public:
         RetriggerableMonostableMultivibratorCompact(double tolerance_sec)
             : tolerance_sec_(tolerance_sec) {}
+
         void notify_signal(bool value) { rmm_.notify_signal(value); }
         bool poll_signal(double tolerance_sec) {
             return rmm_.poll_signal(tolerance_sec);
