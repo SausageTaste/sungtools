@@ -47,6 +47,12 @@ namespace sung {
         constexpr TDistance operator-(const TDistance& rhs) const {
             return TDistance(metres_ - rhs.metres_);
         }
+        constexpr TDistance operator*(T rhs) const {
+            return TDistance(metres_ * rhs);
+        }
+        constexpr TDistance operator/(T rhs) const {
+            return TDistance(metres_ / rhs);
+        }
 
         constexpr bool operator<(const TDistance& rhs) const {
             return metres_ < rhs.metres_;

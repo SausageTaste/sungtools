@@ -37,6 +37,7 @@ namespace sung {
         constexpr T mini() const { return min_; }
         constexpr T maxi() const { return max_; }
 
+        constexpr T mid() const { return (min_ + max_) / static_cast<T>(2); }
         constexpr T len() const { return max_ - min_; }
 
         // Open interval
@@ -122,6 +123,11 @@ namespace sung {
         constexpr T x_max() const { return x_.maxi(); }
         constexpr T y_min() const { return y_.mini(); }
         constexpr T y_max() const { return y_.maxi(); }
+
+        constexpr T x_mid() const { return x_.mid(); }
+        constexpr T y_mid() const { return y_.mid(); }
+        constexpr T x_len() const { return x_.len(); }
+        constexpr T y_len() const { return y_.len(); }
 
         constexpr T width() const { return x_.len(); }
         constexpr T height() const { return y_.len(); }
@@ -237,9 +243,13 @@ namespace sung {
             return TVec3<T>{ this->x_max(), this->y_max(), this->z_max() };
         }
 
+        constexpr T x_mid() const { return x_.mid(); }
+        constexpr T y_mid() const { return y_.mid(); }
+        constexpr T z_mid() const { return z_.mid(); }
         constexpr T x_len() const { return x_.len(); }
         constexpr T y_len() const { return y_.len(); }
         constexpr T z_len() const { return z_.len(); }
+
         constexpr T volume() const {
             return this->x_len() * this->y_len() * this->z_len();
         }
