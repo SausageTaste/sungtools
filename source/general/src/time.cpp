@@ -14,7 +14,7 @@ namespace {
         return chr::duration_cast<chr::duration<double>>(dur).count();
     }
 
-}
+}  // namespace
 
 
 namespace sung {
@@ -60,7 +60,9 @@ namespace sung {
         return value_ != rhs.value_;
     }
 
-    CalenderTime CalenderTime::from_now() { return CalenderTime{ Clock_t::now() }; }
+    CalenderTime CalenderTime::from_now() {
+        return CalenderTime{ Clock_t::now() };
+    }
 
     CalenderTime CalenderTime::from_total_sec(double total_seconds) {
         namespace chr = std::chrono;
@@ -164,7 +166,7 @@ namespace sung {
 
     void ManualClock::set_min() {
         accum_ = 0;
-        lasted_added_value_ = 0;
+        last_added_value_ = 0;
     }
 
     void ManualClock::check() { this->set_min(); }
@@ -183,14 +185,21 @@ namespace sung {
         return false;
     }
 
+    double ManualClock::last_added_value() const { return last_added_value_; }
+
     void ManualClock::add(double value) {
         accum_ += value;
-        lasted_added_value_ = value;
+        last_added_value_ = value;
+    }
+
+    void ManualClock::set(double value) {
+        accum_ = value;
+        last_added_value_ = value;
     }
 
     void ManualClock::set_max() {
         constexpr double MAX_VALUE = 9999999999999;  // Such random number
-        lasted_added_value_ = MAX_VALUE - accum_;
+        last_added_value_ = MAX_VALUE - accum_;
         accum_ = MAX_VALUE;
     }
 

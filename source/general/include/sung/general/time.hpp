@@ -95,12 +95,15 @@ namespace sung {
         double check_get_elapsed() override final;
         bool check_if_elapsed(double seconds) override final;
 
+        double last_added_value() const;
+
         void add(double value);
+        void set(double value);
         void set_max();
 
     private:
         double accum_ = 0;
-        double lasted_added_value_ = 0;
+        double last_added_value_ = 0;
     };
 
 }  // namespace sung
