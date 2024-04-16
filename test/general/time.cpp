@@ -5,14 +5,14 @@
 
 namespace {
 
-    TEST(Timer, TimePoint) {
-        const auto tp = sung::TimePoint::from_now();
+    TEST(Timer, CalenderTime) {
+        const auto tp = sung::CalenderTime::from_now();
 
-        sung::TimePoint tp_copy;
+        sung::CalenderTime tp_copy;
         tp_copy = tp;
         ASSERT_EQ(tp.to_time_point(), tp_copy.to_time_point());
 
-        sung::TimePoint tp_move;
+        sung::CalenderTime tp_move;
         tp_move = std::move(tp_copy);
         EXPECT_EQ(tp.to_time_point(), tp_move.to_time_point());
 

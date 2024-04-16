@@ -13,24 +13,12 @@ namespace sung {
     void sleep_hybrid(double seconds, double proportion = 0.5);
 
 
-    class TimePoint {
+    class CalenderTime {
 
     public:
         using Clock_t = std::chrono::system_clock;
 
-        struct YearMonthDay {
-            int year_;
-            int month_;
-            int day_;
-        };
-
-        struct HourMinuteSecond {
-            int hour_;
-            int minute_;
-            int second_;
-        };
-
-        struct YearMonthDayHourMinuteSecond {
+        struct HumanReadable {
             int year_;
             int month_;
             int day_;
@@ -39,15 +27,15 @@ namespace sung {
             int second_;
         };
 
-        TimePoint() = default;
+        CalenderTime() = default;
 
-        bool operator==(const TimePoint& rhs) const;
-        bool operator!=(const TimePoint& rhs) const;
+        bool operator==(const CalenderTime& rhs) const;
+        bool operator!=(const CalenderTime& rhs) const;
 
-        static TimePoint from_now();
-        static TimePoint from_total_sec(double total_seconds);
-        static TimePoint from_time_point(Clock_t::time_point time_point);
-        static TimePoint from_time_t(time_t time);
+        static CalenderTime from_now();
+        static CalenderTime from_total_sec(double total_seconds);
+        static CalenderTime from_time_point(Clock_t::time_point time_point);
+        static CalenderTime from_time_t(time_t time);
 
         // Since epoch
         auto to_total_seconds() const -> double;
@@ -57,11 +45,11 @@ namespace sung {
         std::string make_locale_text() const;
         std::string make_sortable_text(bool utc) const;
 
-        YearMonthDayHourMinuteSecond local_time() const;
-        YearMonthDayHourMinuteSecond utc_time() const;
+        HumanReadable local_time() const;
+        HumanReadable utc_time() const;
 
     private:
-        TimePoint(Clock_t::time_point value) : value_(value) {}
+        CalenderTime(Clock_t::time_point value) : value_(value) {}
 
         Clock_t::time_point value_;
     };

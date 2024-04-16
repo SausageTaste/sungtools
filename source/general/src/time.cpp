@@ -38,50 +38,50 @@ namespace sung {
 }  // namespace sung
 
 
-// TimePoint
+// CalenderTime
 namespace sung {
 
-    bool TimePoint::operator==(const TimePoint& rhs) const {
+    bool CalenderTime::operator==(const CalenderTime& rhs) const {
         return value_ == rhs.value_;
     }
 
-    bool TimePoint::operator!=(const TimePoint& rhs) const {
+    bool CalenderTime::operator!=(const CalenderTime& rhs) const {
         return value_ != rhs.value_;
     }
 
-    TimePoint TimePoint::from_now() { return TimePoint{ Clock_t::now() }; }
+    CalenderTime CalenderTime::from_now() { return CalenderTime{ Clock_t::now() }; }
 
-    TimePoint TimePoint::from_total_sec(double total_seconds) {
+    CalenderTime CalenderTime::from_total_sec(double total_seconds) {
         namespace chr = std::chrono;
         const auto duration = chr::duration<double>(total_seconds);
         const auto ns = chr::duration_cast<Clock_t::duration>(duration);
-        return TimePoint{ Clock_t::time_point{ ns } };
+        return CalenderTime{ Clock_t::time_point{ ns } };
     }
 
-    TimePoint TimePoint::from_time_point(Clock_t::time_point time_point) {
-        return TimePoint{ time_point };
+    CalenderTime CalenderTime::from_time_point(Clock_t::time_point time_point) {
+        return CalenderTime{ time_point };
     }
 
-    TimePoint TimePoint::from_time_t(time_t time) {
-        return TimePoint{ Clock_t::from_time_t(time) };
+    CalenderTime CalenderTime::from_time_t(time_t time) {
+        return CalenderTime{ Clock_t::from_time_t(time) };
     }
 
-    double TimePoint::to_total_seconds() const {
+    double CalenderTime::to_total_seconds() const {
         namespace chr = std::chrono;
         const auto since = Clock_t::now().time_since_epoch();
         const auto nanoseconds = chr::duration_cast<chr::nanoseconds>(since);
         return nanoseconds.count() / 1e9;
     }
 
-    TimePoint::Clock_t::time_point TimePoint::to_time_point() const {
+    CalenderTime::Clock_t::time_point CalenderTime::to_time_point() const {
         return value_;
     }
 
-    time_t TimePoint::to_time_t() const {
+    time_t CalenderTime::to_time_t() const {
         return std::chrono::system_clock::to_time_t(value_);
     }
 
-    std::string TimePoint::make_locale_text() const {
+    std::string CalenderTime::make_locale_text() const {
         const auto time = this->to_time_t();
         auto output = std::string{ std::ctime(&time) };
         if (output.back() == '\n')
@@ -90,7 +90,7 @@ namespace sung {
         return output;
     }
 
-    std::string TimePoint::make_sortable_text(bool utc) const {
+    std::string CalenderTime::make_sortable_text(bool utc) const {
         const auto time = this->to_time_t();
         const auto tm = *(utc ? gmtime(&time) : localtime(&time));
         std::stringstream ss;
@@ -98,20 +98,18 @@ namespace sung {
         return ss.str();
     }
 
-    TimePoint::YearMonthDayHourMinuteSecond TimePoint::local_time() const {
+    CalenderTime::HumanReadable CalenderTime::local_time() const {
         const auto time = this->to_time_t();
         const auto tm = *localtime(&time);
-        return YearMonthDayHourMinuteSecond{ tm.tm_year + 1900, tm.tm_mon + 1,
-                                             tm.tm_mday,        tm.tm_hour,
-                                             tm.tm_min,         tm.tm_sec };
+        return HumanReadable{ tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
+                              tm.tm_hour,        tm.tm_min,     tm.tm_sec };
     }
 
-    TimePoint::YearMonthDayHourMinuteSecond TimePoint::utc_time() const {
+    CalenderTime::HumanReadable CalenderTime::utc_time() const {
         const auto time = this->to_time_t();
         const auto tm = *gmtime(&time);
-        return YearMonthDayHourMinuteSecond{ tm.tm_year + 1900, tm.tm_mon + 1,
-                                             tm.tm_mday,        tm.tm_hour,
-                                             tm.tm_min,         tm.tm_sec };
+        return HumanReadable{ tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
+                              tm.tm_hour,        tm.tm_min,     tm.tm_sec };
     }
 
 }  // namespace sung
