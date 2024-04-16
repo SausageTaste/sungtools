@@ -49,7 +49,7 @@ add_executable(sungtest_general_stringtool stringtool.cpp)
 add_test(sungtest_general_stringtool sungtest_general_stringtool)
 target_link_libraries(sungtest_general_stringtool ${LIB_GENERAL})
 
-add_executable(sungtest_general_time stringtool.cpp)
+add_executable(sungtest_general_time time.cpp)
 add_test(sungtest_general_time sungtest_general_time)
 target_link_libraries(sungtest_general_time ${LIB_GENERAL})
 
