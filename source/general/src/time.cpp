@@ -164,10 +164,7 @@ namespace sung {
 
     double ManualClock::elapsed() const { return accum_; }
 
-    void ManualClock::set_min() {
-        accum_ = 0;
-        last_added_value_ = 0;
-    }
+    void ManualClock::set_min() { this->set(0); }
 
     void ManualClock::check() { this->set_min(); }
 
@@ -193,14 +190,12 @@ namespace sung {
     }
 
     void ManualClock::set(double value) {
+        last_added_value_ = value - accum_;
         accum_ = value;
-        last_added_value_ = value;
     }
 
     void ManualClock::set_max() {
-        constexpr double MAX_VALUE = 9999999999999;  // Such random number
-        last_added_value_ = MAX_VALUE - accum_;
-        accum_ = MAX_VALUE;
+        this->set(999999999999999);  // Such random number
     }
 
 }  // namespace sung
