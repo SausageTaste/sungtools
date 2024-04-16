@@ -68,7 +68,7 @@ namespace sung {
     You can search for "monostable multivibrator" on the internet to get more
     information.
 
-    You may use `sung::TimeChecker` for template parameter `TTimer` if your use
+    You may use `sung::MonotonicClock` for template parameter `TTimer` if your use
     case needs a real time clock. But if you need to manually control the timer,
     you may use `sung::TimeAccumulator` instead, in which case you need to
     manually control the timer. You can access the timer object using the
@@ -151,7 +151,7 @@ namespace sung {
 
     private:
         EdgeDetector edge_detector_;
-        TimeChecker last_state_changed_;
+        MonotonicClock last_state_changed_;
         bool consumed_ = false;
     };
 

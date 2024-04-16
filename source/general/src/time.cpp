@@ -6,6 +6,17 @@
 #include <thread>
 
 
+namespace {
+
+    // Duration cast
+    double dur_cast(std::chrono::steady_clock::duration dur) {
+        namespace chr = std::chrono;
+        return chr::duration_cast<chr::duration<double>>(dur).count();
+    }
+
+}
+
+
 namespace sung {
 
     void sleep_naive(double seconds) {
@@ -115,37 +126,32 @@ namespace sung {
 }  // namespace sung
 
 
-// TimeChecker
+// MonotonicClock
 namespace sung {
 
-    double TimeChecker::elapsed() const {
-        return this->duration_cast(Clock_t::now() - last_checked_);
+    double MonotonicClock::elapsed() const {
+        return ::dur_cast(Clock_t::now() - last_checked_);
     }
 
-    void TimeChecker::set_min() { last_checked_ = Clock_t::time_point{}; }
+    void MonotonicClock::set_min() { last_checked_ = Clock_t::time_point{}; }
 
-    void TimeChecker::check() { last_checked_ = Clock_t::now(); }
+    void MonotonicClock::check() { last_checked_ = Clock_t::now(); }
 
-    double TimeChecker::check_get_elapsed() {
+    double MonotonicClock::check_get_elapsed() {
         const auto now = Clock_t::now();
-        const auto elapsed = this->duration_cast(now - last_checked_);
+        const auto elapsed = ::dur_cast(now - last_checked_);
         last_checked_ = now;
         return elapsed;
     }
 
-    bool TimeChecker::check_if_elapsed(double seconds) {
+    bool MonotonicClock::check_if_elapsed(double seconds) {
         const auto now = Clock_t::now();
-        const auto elapsed = this->duration_cast(now - last_checked_);
+        const auto elapsed = ::dur_cast(now - last_checked_);
         if (elapsed >= seconds) {
             last_checked_ = now;
             return true;
         }
         return false;
-    }
-
-    double TimeChecker::duration_cast(Clock_t::duration duration) {
-        namespace chr = std::chrono;
-        return chr::duration_cast<chr::duration<double>>(duration).count();
     }
 
 }  // namespace sung

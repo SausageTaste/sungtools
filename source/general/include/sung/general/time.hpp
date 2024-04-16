@@ -69,10 +69,7 @@ namespace sung {
     };
 
 
-    /*
-    This class uses monotonic clock.
-    */
-    class TimeChecker : public IClock {
+    class MonotonicClock : public IClock {
 
     public:
         double elapsed() const override final;
@@ -84,9 +81,6 @@ namespace sung {
 
     private:
         using Clock_t = std::chrono::steady_clock;
-
-        static double duration_cast(Clock_t::duration duration);
-
         Clock_t::time_point last_checked_ = Clock_t::now();
     };
 

@@ -29,10 +29,10 @@ namespace {
         constexpr double TRUE_DURATION = 0.5498;
         constexpr double TOLERANCE = 0.8465416345;
 
-        sung::RetriggerableMonostableMultivibrator<sung::TimeChecker> rmm;
+        sung::RetriggerableMonostableMultivibrator<sung::MonotonicClock> rmm;
         rmm.notify_signal(true);
 
-        sung::TimeChecker timer;
+        sung::MonotonicClock timer;
         while (rmm.poll_signal(TOLERANCE)) {
             if (timer.elapsed() < TRUE_DURATION)
                 rmm.notify_signal(true);

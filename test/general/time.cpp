@@ -22,8 +22,8 @@ namespace {
     }
 
 
-    TEST(Timer, TimeCheckerMin) {
-        sung::TimeChecker sw;
+    TEST(Timer, MonotonicClockMin) {
+        sung::MonotonicClock sw;
         sw.set_min();
         EXPECT_GE(sw.elapsed(), 0) << "Elapsed time of min is less than 0";
     }
@@ -32,7 +32,7 @@ namespace {
     TEST(Timer, Sleep) {
         constexpr double SLEEP_SEC = 1;
 
-        sung::TimeChecker sw;
+        sung::MonotonicClock sw;
         sung::sleep_hybrid(SLEEP_SEC);
         EXPECT_NEAR(sw.elapsed(), SLEEP_SEC, 0.000001);
 
