@@ -157,25 +157,25 @@ namespace sung {
 }  // namespace sung
 
 
-// TimeAccumulator
+// ManualClock
 namespace sung {
 
-    double TimeAccumulator::elapsed() const { return accum_; }
+    double ManualClock::elapsed() const { return accum_; }
 
-    void TimeAccumulator::set_min() {
+    void ManualClock::set_min() {
         accum_ = 0;
         lasted_added_value_ = 0;
     }
 
-    void TimeAccumulator::check() { this->set_min(); }
+    void ManualClock::check() { this->set_min(); }
 
-    double TimeAccumulator::check_get_elapsed() {
+    double ManualClock::check_get_elapsed() {
         const auto result = accum_;
         this->set_min();
         return result;
     }
 
-    bool TimeAccumulator::check_if_elapsed(double seconds) {
+    bool ManualClock::check_if_elapsed(double seconds) {
         if (accum_ >= seconds) {
             this->set_min();
             return true;
@@ -183,12 +183,12 @@ namespace sung {
         return false;
     }
 
-    void TimeAccumulator::add(double value) {
+    void ManualClock::add(double value) {
         accum_ += value;
         lasted_added_value_ = value;
     }
 
-    void TimeAccumulator::set_max() {
+    void ManualClock::set_max() {
         constexpr double MAX_VALUE = 9999999999999;  // Such random number
         lasted_added_value_ = MAX_VALUE - accum_;
         accum_ = MAX_VALUE;

@@ -70,7 +70,7 @@ namespace sung {
 
     You may use `sung::MonotonicClock` for template parameter `TTimer` if your use
     case needs a real time clock. But if you need to manually control the timer,
-    you may use `sung::TimeAccumulator` instead, in which case you need to
+    you may use `sung::ManualClock` instead, in which case you need to
     manually control the timer. You can access the timer object using the
     `timer()` method.
     */

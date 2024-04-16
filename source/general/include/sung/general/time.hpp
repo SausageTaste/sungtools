@@ -85,7 +85,7 @@ namespace sung {
     };
 
 
-    class TimeAccumulator : public IClock {
+    class ManualClock : public IClock {
 
     public:
         double elapsed() const override final;

@@ -47,7 +47,7 @@ namespace {
         constexpr double TOLERANCE = 0.54564;
         constexpr double STEP = 0.01345;
 
-        sung::RetriggerableMonostableMultivibrator<sung::TimeAccumulator> rmm;
+        sung::RetriggerableMonostableMultivibrator<sung::ManualClock> rmm;
         double accum = 0;
         while (true) {
             rmm.timer().add(STEP);
