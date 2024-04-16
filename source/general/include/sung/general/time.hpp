@@ -55,10 +55,10 @@ namespace sung {
     };
 
 
-    class ITimer {
+    class IClock {
 
     public:
-        virtual ~ITimer() = default;
+        virtual ~IClock() = default;
 
         virtual double elapsed() const = 0;
 
@@ -72,7 +72,7 @@ namespace sung {
     /*
     This class uses monotonic clock.
     */
-    class TimeChecker : public ITimer {
+    class TimeChecker : public IClock {
 
     public:
         double elapsed() const override final;
@@ -91,7 +91,7 @@ namespace sung {
     };
 
 
-    class TimeAccumulator : public ITimer {
+    class TimeAccumulator : public IClock {
 
     public:
         double elapsed() const override final;
