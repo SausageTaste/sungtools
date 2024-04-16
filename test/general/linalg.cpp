@@ -137,7 +137,7 @@ namespace {
         EXPECT_NEAR(result1.w(), 0, EPSILON);
 
         const auto result2 = Mat::rotate_axis({ 0, 1, 0 }, angle) *
-                             Mat::rotate_axis({ 1, 0, 0 }, -angle) * Vec4(v, 1);
+                             Mat::rotate_axis({ 1, 0, 0 }, -angle) * Vec4(v, 0);
         EXPECT_NEAR(result2.x(), 0, EPSILON);
         EXPECT_NEAR(result2.y(), 0, EPSILON);
         EXPECT_NEAR(result2.z(), -1, EPSILON);
