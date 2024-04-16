@@ -1,11 +1,13 @@
+#include "sung/general/time.hpp"
+
 #include <gtest/gtest.h>
 
-#include "sung/general/time.hpp"
+#include "sung/general/random.hpp"
 
 
 namespace {
 
-    TEST(Timer, CalenderTime) {
+    TEST(Time, CalenderTime) {
         const auto tp = sung::CalenderTime::from_now();
 
         sung::CalenderTime tp_copy;
@@ -22,15 +24,41 @@ namespace {
     }
 
 
-    TEST(Timer, MonotonicClockMin) {
+    TEST(Time, MonotonicClockMin) {
         sung::MonotonicClock sw;
         sw.set_min();
         EXPECT_GE(sw.elapsed(), 0) << "Elapsed time of min is less than 0";
     }
 
 
-    TEST(Timer, Sleep) {
-        constexpr double SLEEP_SEC = 1;
+    TEST(Time, ManualClock) {
+        sung::RandomRealNumGenerator<double> rng(0, 10);
+        sung::ManualClock cl;
+        EXPECT_DOUBLE_EQ(cl.elapsed(), 0);
+
+        const auto value1 = rng.gen();
+        cl.add(value1);
+        EXPECT_DOUBLE_EQ(cl.elapsed(), value1);
+        EXPECT_DOUBLE_EQ(cl.last_added_value(), value1);
+
+        const auto value2 = rng.gen();
+        cl.add(value2);
+        EXPECT_DOUBLE_EQ(cl.elapsed(), value1 + value2);
+        EXPECT_DOUBLE_EQ(cl.last_added_value(), value2);
+
+        const auto value3 = rng.gen();
+        cl.set(value3);
+        EXPECT_DOUBLE_EQ(cl.elapsed(), value3);
+        EXPECT_DOUBLE_EQ(cl.last_added_value(), value3 - value1 - value2);
+
+        cl.set_min();
+        EXPECT_EQ(cl.elapsed(), 0);
+        EXPECT_EQ(cl.last_added_value(), 0);
+    }
+
+
+    TEST(Time, Sleep) {
+        constexpr double SLEEP_SEC = 1.0 / 3.0;
 
         sung::MonotonicClock sw;
         sung::sleep_hybrid(SLEEP_SEC);
