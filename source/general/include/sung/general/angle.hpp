@@ -55,21 +55,25 @@ namespace sung {
     }
 
 
-    // Calculate the shortest angular distance from `a` to `b`.
-    // The result will be in [-pi, pi).
-    // For instance, if `a` is 0 degrees and `b` is 270 degrees, the result will
-    // be -90 degrees. If `a` is 178 degrees and `b` is -169 degrees, the
-    // function will magically find the shortest path and outputs -13 degrees,
-    // which can be added to `a` and get new angle whose phase equals to `rhs`.
-    // That means `repeat_rad_negative(a + new angle) =
-    // repeat_rad_negative(rhs)`, ignoring the float precision problem. Check
-    // out https://gist.github.com/shaunlebron/8832585 for more details. Also
-    // there is a simple interactive Desmos graph
-    // (https://www.desmos.com/calculator/bkrjdpk2am) you can play with.
-    /// @tparam T Either `float` or `double`
-    /// @param from Start angle in radians
-    /// @param to Destination angle in radians
-    /// @return Shortest angular distance in radians
+    /*
+    Calculate the shortest angular distance from `a` to `b`.
+    The result will be in [-pi, pi).
+    For instance, if `a` is 0 degrees and `b` is 270 degrees, the result will be
+    -90 degrees.
+    If `a` is 178 degrees and `b` is -169 degrees, the function will magically
+    find the shortest path and outputs -13 degrees, which can be added to `a`
+    and get new angle whose phase equals to `rhs`.
+    That means `repeat_rad_negative(a + new angle) = repeat_rad_negative(rhs)`,
+    ignoring the float precision problem. Check out [this
+    gist](https://gist.github.com/shaunlebron/8832585) for more details. Also
+    there is a simple interactive [Desmos
+    graph](https://www.desmos.com/calculator/bkrjdpk2am) you can play with.
+
+    @tparam T Either `float` or `double`
+    @param from Start angle in radians
+    @param to Destination angle in radians
+    @return Shortest angular distance in radians
+    */
     template <typename T>
     constexpr T calc_rad_shortest_diff(T from, T to) {
         return calc_rad_shortest_diff_floor<T>(from, to);
@@ -79,7 +83,6 @@ namespace sung {
     /*
     Strong type for angles.
     This class eliminates the confusion between radians and degrees.
-
     Just be careful and choose correct unit when using `from_*`, `set_*`
     functions. For instance, calling `set_deg` with radians parameter will cause
     unexpected result.
@@ -90,9 +93,8 @@ namespace sung {
 
     Comparing two angles are not strictly defined.
     For instance, 0 deg and 360 deg can be treated as a same angle, but
-    sometimes not. So, you may use `normalize_*` function to normalize the
-    angles before comparing. Or you can call `rad` to get numeric value and
-    compare them.
+    sometimes not. So, you may use `is_equivalent` function instead, or use
+    `rad` method to get numeric value and compare them directly.
 
     @tparam T Either `float` or `double`
     */
@@ -130,9 +132,21 @@ namespace sung {
             return TAngle{ radians_ / rhs };
         }
 
+        /*
+        Compare two angles' phase.
+        Which menas `0 == 360` will be evaluated as true.
+        It's floating point operation so you need to choose epsilon value
+        carefully to cover all cases.
+
+        @param rhs Another angle to compare
+        @param epsilon Tolerance value for comparison
+        @return True if the difference between two angles is equal or less than
+                the epsilon
+        */
         constexpr bool is_equivalent(const TAngle& rhs, T epsilon = 0) const {
-            const auto diff =
-                sung::calc_rad_shortest_diff(radians_, rhs.radians_);
+            const auto diff = sung::calc_rad_shortest_diff(
+                radians_, rhs.radians_
+            );
             // It must be <=, not < because the epsilon can be 0.
             return sung::abs(diff) <= epsilon;
         }
@@ -164,8 +178,9 @@ namespace sung {
             return TAngle(sung::calc_rad_shortest_diff(radians_, dst.radians_));
         }
         constexpr TAngle calc_short_diff_from(TAngle start) const {
-            return TAngle(sung::calc_rad_shortest_diff(start.radians_, radians_)
-            );
+            return TAngle{
+                sung::calc_rad_shortest_diff(start.radians_, radians_)
+            };
         }
         constexpr TAngle lerp(TAngle dst, T t) const {
             return (*this) + this->calc_short_diff_to(dst) * t;
@@ -180,11 +195,11 @@ namespace sung {
 
     static_assert(
         sizeof(TAngle<float>) == sizeof(float),
-        "TAngle<float> must be as big as underlying type"
+        "The size of TAngle<float> must be same as underlying type"
     );
     static_assert(
         sizeof(TAngle<double>) == sizeof(double),
-        "TAngle<double> must be as big as underlying type"
+        "The size of TAngle<double> must be same as underlying type"
     );
 
 }  // namespace sung
