@@ -16,7 +16,7 @@ namespace sung {
             , upper_bound_(upper_bound) {
             const auto now = std::chrono::high_resolution_clock::now();
             const auto time_seed = now.time_since_epoch().count();
-            const std::seed_seq ss{ uint32_t(time_seed & 0xffffffff),
+            std::seed_seq ss{ uint32_t(time_seed & 0xffffffff),
                                     uint32_t(time_seed >> 32) };
 
             rng_.seed(ss);
@@ -45,7 +45,7 @@ namespace sung {
             , upper_bound_(upper_bound) {
             const auto now = std::chrono::high_resolution_clock::now();
             const auto time_seed = now.time_since_epoch().count();
-            const std::seed_seq ss{ uint32_t(time_seed & 0xffffffff),
+            std::seed_seq ss{ uint32_t(time_seed & 0xffffffff),
                                     uint32_t(time_seed >> 32) };
 
             rng_.seed(ss);

@@ -71,9 +71,9 @@ namespace sung {
                 return SegIntersecInfo{ 0, pos_dist > end_dist };
 
             const auto distance = seg.len() * pos_dist_abs / denominator;
-            if (isnan(distance)) {
-                throw std::exception{ "Plane::find_intersection" };
-            }
+            if (std::isnan(distance))
+                return sung::nullopt;
+
             return SegIntersecInfo{ distance, pos_dist > end_dist };
         }
 
