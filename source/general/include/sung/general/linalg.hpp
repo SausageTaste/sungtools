@@ -302,6 +302,31 @@ namespace sung {
             return m;
         }
 
+        static TMat3 rotate_axis(TVec3<T> axis, T angle) {
+            axis = axis.normalize();
+
+            const auto c = std::cos(angle);
+            const auto s = std::sin(angle);
+            const auto t = static_cast<T>(1) - c;
+            const auto x = axis.x();
+            const auto y = axis.y();
+            const auto z = axis.z();
+
+            TMat3 output;
+            output.elements_[0][0] = t * x * x + c;
+            output.elements_[0][1] = t * x * y - z * s;
+            output.elements_[0][2] = t * x * z + y * s;
+
+            output.elements_[1][0] = t * x * y + z * s;
+            output.elements_[1][1] = t * y * y + c;
+            output.elements_[1][2] = t * y * z - x * s;
+
+            output.elements_[2][0] = t * x * z - y * s;
+            output.elements_[2][1] = t * y * z + x * s;
+            output.elements_[2][2] = t * z * z + c;
+            return output;
+        }
+
         constexpr T& at(size_t row, size_t col) { return elements_[row][col]; }
         constexpr T at(size_t row, size_t col) const {
             return elements_[row][col];
