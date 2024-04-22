@@ -24,6 +24,20 @@ namespace {
         return glm::vec4(v.x(), v.y(), v.z(), v.w());
     }
 
+    glm::mat3 mat_cast(const sung::TMat3<float>& m) {
+        return glm::mat3(
+            m.at(0, 0),
+            m.at(1, 0),
+            m.at(2, 0),
+            m.at(0, 1),
+            m.at(1, 1),
+            m.at(2, 1),
+            m.at(0, 2),
+            m.at(1, 2),
+            m.at(2, 2)
+        );
+    }
+
     glm::mat4 mat_cast(const sung::TMat4<float>& m) {
         return glm::mat4(
             m.at(0, 0),
@@ -120,18 +134,42 @@ namespace {
             const auto col_glm = mat_glm[3];  // glm is column major
             const auto col_sung = mat_sung.column(3);
 
-            EXPECT_FLOAT_EQ(col_glm.x, col_sung.x());
-            EXPECT_FLOAT_EQ(col_glm.y, col_sung.y());
-            EXPECT_FLOAT_EQ(col_glm.z, col_sung.z());
-            EXPECT_FLOAT_EQ(col_glm.w, col_sung.w());
+            ASSERT_FLOAT_EQ(col_glm.x, col_sung.x());
+            ASSERT_FLOAT_EQ(col_glm.y, col_sung.y());
+            ASSERT_FLOAT_EQ(col_glm.z, col_sung.z());
+            ASSERT_FLOAT_EQ(col_glm.w, col_sung.w());
 
             const auto v2_glm = mat_glm * v_glm;
             const auto v2_sung = mat_sung * v_sung;
 
-            EXPECT_FLOAT_EQ(v2_glm.x, v2_sung.x());
-            EXPECT_FLOAT_EQ(v2_glm.y, v2_sung.y());
-            EXPECT_FLOAT_EQ(v2_glm.z, v2_sung.z());
-            EXPECT_FLOAT_EQ(v2_glm.w, v2_sung.w());
+            ASSERT_FLOAT_EQ(v2_glm.x, v2_sung.x());
+            ASSERT_FLOAT_EQ(v2_glm.y, v2_sung.y());
+            ASSERT_FLOAT_EQ(v2_glm.z, v2_sung.z());
+            ASSERT_FLOAT_EQ(v2_glm.w, v2_sung.w());
+
+            const auto mat_inv_glm = glm::inverse(mat_glm);
+            const auto mat_inv_sung = mat_sung.inverse().value();
+
+            const auto col_inv_glm = mat_inv_glm[3];  // glm is column major
+            const auto col_inv_sung = mat_inv_sung.column(3);
+
+            ASSERT_FLOAT_EQ(col_inv_glm.x, col_inv_sung.x());
+            ASSERT_FLOAT_EQ(col_inv_glm.y, col_inv_sung.y());
+            ASSERT_FLOAT_EQ(col_inv_glm.z, col_inv_sung.z());
+            ASSERT_FLOAT_EQ(col_inv_glm.w, col_inv_sung.w());
+
+            const auto v3_glm = mat_inv_glm * v2_glm;
+            const auto v3_sung = mat_inv_sung * v2_sung;
+
+            ASSERT_NEAR(v_sung.x(), v3_sung.x(), 0.1);
+            ASSERT_NEAR(v_sung.y(), v3_sung.y(), 0.1);
+            ASSERT_NEAR(v_sung.z(), v3_sung.z(), 0.1);
+            ASSERT_NEAR(v_sung.w(), v3_sung.w(), 0.1);
+
+            ASSERT_FLOAT_EQ(v3_glm.x, v3_sung.x());
+            ASSERT_FLOAT_EQ(v3_glm.y, v3_sung.y());
+            ASSERT_FLOAT_EQ(v3_glm.z, v3_sung.z());
+            ASSERT_FLOAT_EQ(v3_glm.w, v3_sung.w());
         }
 
         return;
