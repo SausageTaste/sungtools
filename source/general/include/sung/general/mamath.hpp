@@ -80,4 +80,11 @@ namespace sung {
         return internal::acos_safe_branches(x);
     }
 
+
+    template <typename T>
+    constexpr T linear_remap(T x, T min_bef, T max_bef, T min_aft, T max_aft) {
+        return (max_aft - min_aft) * (x - min_bef) / (max_bef - min_bef) +
+               min_aft;
+    }
+
 }  // namespace sung
