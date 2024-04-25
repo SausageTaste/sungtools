@@ -82,4 +82,46 @@ namespace sung {
         Vec3 normal_;
     };
 
+
+    class Triangle3 {
+
+    public:
+        using Vec3 = TVec3<double>;
+
+        constexpr Triangle3() = default;
+        constexpr Triangle3(const Vec3& a, const Vec3& b, const Vec3& c)
+            : a_(a), b_(b), c_(c) {}
+
+        constexpr auto& a() const { return a_; }
+        constexpr auto& b() const { return b_; }
+        constexpr auto& c() const { return c_; }
+
+        double area() const {
+            return (b_ - a_).cross(c_ - a_).len() / 2;
+        }
+
+        // Counter-clockwise
+        Vec3 normal() const { return (b_ - a_).cross(c_ - a_).normalize(); }
+
+        Plane3 plane() const { return Plane3{ a_, this->normal() }; }
+
+        double radius_circumcircle() const {
+            const auto ab = b_ - a_;
+            const auto ac = c_ - a_;
+            const auto bc = c_ - b_;
+
+            const auto a = ab.len();
+            const auto b = ac.len();
+            const auto c = bc.len();
+
+            const auto area = this->area();
+            return a * b * c / (4 * area);
+        }
+
+    private:
+        Vec3 a_;
+        Vec3 b_;
+        Vec3 c_;
+    };
+
 }  // namespace sung
