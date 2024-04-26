@@ -33,6 +33,10 @@ add_executable(sungtest_general_logicgate logic_gate.cpp)
 add_test(sungtest_general_logicgate sungtest_general_logicgate)
 target_link_libraries(sungtest_general_logicgate ${LIB_GENERAL})
 
+add_executable(sungtest_general_mamath mamath.cpp)
+add_test(sungtest_general_mamath sungtest_general_mamath)
+target_link_libraries(sungtest_general_mamath ${LIB_GENERAL})
+
 add_executable(sungtest_general_optional optional.cpp)
 add_test(sungtest_general_optional sungtest_general_optional)
 target_link_libraries(sungtest_general_optional ${LIB_GENERAL})

@@ -8,12 +8,50 @@
 #define SUNG_TAU (SUNG_PI * 2)
 
 
+namespace sung { namespace internal {
+
+    template <typename T>
+    constexpr int signum(T x, std::false_type is_signed) {
+        constexpr auto ZERO = static_cast<T>(0);
+        return ZERO < x;
+    }
+
+    template <typename T>
+    constexpr int signum(T x, std::true_type is_signed) {
+        constexpr auto ZERO = static_cast<T>(0);
+        return (ZERO < x) - (x < ZERO);
+    }
+
+
+    template <typename T>
+    T acos_safe_clamp(T x) {
+        x = clamp(x, static_cast<T>(-1), static_cast<T>(1));
+        return std::acos(x);
+    }
+
+    template <typename T>
+    T acos_safe_branches(T x) {
+        if (x < static_cast<T>(-1))
+            return SUNG_PI;
+        if (x > static_cast<T>(1))
+            return 0;
+        return std::acos(x);
+    }
+
+}}  // namespace sung::internal
+
+
 namespace sung {
 
     template <typename T>
     constexpr T abs(const T x) {
         constexpr auto ZERO = static_cast<T>(0);
         return ZERO == x ? ZERO : (x < ZERO ? -x : x);
+    }
+
+    template <typename T>
+    constexpr int signum(T x) {
+        return internal::signum(x, std::is_signed<T>());
     }
 
     template <typename T>
@@ -54,26 +92,6 @@ namespace sung {
         x = clamp(x, static_cast<T>(-1), static_cast<T>(1));
         return std::asin(x);
     }
-
-
-    namespace internal {
-
-        template <typename T>
-        T acos_safe_clamp(T x) {
-            x = clamp(x, static_cast<T>(-1), static_cast<T>(1));
-            return std::acos(x);
-        }
-
-        template <typename T>
-        T acos_safe_branches(T x) {
-            if (x < static_cast<T>(-1))
-                return SUNG_PI;
-            if (x > static_cast<T>(1))
-                return 0;
-            return std::acos(x);
-        }
-
-    }  // namespace internal
 
     template <typename T>
     T acos_safe(T x) {
