@@ -56,16 +56,29 @@ namespace {
         sung::RandomRealNumGenerator<double> rng{ -1000, 1000 };
 
         {
-            Tri tri{ { 0, 0, 0 }, { 1, 0, 0 }, { 0, 1, 0 } };
-
+            const Tri tri{ { 0, 0, 0 }, { 1, 0, 0 }, { 0, 1, 0 } };
             ASSERT_DOUBLE_EQ(tri.area(), 0.5);
-            ASSERT_DOUBLE_EQ(tri.radius_circumcircle(), std::sqrt(2.0) * 0.5);
+            ASSERT_DOUBLE_EQ(*tri.radius_circumcircle(), std::sqrt(2.0) * 0.5);
+
+            const auto c = tri.circumcenter().value();
+            ASSERT_NEAR(c.distance_sqr(tri.a()), c.distance_sqr(tri.b()), 1e-6);
+            ASSERT_NEAR(c.distance_sqr(tri.a()), c.distance_sqr(tri.c()), 1e-6);
+
+            const auto p = tri.plane();
+            ASSERT_NEAR(p.calc_signed_dist(tri.a()), 0, 1e-6);
         }
 
         {
-            Tri tri{ { 0, 5, 3 }, { 1, 2, 4 }, { 3, 1, 2 } };
+            const Tri tri{ { 0, 5, 3 }, { 1, 2, 4 }, { 3, 1, 2 } };
             ASSERT_NEAR(tri.area(), 4.743, 1e-3);
-            ASSERT_NEAR(tri.radius_circumcircle(), 2.674, 1e-3);
+            ASSERT_NEAR(*tri.radius_circumcircle(), 2.674, 1e-3);
+
+            const auto c = tri.circumcenter().value();
+            ASSERT_NEAR(c.distance_sqr(tri.a()), c.distance_sqr(tri.b()), 1e-6);
+            ASSERT_NEAR(c.distance_sqr(tri.a()), c.distance_sqr(tri.c()), 1e-6);
+
+            const auto p = tri.plane();
+            ASSERT_NEAR(p.calc_signed_dist(tri.a()), 0, 1e-6);
         }
     }
 

@@ -96,16 +96,14 @@ namespace sung {
         constexpr auto& b() const { return b_; }
         constexpr auto& c() const { return c_; }
 
-        double area() const {
-            return (b_ - a_).cross(c_ - a_).len() / 2;
-        }
+        double area() const { return (b_ - a_).cross(c_ - a_).len() / 2; }
 
         // Counter-clockwise
         Vec3 normal() const { return (b_ - a_).cross(c_ - a_).normalize(); }
 
         Plane3 plane() const { return Plane3{ a_, this->normal() }; }
 
-        double radius_circumcircle() const {
+        sung::Optional<double> radius_circumcircle() const {
             const auto ab = b_ - a_;
             const auto ac = c_ - a_;
             const auto bc = c_ - b_;
@@ -114,8 +112,35 @@ namespace sung {
             const auto b = ac.len();
             const auto c = bc.len();
 
-            const auto area = this->area();
-            return a * b * c / (4 * area);
+            const auto cross_area = ab.cross(ac).len_sqr();
+            if (cross_area <= 1e-128)
+                return sung::nullopt;
+
+            return a * b * c / (2 * std::sqrt(cross_area));
+        }
+
+        // https://www.desmos.com/3d/xf0tqmgkfo
+        sung::Optional<Vec3> circumcenter() const {
+            const auto ab = b_ - a_;
+            const auto bc = c_ - b_;
+            const auto ca = a_ - c_;
+
+            const auto cross_area = ab.cross(ca).len_sqr();
+            if (cross_area <= 1e-128)
+                return sung::nullopt;
+
+            const auto A = bc.len();
+            const auto B = ca.len();
+            const auto C = ab.len();
+            const auto r = (A * B * C) / (2 * std::sqrt(cross_area));
+
+            const auto half_edge_len = A * 0.5;
+            const auto dist_sqr = (r + half_edge_len) * (r - half_edge_len);
+            const auto dist = std::sqrt(dist_sqr);
+
+            const auto tri_normal = ab.cross(bc);
+            const auto to_center = tri_normal.cross(bc).normalize() * dist;
+            return (b_ + c_) * 0.5 + to_center;
         }
 
     private:

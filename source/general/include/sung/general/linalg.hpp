@@ -135,6 +135,11 @@ namespace sung {
 
 
     template <typename T>
+    constexpr TVec3<T> operator*(T lhs, const TVec3<T>& rhs) {
+        return rhs * lhs;
+    }
+
+    template <typename T>
     constexpr T length(const TVec3<T>& v) {
         return v.len();
     }
