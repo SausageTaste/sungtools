@@ -39,21 +39,17 @@ namespace {
         const auto value1 = rng.gen();
         cl.add(value1);
         EXPECT_DOUBLE_EQ(cl.elapsed(), value1);
-        EXPECT_DOUBLE_EQ(cl.last_added_value(), value1);
 
         const auto value2 = rng.gen();
         cl.add(value2);
         EXPECT_DOUBLE_EQ(cl.elapsed(), value1 + value2);
-        EXPECT_DOUBLE_EQ(cl.last_added_value(), value2);
 
         const auto value3 = rng.gen();
         cl.set(value3);
         EXPECT_DOUBLE_EQ(cl.elapsed(), value3);
-        EXPECT_DOUBLE_EQ(cl.last_added_value(), value3 - value1 - value2);
 
         cl.set_min();
         EXPECT_EQ(cl.elapsed(), 0);
-        EXPECT_EQ(cl.last_added_value(), 0);
     }
 
 

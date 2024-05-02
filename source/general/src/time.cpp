@@ -162,36 +162,32 @@ namespace sung {
 // ManualClock
 namespace sung {
 
-    double ManualClock::elapsed() const { return accum_; }
+    double ManualClock::elapsed() const { return cur_time_ - last_checked_; }
 
     void ManualClock::set_min() { this->set(0); }
 
-    void ManualClock::check() { this->set_min(); }
+    void ManualClock::check() { last_checked_ = cur_time_; }
 
     double ManualClock::check_get_elapsed() {
-        const auto result = accum_;
-        this->set_min();
+        const auto result = this->elapsed();
+        this->check();
         return result;
     }
 
     bool ManualClock::check_if_elapsed(double seconds) {
-        if (accum_ >= seconds) {
-            this->set_min();
+        if (this->elapsed()) {
+            this->check();
             return true;
         }
         return false;
     }
 
-    double ManualClock::last_added_value() const { return last_added_value_; }
-
     void ManualClock::add(double value) {
-        accum_ += value;
-        last_added_value_ = value;
+        cur_time_ += value;
     }
 
     void ManualClock::set(double value) {
-        last_added_value_ = value - accum_;
-        accum_ = value;
+        cur_time_ = value;
     }
 
     void ManualClock::set_max() {
