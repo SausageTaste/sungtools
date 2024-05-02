@@ -175,7 +175,7 @@ namespace sung {
     }
 
     bool ManualClock::check_if_elapsed(double seconds) {
-        if (this->elapsed()) {
+        if (this->elapsed() >= seconds) {
             this->check();
             return true;
         }
