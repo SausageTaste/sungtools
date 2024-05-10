@@ -45,6 +45,10 @@ namespace sung {
             this->notify_signal(v);
             return this->check_edge();
         }
+        void reset() {
+            signal_ = false;
+            last_checked_signal_ = false;
+        }
 
     private:
         Type edge_type() const;
