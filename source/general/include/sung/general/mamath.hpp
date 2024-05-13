@@ -99,10 +99,28 @@ namespace sung {
     }
 
 
+    /*
+    @tparam T Floating poinrt number type.
+    @return The linearly remapped value of `x` from the range [`min_bef`,
+    `max_bef`] to the range [`min_aft`, `max_aft`].
+    */
     template <typename T>
     constexpr T linear_remap(T x, T min_bef, T max_bef, T min_aft, T max_aft) {
         return (max_aft - min_aft) * (x - min_bef) / (max_bef - min_bef) +
                min_aft;
+    }
+
+    /*
+    @tparam T Floating poinrt number type.
+    @return 0 if `x` is less than `x_to_0`, 1 if `x` is greater than `x_to_1`,
+    and a value between 0 and 1 if `x` is between `x_to_0` and `x_to_1`. The
+    range is [0, 1].
+    */
+    template <typename T>
+    constexpr T smoothstep_capped(T x, T x_to_0, T x_to_1) {
+        auto t = (x - x_to_0) / (x_to_1 - x_to_0);
+        t = sung::clamp<T>(t, (T)0, (T)1);
+        return t * t * ((T)3 - (T)2 * t);
     }
 
 }  // namespace sung

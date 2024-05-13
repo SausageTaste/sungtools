@@ -21,9 +21,20 @@ namespace {
 
 
     TEST(Mamath, LinearRemap) {
-        ASSERT_DOUBLE_EQ(sung::linear_remap(0, 0, 10, 0, 100), 0);
-        ASSERT_DOUBLE_EQ(sung::linear_remap(5, 0, 10, 0, 100), 50);
-        ASSERT_DOUBLE_EQ(sung::linear_remap(10, 0, 10, 0, 100), 100);
+        using T = double;
+
+        ASSERT_DOUBLE_EQ(sung::linear_remap<T>(0, 0, 10, 0, 100), 0);
+        ASSERT_DOUBLE_EQ(sung::linear_remap<T>(5, 0, 10, 0, 100), 50);
+        ASSERT_DOUBLE_EQ(sung::linear_remap<T>(10, 0, 10, 0, 100), 100);
+    }
+
+
+    TEST(Mamath, SmoothstepCapped) {
+        using T = double;
+
+        ASSERT_DOUBLE_EQ(sung::smoothstep_capped<T>(10, 0, 10), 1);
+        ASSERT_DOUBLE_EQ(sung::smoothstep_capped<T>(5, 0, 10), 0.5);
+        ASSERT_DOUBLE_EQ(sung::smoothstep_capped<T>(10, 0, 100), 0.028);
     }
 
 }  // namespace
