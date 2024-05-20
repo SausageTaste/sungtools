@@ -1,5 +1,6 @@
 add_library(sungtools_general STATIC
     src/angle.cpp
+    src/bytes.cpp
     src/logic_gate.cpp
     src/stringtool.cpp
     src/time.cpp
