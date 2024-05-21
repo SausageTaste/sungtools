@@ -71,6 +71,11 @@ else()
 endif()
 
 if (sung_cpp23_supported)
+    add_executable(sungtest_general_bytes_23 bytes.cpp)
+    add_test(sungtest_general_bytes_23 sungtest_general_bytes_23)
+    target_link_libraries(sungtest_general_bytes_23 ${LIB_GENERAL})
+    target_compile_features(sungtest_general_bytes_23 PUBLIC cxx_std_23)
+
     add_executable(sungtest_general_expected_23 expected.cpp)
     add_test(sungtest_general_expected_23 sungtest_general_expected_23)
     target_link_libraries(sungtest_general_expected_23 ${LIB_GENERAL})
