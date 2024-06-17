@@ -58,26 +58,26 @@ namespace sung {
     };
 
 
-    /*
-    Monostable Multivibrator (MMV) is an electronic circuit that has two states:
-    stable and unstable. When the input signal changes, the MMV will change its
-    state to unstable for a certain period of time. After that, it will return
-    to the stable state. False is the unstable state, and true is the stable
-    state.
-
-    This class is a retriggerable MMV. It will stay in the unstable state as
-    long as the input signal is true. If the input signal is false, the MMV will
-    return to the stable state after a certain period of time.
-
-    You can search for "monostable multivibrator" on the internet to get more
-    information.
-
-    You may use `sung::MonotonicClock` for template parameter `TTimer` if your use
-    case needs a real time clock. But if you need to manually control the timer,
-    you may use `sung::ManualClock` instead, in which case you need to
-    manually control the timer. You can access the timer object using the
-    `timer()` method.
-    */
+    /**
+     * Monostable Multivibrator (MMV) is an electronic circuit that has two
+     * states: stable and unstable. When the input signal changes, the MMV will
+     * change its state to unstable for a certain period of time. After that, it
+     * will return to the stable state. True is the unstable state, and false is
+     * the stable state.
+     *
+     * This class is a retriggerable MMV. It will stay in the unstable state as
+     * long as the input signal is true. If the input signal is false, the MMV
+     * will return to the stable state after a certain period of time.
+     *
+     * You can search for "monostable multivibrator" on the internet to get more
+     * information.
+     *
+     * You may use `sung::MonotonicClock` for template parameter `TTimer` if
+     * your use case needs a real time clock. But if you need to manually
+     * control the timer, you may use `sung::ManualClock` instead, in which case
+     * you need to manually control the timer. You can access the timer object
+     * using the `timer()` method.
+     */
     template <typename TTimer>
     class RetriggerableMonostableMultivibrator {
 
