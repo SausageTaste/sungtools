@@ -115,6 +115,10 @@ namespace sung {
     };
 
 
+    template <typename TTimer>
+    using RetriggerableMMV = RetriggerableMonostableMultivibrator<TTimer>;
+
+
     /*
     This is same as `RetriggerableMonostableMultivibrator` but with a tolerance
     parameter embedded in the class.
@@ -143,6 +147,11 @@ namespace sung {
 
         double tolerance_sec_ = 0;
     };
+
+
+    template <typename TTimer>
+    using RetriggerableMMVCompact =
+        RetriggerableMonostableMultivibratorCompact<TTimer>;
 
 
     class LongPressDetector {
