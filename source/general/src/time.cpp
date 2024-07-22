@@ -1,9 +1,12 @@
 #include "sung/general/time.hpp"
 
+#include <array>
 #include <ctime>
 #include <iomanip>
 #include <sstream>
 #include <thread>
+
+#include "sung/general/os_detect.hpp"
 
 
 namespace {
@@ -44,6 +47,22 @@ namespace sung {
         while (duration_t(clock_t::now() - start).count() < seconds) {
             std::this_thread::sleep_for(MIN_SLEEP_DURATION);
         }
+    }
+
+
+    std::string get_cur_time_iso_utc_strftime() {
+        std::string out;
+
+        time_t now;
+        time(&now);
+        std::array<char, 128> buf;
+        auto res = strftime(buf.data(), buf.size(), "%FT%TZ", gmtime(&now));
+        // strftime(buf, sizeof buf, "%Y-%m-%dT%H:%M:%SZ", gmtime(&now));
+
+        if (0 != res)
+            out.assign(buf.data(), res);
+
+        return out;
     }
 
 }  // namespace sung
@@ -182,13 +201,9 @@ namespace sung {
         return false;
     }
 
-    void ManualClock::add(double value) {
-        cur_time_ += value;
-    }
+    void ManualClock::add(double value) { cur_time_ += value; }
 
-    void ManualClock::set(double value) {
-        cur_time_ = value;
-    }
+    void ManualClock::set(double value) { cur_time_ = value; }
 
     void ManualClock::set_max() {
         this->set(999999999999999);  // Such random number

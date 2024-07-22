@@ -5,12 +5,28 @@
 #include <chrono>
 #include <string>
 
+#ifdef __cpp_lib_format
+    #include <format>
+#endif
+
 
 namespace sung {
 
     void sleep_naive(double seconds);
     void sleep_loop(double seconds);
     void sleep_hybrid(double seconds, double proportion = 0.5);
+
+
+    std::string get_cur_time_iso_utc_strftime();
+
+    inline std::string get_cur_time_iso_utc() {
+#ifdef __cpp_lib_format
+        const auto now = std::chrono::system_clock::now();
+        return std::format("{:%FT%TZ}", now);
+#else
+        return get_cur_time_iso_utc_strftime();
+#endif
+    }
 
 
     class CalenderTime {

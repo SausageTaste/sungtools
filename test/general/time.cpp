@@ -7,6 +7,17 @@
 
 namespace {
 
+    TEST(Time, IsoTimeStr) {
+        const auto str = sung::get_cur_time_iso_utc_strftime();
+        ASSERT_FALSE(str.empty());
+        std::cout << str << std::endl;
+
+        const auto str2 = sung::get_cur_time_iso_utc();
+        ASSERT_FALSE(str2.empty());
+        std::cout << str2 << std::endl;
+    }
+
+
     TEST(Time, CalenderTime) {
         const auto tp = sung::CalenderTime::from_now();
 
