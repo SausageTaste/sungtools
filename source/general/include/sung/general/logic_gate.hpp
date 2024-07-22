@@ -79,10 +79,10 @@ namespace sung {
      * access the timer object using the `timer()` method.
      */
     template <typename TTimer>
-    class RetriggerableMonostableMultivibrator {
+    class RetriggerableMMV {
 
     public:
-        RetriggerableMonostableMultivibrator() { timer_.set_min(); }
+        RetriggerableMMV() { timer_.set_min(); }
 
         void notify_signal(bool value) {
             if (value) {
@@ -115,19 +115,15 @@ namespace sung {
     };
 
 
-    template <typename TTimer>
-    using RetriggerableMMV = RetriggerableMonostableMultivibrator<TTimer>;
-
-
     /*
-    This is same as `RetriggerableMonostableMultivibrator` but with a tolerance
+    This is same as `RetriggerableMMV` but with a tolerance
     parameter embedded in the class.
     */
     template <typename TTimer>
-    class RetriggerableMonostableMultivibratorCompact {
+    class RetriggerableMMVCompact {
 
     public:
-        RetriggerableMonostableMultivibratorCompact(double tolerance_sec)
+        RetriggerableMMVCompact(double tolerance_sec)
             : tolerance_sec_(tolerance_sec) {}
 
         void notify_signal(bool value) { rmm_.notify_signal(value); }
@@ -143,15 +139,10 @@ namespace sung {
         TTimer& timer() { return rmm_.timer_; }
 
     private:
-        RetriggerableMonostableMultivibrator<TTimer> rmm_;
+        RetriggerableMMV<TTimer> rmm_;
 
         double tolerance_sec_ = 0;
     };
-
-
-    template <typename TTimer>
-    using RetriggerableMMVCompact =
-        RetriggerableMonostableMultivibratorCompact<TTimer>;
 
 
     class LongPressDetector {
