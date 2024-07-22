@@ -29,48 +29,6 @@ namespace sung {
     }
 
 
-    class CalenderTime {
-
-    public:
-        using Clock_t = std::chrono::system_clock;
-
-        struct HumanReadable {
-            int year_;
-            int month_;
-            int day_;
-            int hour_;
-            int minute_;
-            int second_;
-        };
-
-        CalenderTime() = default;
-
-        bool operator==(const CalenderTime& rhs) const;
-        bool operator!=(const CalenderTime& rhs) const;
-
-        static CalenderTime from_now();
-        static CalenderTime from_total_sec(double total_seconds);
-        static CalenderTime from_time_point(Clock_t::time_point time_point);
-        static CalenderTime from_time_t(time_t time);
-
-        // Since epoch
-        auto to_total_seconds() const -> double;
-        auto to_time_point() const -> Clock_t::time_point;
-        auto to_time_t() const -> time_t;
-
-        std::string make_locale_text() const;
-        std::string make_sortable_text(bool utc) const;
-
-        HumanReadable local_time() const;
-        HumanReadable utc_time() const;
-
-    private:
-        CalenderTime(Clock_t::time_point value) : value_(value) {}
-
-        Clock_t::time_point value_;
-    };
-
-
     class IClock {
 
     public:

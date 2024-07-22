@@ -18,23 +18,6 @@ namespace {
     }
 
 
-    TEST(Time, CalenderTime) {
-        const auto tp = sung::CalenderTime::from_now();
-
-        sung::CalenderTime tp_copy;
-        tp_copy = tp;
-        ASSERT_EQ(tp.to_time_point(), tp_copy.to_time_point());
-
-        sung::CalenderTime tp_move;
-        tp_move = std::move(tp_copy);
-        EXPECT_EQ(tp.to_time_point(), tp_move.to_time_point());
-
-        std::cout << tp.make_sortable_text(false) << std::endl;
-        std::cout << tp.make_sortable_text(true) << std::endl;
-        std::cout << tp.make_locale_text() << std::endl;
-    }
-
-
     TEST(Time, MonotonicClockMin) {
         sung::MonotonicClock sw;
         sw.set_min();
