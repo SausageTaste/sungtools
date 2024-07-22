@@ -71,7 +71,7 @@ namespace sung {
         bool expired() const { return timer_.elapsed() >= delay_sec_; }
 
     private:
-        MonotonicClock timer_;
+        MonotonicRealtimeTimer timer_;
         double delay_sec_;
     };
 

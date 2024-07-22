@@ -18,31 +18,31 @@ namespace {
     }
 
 
-    TEST(Time, MonotonicClockMin) {
-        sung::MonotonicClock sw;
+    TEST(Time, MonotonicRealtimeTimerMin) {
+        sung::MonotonicRealtimeTimer sw;
         sw.set_min();
         EXPECT_GE(sw.elapsed(), 0) << "Elapsed time of min is less than 0";
     }
 
 
-    TEST(Time, ManualClock) {
+    TEST(Time, ManualNumericTimer) {
         sung::RandomRealNumGenerator<double> rng(0, 10);
-        sung::ManualClock cl;
+        sung::ManualNumericTimer cl;
         EXPECT_DOUBLE_EQ(cl.elapsed(), 0);
 
         const auto value1 = rng.gen();
-        cl.add(value1);
+        cl.clock_.add(value1);
         EXPECT_DOUBLE_EQ(cl.elapsed(), value1);
 
         const auto value2 = rng.gen();
-        cl.add(value2);
+        cl.clock_.add(value2);
         EXPECT_DOUBLE_EQ(cl.elapsed(), value1 + value2);
 
         const auto value3 = rng.gen();
-        cl.set(value3);
+        cl.clock_.set(value3);
         EXPECT_DOUBLE_EQ(cl.elapsed(), value3);
 
-        cl.set_min();
+        cl.clock_.set_min();
         EXPECT_EQ(cl.elapsed(), 0);
     }
 
@@ -50,7 +50,7 @@ namespace {
     TEST(Time, Sleep) {
         constexpr double SLEEP_SEC = 1.0 / 3.0;
 
-        sung::MonotonicClock sw;
+        sung::MonotonicRealtimeTimer sw;
         sung::sleep_hybrid(SLEEP_SEC);
         EXPECT_NEAR(sw.elapsed(), SLEEP_SEC, 0.000001);
 

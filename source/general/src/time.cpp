@@ -68,66 +68,35 @@ namespace sung {
 }  // namespace sung
 
 
-// MonotonicClock
+// MonotonicRealtimeClock
 namespace sung {
 
-    double MonotonicClock::elapsed() const {
-        return ::dur_cast(Clock_t::now() - last_checked_);
-    }
-
-    void MonotonicClock::set_min() { last_checked_ = Clock_t::time_point{}; }
-
-    void MonotonicClock::check() { last_checked_ = Clock_t::now(); }
-
-    double MonotonicClock::check_get_elapsed() {
-        const auto now = Clock_t::now();
-        const auto elapsed = ::dur_cast(now - last_checked_);
-        last_checked_ = now;
-        return elapsed;
-    }
-
-    bool MonotonicClock::check_if_elapsed(double seconds) {
-        const auto now = Clock_t::now();
-        const auto elapsed = ::dur_cast(now - last_checked_);
-        if (elapsed >= seconds) {
-            last_checked_ = now;
-            return true;
-        }
-        return false;
+    double MonotonicRealtimeClock::calc_dur_sec(tp_t start, tp_t end) {
+        return ::dur_cast(end - start);
     }
 
 }  // namespace sung
 
 
-// ManualClock
+// ManualNumericClock
 namespace sung {
 
-    double ManualClock::elapsed() const { return cur_time_ - last_checked_; }
-
-    void ManualClock::set_min() { this->set(0); }
-
-    void ManualClock::check() { last_checked_ = cur_time_; }
-
-    double ManualClock::check_get_elapsed() {
-        const auto result = this->elapsed();
-        this->check();
-        return result;
+    // Returns true if the time rewinded
+    bool ManualNumericClock::add(double value) {
+        cur_time_ += value;
+        return value < 0;
     }
 
-    bool ManualClock::check_if_elapsed(double seconds) {
-        if (this->elapsed() >= seconds) {
-            this->check();
-            return true;
-        }
-        return false;
+    bool ManualNumericClock::set(double value) {
+        const auto out = cur_time_ > value;
+        cur_time_ = value;
+        return out;
     }
 
-    void ManualClock::add(double value) { cur_time_ += value; }
-
-    void ManualClock::set(double value) { cur_time_ = value; }
-
-    void ManualClock::set_max() {
-        this->set(999999999999999);  // Such random number
+    bool ManualNumericClock::set_max() {
+        return this->set(std::numeric_limits<float>::max());
     }
+
+    bool ManualNumericClock::set_min() { return this->set(0); }
 
 }  // namespace sung

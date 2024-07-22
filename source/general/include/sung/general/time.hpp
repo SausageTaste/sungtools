@@ -29,53 +29,76 @@ namespace sung {
     }
 
 
-    class IClock {
+    class MonotonicRealtimeClock {
 
     public:
-        virtual ~IClock() = default;
+        using clock_t = std::chrono::steady_clock;
+        using tp_t = clock_t::time_point;
 
-        virtual double elapsed() const = 0;
-
-        virtual void set_min() = 0;
-        virtual void check() = 0;
-        virtual double check_get_elapsed() = 0;
-        virtual bool check_if_elapsed(double seconds) = 0;
+        static tp_t now() { return clock_t::now(); }
+        static tp_t min_val() { return tp_t{}; }
+        static double calc_dur_sec(tp_t start, tp_t end);
     };
 
 
-    class MonotonicClock : public IClock {
+    class ManualNumericClock {
 
     public:
-        double elapsed() const override final;
+        using tp_t = double;
 
-        void set_min() override final;
-        void check() override final;
-        double check_get_elapsed() override final;
-        bool check_if_elapsed(double seconds) override final;
+        tp_t now() const { return cur_time_; }
+
+        static tp_t min_val() { return 0; }
+        static tp_t calc_dur_sec(tp_t start, tp_t end) { return end - start; }
+
+        // Returns true if the time rewinded
+        bool add(double value);
+        bool set(tp_t value);
+        bool set_max();
+        bool set_min();
 
     private:
-        using Clock_t = std::chrono::steady_clock;
-        Clock_t::time_point last_checked_ = Clock_t::now();
+        tp_t cur_time_ = 0;
     };
 
 
-    class ManualClock : public IClock {
+    template <typename TClock>
+    class TTimer {
 
     public:
-        double elapsed() const override final;
+        TTimer() { last_checked_ = clock_.now(); }
 
-        void set_min() override final;
-        void check() override final;
-        double check_get_elapsed() override final;
-        bool check_if_elapsed(double seconds) override final;
+        double elapsed() const {
+            return clock_.calc_dur_sec(last_checked_, clock_.now());
+        }
 
-        void add(double value);
-        void set(double value);
-        void set_max();
+        void set_min() { last_checked_ = clock_.min_val(); }
 
-    private:
-        double cur_time_ = 0;
-        double last_checked_ = 0;
+        void check() { last_checked_ = clock_.now(); }
+
+        double check_get_elapsed() {
+            const auto now = clock_.now();
+            const auto elapsed = clock_.calc_dur_sec(last_checked_, now);
+            last_checked_ = now;
+            return elapsed;
+        }
+
+        bool check_if_elapsed(double seconds) {
+            const auto now = clock_.now();
+            const auto elapsed = clock_.calc_dur_sec(last_checked_, now);
+            if (elapsed >= seconds) {
+                last_checked_ = now;
+                return true;
+            }
+            return false;
+        }
+
+        TClock clock_{};
+        typename TClock::tp_t last_checked_{};
     };
+
+
+    using MonotonicRealtimeTimer = TTimer<MonotonicRealtimeClock>;
+    using ManualNumericTimer = TTimer<ManualNumericClock>;
 
 }  // namespace sung

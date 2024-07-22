@@ -72,11 +72,11 @@ namespace sung {
      * You can search for "monostable multivibrator" on the internet to get more
      * information.
      *
-     * You may use `sung::MonotonicClock` for template parameter `TTimer` if
-     * your use case needs a real time clock. But if you need to manually
-     * control the timer, you may use `sung::ManualClock` instead, in which case
-     * you need to manually control the timer. You can access the timer object
-     * using the `timer()` method.
+     * You may use `sung::MonotonicRealtimeTimer` for template parameter
+     * `TTimer` if your use case needs a real time clock. But if you need to
+     * manually control the timer, you may use `sung::ManualNumericTimer`
+     * instead, in which case you need to manually control the timer. You can
+     * access the timer object using the `timer()` method.
      */
     template <typename TTimer>
     class RetriggerableMonostableMultivibrator {
@@ -164,7 +164,7 @@ namespace sung {
 
     private:
         EdgeDetector edge_detector_;
-        MonotonicClock last_state_changed_;
+        MonotonicRealtimeTimer last_state_changed_;
         bool consumed_ = false;
     };
 
