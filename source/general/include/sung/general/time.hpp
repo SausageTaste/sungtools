@@ -17,6 +17,8 @@ namespace sung {
     void sleep_hybrid(double seconds, double proportion = 0.5);
 
 
+    double get_cur_time_unix();
+
     std::string get_cur_time_iso_utc_strftime();
 
     inline std::string get_cur_time_iso_utc() {

@@ -50,6 +50,14 @@ namespace sung {
     }
 
 
+    double get_cur_time_unix() {
+        namespace chr = std::chrono;
+        using Clock_t = chr::system_clock;
+        const auto since = Clock_t::now().time_since_epoch();
+        const auto nanoseconds = chr::duration_cast<chr::nanoseconds>(since);
+        return nanoseconds.count() / 1e9;
+    }
+
     std::string get_cur_time_iso_utc_strftime() {
         std::string out;
 
