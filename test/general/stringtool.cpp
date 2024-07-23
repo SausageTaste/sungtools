@@ -2,6 +2,7 @@
 
 #include "sung/general/random.hpp"
 #include "sung/general/stringtool.hpp"
+#include "sung/general/time.hpp"
 
 
 namespace {
@@ -18,12 +19,14 @@ namespace {
 
     TEST(StringTool, Slugify) {
         const std::vector<std::string> TEST_CASES{
-            "Hello, World!:@#&(*@$(@))",
+            " \t  Hello, World!:@#&(*@$(@)) \t  ",
             gen_random_str(),
+            sung::get_time_iso_utc(),
         };
 
         for (auto& x : TEST_CASES)
-            std::cout << x << "   ->   " << sung::slugify(x) << '\n';
+            std::cout << '"' << x << "\" -> \"" << sung::slugify(x, "-")
+                      << "\"\n";
     }
 
 }  // namespace
