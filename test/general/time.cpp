@@ -8,11 +8,11 @@
 namespace {
 
     TEST(Time, UnixTime) {
-        const auto time_time_t = sung::backend::get_cur_time_unix_time_t();
+        const auto time_time_t = sung::backend::get_time_unix_time_t();
         ASSERT_NE(time_time_t, 0);
         std::cout << std::fixed << "time_t: " << time_time_t << std::endl;
 
-        const auto time = sung::get_cur_time_unix();
+        const auto time = sung::get_time_unix();
         ASSERT_NE(time, 0);
         std::cout << "default: " << time << std::endl;
 
@@ -21,11 +21,11 @@ namespace {
 
 
     TEST(Time, IsoTimeStr) {
-        const auto time_strf = sung::backend::get_cur_time_iso_utc_strftime();
+        const auto time_strf = sung::backend::get_time_iso_utc_strftime();
         ASSERT_FALSE(time_strf.empty());
         std::cout << time_strf << std::endl;
 
-        const auto time = sung::get_cur_time_iso_utc();
+        const auto time = sung::get_time_iso_utc();
         ASSERT_FALSE(time.empty());
         std::cout << time << std::endl;
     }

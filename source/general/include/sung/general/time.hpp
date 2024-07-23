@@ -14,9 +14,9 @@
 
 namespace sung { namespace backend {
 
-    double get_cur_time_unix_time_t();
+    double get_time_unix_time_t();
 
-    std::string get_cur_time_iso_utc_strftime();
+    std::string get_time_iso_utc_strftime();
 
 }}  // namespace sung::backend
 
@@ -28,7 +28,7 @@ namespace sung {
     void sleep_hybrid(double seconds, double proportion = 0.5);
 
 
-    inline double get_cur_time_unix() {
+    inline double get_time_unix() {
 #if SUNG__cplusplus >= 202002L
         namespace chr = std::chrono;
         using clock = chr::system_clock;
@@ -36,16 +36,16 @@ namespace sung {
         const auto nanoseconds = chr::duration_cast<chr::nanoseconds>(since);
         return nanoseconds.count() / 1e9;
 #else
-        return backend::get_cur_time_unix_time_t();
+        return backend::get_time_unix_time_t();
 #endif
     }
 
-    inline std::string get_cur_time_iso_utc() {
+    inline std::string get_time_iso_utc() {
 #ifdef __cpp_lib_format
         const auto now = std::chrono::system_clock::now();
         return std::format("{:%FT%TZ}", now);
 #else
-        return backend::get_cur_time_iso_utc_strftime();
+        return backend::get_time_iso_utc_strftime();
 #endif
     }
 
