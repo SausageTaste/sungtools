@@ -5,9 +5,20 @@
 #include <chrono>
 #include <string>
 
+#include "sung/general/os_detect.hpp"
+
 #ifdef __cpp_lib_format
     #include <format>
 #endif
+
+
+namespace sung { namespace backend {
+
+    double get_cur_time_unix_time_t();
+
+    std::string get_cur_time_iso_utc_strftime();
+
+}}  // namespace sung::backend
 
 
 namespace sung {
@@ -17,16 +28,24 @@ namespace sung {
     void sleep_hybrid(double seconds, double proportion = 0.5);
 
 
-    double get_cur_time_unix();
-
-    std::string get_cur_time_iso_utc_strftime();
+    inline double get_cur_time_unix() {
+#if SUNG__cplusplus >= 202002L
+        namespace chr = std::chrono;
+        using clock = chr::system_clock;
+        const auto since = clock::now().time_since_epoch();
+        const auto nanoseconds = chr::duration_cast<chr::nanoseconds>(since);
+        return nanoseconds.count() / 1e9;
+#else
+        return backend::get_cur_time_unix_time_t();
+#endif
+    }
 
     inline std::string get_cur_time_iso_utc() {
 #ifdef __cpp_lib_format
         const auto now = std::chrono::system_clock::now();
         return std::format("{:%FT%TZ}", now);
 #else
-        return get_cur_time_iso_utc_strftime();
+        return backend::get_cur_time_iso_utc_strftime();
 #endif
     }
 

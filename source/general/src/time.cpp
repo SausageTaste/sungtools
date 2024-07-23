@@ -20,6 +20,30 @@ namespace {
 }  // namespace
 
 
+namespace sung { namespace backend {
+
+    double get_cur_time_unix_time_t() {
+        return std::time(nullptr);
+    }
+
+    std::string get_cur_time_iso_utc_strftime() {
+        std::string out;
+
+        time_t now;
+        time(&now);
+        std::array<char, 128> buf;
+        auto res = strftime(buf.data(), buf.size(), "%FT%TZ", gmtime(&now));
+        // strftime(buf, sizeof buf, "%Y-%m-%dT%H:%M:%SZ", gmtime(&now));
+
+        if (0 != res)
+            out.assign(buf.data(), res);
+
+        return out;
+    }
+
+}}  // namespace sung::backend
+
+
 namespace sung {
 
     void sleep_naive(double seconds) {
@@ -47,30 +71,6 @@ namespace sung {
         while (duration_t(clock_t::now() - start).count() < seconds) {
             std::this_thread::sleep_for(MIN_SLEEP_DURATION);
         }
-    }
-
-
-    double get_cur_time_unix() {
-        namespace chr = std::chrono;
-        using Clock_t = chr::system_clock;
-        const auto since = Clock_t::now().time_since_epoch();
-        const auto nanoseconds = chr::duration_cast<chr::nanoseconds>(since);
-        return nanoseconds.count() / 1e9;
-    }
-
-    std::string get_cur_time_iso_utc_strftime() {
-        std::string out;
-
-        time_t now;
-        time(&now);
-        std::array<char, 128> buf;
-        auto res = strftime(buf.data(), buf.size(), "%FT%TZ", gmtime(&now));
-        // strftime(buf, sizeof buf, "%Y-%m-%dT%H:%M:%SZ", gmtime(&now));
-
-        if (0 != res)
-            out.assign(buf.data(), res);
-
-        return out;
     }
 
 }  // namespace sung

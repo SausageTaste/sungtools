@@ -7,14 +7,27 @@
 
 namespace {
 
-    TEST(Time, IsoTimeStr) {
-        const auto str = sung::get_cur_time_iso_utc_strftime();
-        ASSERT_FALSE(str.empty());
-        std::cout << str << std::endl;
+    TEST(Time, UnixTime) {
+        const auto time_time_t = sung::backend::get_cur_time_unix_time_t();
+        ASSERT_NE(time_time_t, 0);
+        std::cout << std::fixed << "time_t: " << time_time_t << std::endl;
 
-        const auto str2 = sung::get_cur_time_iso_utc();
-        ASSERT_FALSE(str2.empty());
-        std::cout << str2 << std::endl;
+        const auto time = sung::get_cur_time_unix();
+        ASSERT_NE(time, 0);
+        std::cout << "default: " << time << std::endl;
+
+        ASSERT_NEAR(time_time_t, time, 1);
+    }
+
+
+    TEST(Time, IsoTimeStr) {
+        const auto time_strf = sung::backend::get_cur_time_iso_utc_strftime();
+        ASSERT_FALSE(time_strf.empty());
+        std::cout << time_strf << std::endl;
+
+        const auto time = sung::get_cur_time_iso_utc();
+        ASSERT_FALSE(time.empty());
+        std::cout << time << std::endl;
     }
 
 
