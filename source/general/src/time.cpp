@@ -84,6 +84,14 @@ namespace sung {
 // MonotonicRealtimeClock
 namespace sung {
 
+    MonotonicRealtimeClock::tp_t MonotonicRealtimeClock::now() {
+        return clock_t::now();
+    }
+
+    MonotonicRealtimeClock::tp_t MonotonicRealtimeClock::min_val() {
+        return tp_t{};
+    }
+
     double MonotonicRealtimeClock::calc_dur_sec(tp_t start, tp_t end) {
         return ::dur_cast(end - start);
     }
@@ -93,6 +101,18 @@ namespace sung {
 
 // ManualNumericClock
 namespace sung {
+
+    ManualNumericClock::tp_t ManualNumericClock::now() const {
+        return cur_time_;
+    }
+
+    ManualNumericClock::tp_t ManualNumericClock::min_val() { return 0; }
+
+    ManualNumericClock::tp_t ManualNumericClock::calc_dur_sec(
+        tp_t start, tp_t end
+    ) {
+        return end - start;
+    }
 
     // Returns true if the time rewinded
     bool ManualNumericClock::add(double value) {

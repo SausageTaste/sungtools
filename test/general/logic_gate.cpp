@@ -50,7 +50,7 @@ namespace {
         sung::RetriggerableMMV<sung::ManualNumericTimer> rmm;
         double accum = 0;
         while (true) {
-            rmm.timer().clock_.add(STEP);
+            rmm.timer().clock().add(STEP);
             accum += STEP;
 
             if (accum < TRUE_DURATION)

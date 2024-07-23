@@ -44,18 +44,18 @@ namespace {
         EXPECT_DOUBLE_EQ(cl.elapsed(), 0);
 
         const auto value1 = rng.gen();
-        cl.clock_.add(value1);
+        cl.clock().add(value1);
         EXPECT_DOUBLE_EQ(cl.elapsed(), value1);
 
         const auto value2 = rng.gen();
-        cl.clock_.add(value2);
+        cl.clock().add(value2);
         EXPECT_DOUBLE_EQ(cl.elapsed(), value1 + value2);
 
         const auto value3 = rng.gen();
-        cl.clock_.set(value3);
+        cl.clock().set(value3);
         EXPECT_DOUBLE_EQ(cl.elapsed(), value3);
 
-        cl.clock_.set_min();
+        cl.clock().set_min();
         EXPECT_EQ(cl.elapsed(), 0);
     }
 

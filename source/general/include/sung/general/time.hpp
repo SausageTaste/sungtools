@@ -57,8 +57,8 @@ namespace sung {
         using clock_t = std::chrono::steady_clock;
         using tp_t = clock_t::time_point;
 
-        static tp_t now() { return clock_t::now(); }
-        static tp_t min_val() { return tp_t{}; }
+        static tp_t now();
+        static tp_t min_val();
         static double calc_dur_sec(tp_t start, tp_t end);
     };
 
@@ -68,10 +68,9 @@ namespace sung {
     public:
         using tp_t = double;
 
-        tp_t now() const { return cur_time_; }
-
-        static tp_t min_val() { return 0; }
-        static tp_t calc_dur_sec(tp_t start, tp_t end) { return end - start; }
+        tp_t now() const;
+        static tp_t min_val();
+        static tp_t calc_dur_sec(tp_t start, tp_t end);
 
         // Returns true if the time rewinded
         bool add(double value);
@@ -115,6 +114,10 @@ namespace sung {
             return false;
         }
 
+        TClock& clock() { return clock_; }
+        const TClock& clock() const { return clock_; }
+
+    private:
         TClock clock_{};
         typename TClock::tp_t last_checked_{};
     };
