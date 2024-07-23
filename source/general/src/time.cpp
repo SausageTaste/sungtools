@@ -22,22 +22,27 @@ namespace {
 
 namespace sung { namespace backend {
 
-    double get_time_unix_time_t() {
+    uint64_t get_itime_unix() {
+        static_assert(sizeof(time_t) >= 8, "time_t is too small");
+        static_assert(sizeof(std::time_t) == sizeof(time_t), "time_t differs");
+
         return std::time(nullptr);
     }
 
-    std::string get_time_iso_utc_strftime() {
-        std::string out;
+    double get_time_unix_time_t() {
+        return static_cast<double>(std::time(nullptr));
+    }
 
-        time_t now;
-        time(&now);
+    std::string get_time_iso_utc_strftime() {
+        std::string out;  // Please RVO!
+
+        const auto now = std::time(nullptr);
         std::array<char, 128> buf;
         auto res = strftime(buf.data(), buf.size(), "%FT%TZ", gmtime(&now));
         // strftime(buf, sizeof buf, "%Y-%m-%dT%H:%M:%SZ", gmtime(&now));
 
         if (0 != res)
             out.assign(buf.data(), res);
-
         return out;
     }
 
