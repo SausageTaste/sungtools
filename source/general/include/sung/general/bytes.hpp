@@ -1,7 +1,7 @@
 #pragma once
 
-#include <cstdint>
 #include <cstring>
+#include <vector>
 
 
 namespace sung {
@@ -65,5 +65,41 @@ namespace sung {
 
         return true;
     }
+
+
+    class BytesBuilder {
+
+    public:
+        size_t size() const noexcept;
+        uint8_t* data() noexcept;
+        const uint8_t* data() const noexcept;
+        const std::vector<uint8_t>& vector() const noexcept;
+
+        void enlarge(size_t size);
+
+        std::pair<size_t, size_t> add_arr(const void* src, size_t size);
+
+        template <typename T>
+        std::pair<size_t, size_t> add_arr(const T& src) {
+            return this->add_arr(src.data(), src.size());
+        }
+
+        // Add a null-terminated string
+        void add_nt_str(const char* const str);
+
+        void add_int64(int64_t val);
+        void add_uint64(uint64_t val);
+
+    private:
+        template <typename T>
+        void add_val(T val) {
+            this->enlarge(sizeof(T));
+            decompose_to_little_endian(
+                val, data_.data() + data_.size() - sizeof(T), sizeof(T)
+            );
+        }
+
+        std::vector<uint8_t> data_;
+    };
 
 }  // namespace sung
