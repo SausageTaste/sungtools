@@ -1,7 +1,9 @@
 #pragma once
 
-#include <cstring>
+#include <string>
 #include <vector>
+
+#include "sung/general/optional.hpp"
 
 
 namespace sung {
@@ -100,6 +102,48 @@ namespace sung {
         }
 
         std::vector<uint8_t> data_;
+    };
+
+
+    class BytesReader {
+
+    public:
+        BytesReader(const uint8_t* data, size_t size)
+            : data_{ data }, size_{ size } {}
+
+        size_t size() const noexcept { return size_; }
+        const uint8_t* data() const noexcept { return data_; }
+
+        bool is_eof() const noexcept { return pos_ == size_; }
+        bool has_overflow() const noexcept { return pos_ > size_; }
+
+        std::string read_nt_str() {
+            std::string out = reinterpret_cast<const char*>(data_ + pos_);
+            pos_ += out.size() + 1;
+            return out;
+        }
+
+        sung::Optional<int64_t> read_int64() {
+            return this->read_val<int64_t>();
+        }
+        sung::Optional<uint64_t> read_uint64() {
+            return this->read_val<uint64_t>();
+        }
+
+    private:
+        template <typename T>
+        sung::Optional<T> read_val() {
+            if (pos_ + sizeof(T) > size_)
+                return false;
+
+            const auto out = assemble_from_little_endian<T>(data_ + pos_);
+            pos_ += sizeof(T);
+            return out;
+        }
+
+        const uint8_t* const data_;
+        const size_t size_;
+        size_t pos_ = 0;
     };
 
 }  // namespace sung
