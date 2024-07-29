@@ -10,7 +10,15 @@ namespace {
     std::string format_float(double x, std::streamsize precision = 2) {
         std::stringstream ss;
         ss << std::fixed << std::setprecision(precision) << x;
-        return ss.str();
+
+        // Remove trailing zeros
+        auto str = ss.str();
+        str.erase(str.find_last_not_of('0') + 1, std::string::npos);
+        if (str.back() == '.') {
+            str.pop_back();
+        }
+
+        return str;
     }
 
 }  // namespace
@@ -36,7 +44,7 @@ namespace sung {
 
     std::string format_bytes(size_t bytes) {
         if (bytes < 1024) {
-            return ::format_float(static_cast<double>(bytes)) + " B";
+            return std::to_string(bytes) + " B";
         } else if (bytes < 1024 * 1024) {
             return ::format_float(bytes / 1024.0) + " KiB";
         } else if (bytes < 1024 * 1024 * 1024) {
