@@ -51,8 +51,23 @@ namespace sung {
         this->add_val('\0');
     }
 
-    void BytesBuilder::add_int64(int64_t val) { this->add_val(val); }
+}  // namespace sung
 
-    void BytesBuilder::add_uint64(uint64_t val) { this->add_val(val); }
+
+// BytesReader
+namespace sung {
+
+    BytesReader::BytesReader(const uint8_t* data, size_t size)
+        : data_{ data }, size_{ size } {}
+
+    bool BytesReader::is_eof() const noexcept { return pos_ == size_; }
+
+    bool BytesReader::has_overflow() const noexcept { return pos_ > size_; }
+
+    std::string BytesReader::read_nt_str() {
+        std::string out = reinterpret_cast<const char*>(data_ + pos_);
+        pos_ += out.size() + 1;
+        return out;
+    }
 
 }  // namespace sung
