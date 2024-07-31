@@ -151,6 +151,8 @@ namespace sung {
         bool is_eof() const noexcept;
         bool has_overflow() const noexcept;
 
+        void advance(size_t size) { pos_ += size; }
+
         std::string read_nt_str();
 
         template <typename T>
