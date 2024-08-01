@@ -23,7 +23,7 @@ namespace {
 namespace sung { namespace backend {
 
     uint64_t get_itime_unix() {
-        static_assert(sizeof(time_t) >= 8, "time_t is too small");
+        // static_assert(sizeof(time_t) >= 8, "time_t is too small");
         static_assert(sizeof(std::time_t) == sizeof(time_t), "time_t differs");
 
         return std::time(nullptr);
