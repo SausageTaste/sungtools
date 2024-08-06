@@ -93,6 +93,12 @@ namespace sung {
             return clock_.calc_dur_sec(last_checked_, clock_.now());
         }
 
+        bool has_elapsed(const double sec) const {
+            return this->elapsed() >= sec;
+        }
+
+        auto& last_checked() const { return last_checked_; }
+
         void set_min() { last_checked_ = clock_.min_val(); }
 
         void check() { last_checked_ = clock_.now(); }
