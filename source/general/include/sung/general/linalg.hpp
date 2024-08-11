@@ -9,9 +9,106 @@
 namespace sung {
 
     template <typename T>
+    class TVec2;
+    template <typename T>
     class TVec3;
     template <typename T>
     class TVec4;
+
+
+    template <typename T>
+    class TVec2 {
+
+    public:
+        constexpr TVec2() : elements_{ 0, 0 } {}
+        constexpr TVec2(T x, T y) : elements_{ x, y } {}
+
+        // Element-wise operations
+        constexpr TVec2 operator+(const TVec2& rhs) const {
+            return TVec2{ this->x() + rhs.x(), this->y() + rhs.y() };
+        }
+        constexpr TVec2 operator-(const TVec2& rhs) const {
+            return TVec2{ this->x() - rhs.x(), this->y() - rhs.y() };
+        }
+        constexpr TVec2 operator*(const TVec2& rhs) const {
+            return TVec2{ this->x() * rhs.x(), this->y() * rhs.y() };
+        }
+        constexpr TVec2 operator/(const TVec2& rhs) const {
+            return TVec2{ this->x() / rhs.x(), this->y() / rhs.y() };
+        }
+
+        constexpr TVec2& operator+=(const TVec2& rhs) {
+            this->x() += rhs.x();
+            this->y() += rhs.y();
+            return *this;
+        }
+        constexpr TVec2& operator-=(const TVec2& rhs) {
+            this->x() -= rhs.x();
+            this->y() -= rhs.y();
+            return *this;
+        }
+
+        // Scalar operations
+        constexpr TVec2 operator*(T rhs) const {
+            return TVec2{ this->x() * rhs, this->y() * rhs };
+        }
+        constexpr TVec2 operator/(T rhs) const {
+            return TVec2{ this->x() / rhs, this->y() / rhs };
+        }
+
+        // Unary operations
+        constexpr TVec2 operator-() const {
+            return TVec2{ -this->x(), -this->y() };
+        }
+
+        constexpr T& operator[](size_t i) { return elements_[i]; }
+        constexpr T operator[](size_t i) const { return elements_[i]; }
+
+        constexpr T& x() { return elements_[0]; }
+        constexpr T& y() { return elements_[1]; }
+
+        constexpr T x() const { return elements_[0]; }
+        constexpr T y() const { return elements_[1]; }
+
+        constexpr bool are_similar(const TVec2& rhs, T epsilon = 0) const {
+            return sung::are_similiar(this->x(), rhs.x(), epsilon) &&
+                   sung::are_similiar(this->y(), rhs.y(), epsilon);
+        }
+
+        bool has_nan() const noexcept {
+            return std::isnan(this->x()) || std::isnan(this->y());
+        }
+
+        bool has_inf() const noexcept {
+            return std::isinf(this->x()) || std::isinf(this->y());
+        }
+
+        constexpr TVec2 lerp(const TVec2& rhs, T t) const {
+            return *this + (rhs - *this) * t;
+        }
+
+        constexpr T dot(const TVec2& rhs) const {
+            return (this->x() * rhs.x()) + (this->y() * rhs.y());
+        }
+
+        constexpr T len_sqr() const { return this->dot(*this); }
+
+        T len() const { return std::sqrt(this->len_sqr()); }
+
+        constexpr T distance_sqr(const TVec2& rhs) const {
+            return (*this - rhs).len_sqr();
+        }
+
+        T distance(const TVec2& rhs) const { return (*this - rhs).len(); }
+
+        TVec2 normalize() const {
+            const auto l = this->len();
+            return TVec2{ this->x() / l, this->y() / l };
+        }
+
+    private:
+        T elements_[2];
+    };
 
 
     template <typename T>
