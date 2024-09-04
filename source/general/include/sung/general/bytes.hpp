@@ -149,7 +149,9 @@ namespace sung {
         BytesReader(const uint8_t* data, size_t size);
 
         size_t size() const noexcept { return size_; }
+        size_t remaining() const noexcept { return size_ - pos_; }
         const uint8_t* data() const noexcept { return data_; }
+        const uint8_t* head() const noexcept { return data_ + pos_; }
 
         bool is_eof() const noexcept;
         bool has_overflow() const noexcept;
