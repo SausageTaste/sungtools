@@ -142,6 +142,7 @@ namespace sung {
     };
 
 
+    // Little endian
     class BytesReader {
 
     public:
@@ -167,11 +168,41 @@ namespace sung {
             return out;
         }
 
+        template <typename T>
+        bool read_val_arr(T* dst, size_t count) {
+            const auto read_size = sizeof(T) * count;
+            if (pos_ + read_size > size_)
+                return false;
+
+            if (is_little_endian()) {
+                std::memcpy(dst, data_ + pos_, read_size);
+                pos_ += read_size;
+            } else {
+                for (size_t i = 0; i < count; ++i) {
+                    dst[i] = assemble_le_data<T>(data_ + pos_);
+                    pos_ += sizeof(T);
+                }
+            }
+
+            return true;
+        }
+
+        sung::Optional<int8_t> read_bool() { return read_val<int8_t>() != 0; }
+
+        sung::Optional<int32_t> read_int32() { return read_val<int32_t>(); }
         sung::Optional<int64_t> read_int64() { return read_val<int64_t>(); }
+        sung::Optional<uint32_t> read_uint32() { return read_val<uint32_t>(); }
         sung::Optional<uint64_t> read_uint64() { return read_val<uint64_t>(); }
 
         sung::Optional<float> read_float32() { return read_val<float>(); }
         sung::Optional<double> read_float64() { return read_val<double>(); }
+
+        bool read_int32_arr(int32_t* dst, size_t count) {
+            return read_val_arr<int32_t>(dst, count);
+        }
+        bool read_float32_arr(float* dst, size_t count) {
+            return read_val_arr<float>(dst, count);
+        }
 
     private:
         const uint8_t* const data_;
