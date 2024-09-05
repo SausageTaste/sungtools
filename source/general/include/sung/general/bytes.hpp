@@ -190,6 +190,23 @@ namespace sung {
             return true;
         }
 
+        template <typename T, size_t TSize>
+        sung::Optional<std::array<T, TSize>> read_val_arr() {
+            std::array<T, TSize> out;
+            if (this->read_val_arr<T>(out.data(), TSize))
+                return out;
+            return sung::nullopt;
+        }
+
+        bool read_raw_arr(uint8_t* dst, size_t count) {
+            if (pos_ + count > size_)
+                return false;
+
+            std::memcpy(dst, data_ + pos_, count);
+            pos_ += count;
+            return true;
+        }
+
         sung::Optional<int8_t> read_bool() { return read_val<int8_t>() != 0; }
 
         sung::Optional<int32_t> read_int32() { return read_val<int32_t>(); }
