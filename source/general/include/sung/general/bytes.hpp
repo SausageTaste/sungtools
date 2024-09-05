@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
 #include <cstring>
 #include <string>
@@ -204,6 +205,14 @@ namespace sung {
         }
         bool read_float32_arr(float* dst, size_t count) {
             return read_val_arr<float>(dst, count);
+        }
+
+        template <size_t TSize>
+        sung::Optional<std::array<float, TSize>> read_float32_arr() {
+            std::array<float, TSize> out;
+            if (this->read_val_arr(out.data(), TSize))
+                return out;
+            return sung::nullopt;
         }
 
     private:
