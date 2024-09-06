@@ -54,6 +54,7 @@ namespace sung { namespace backend {
         ss << std::put_time(gmtime(&itt), "%FT%TZ");
         return ss.str();
     }
+
 }}  // namespace sung::backend
 
 
