@@ -21,13 +21,23 @@ namespace {
 
 
     TEST(Time, IsoTimeStr) {
-        const auto time_strf = sung::backend::get_time_iso_utc_strftime();
-        ASSERT_FALSE(time_strf.empty());
-        std::cout << time_strf << std::endl;
-
         const auto time = sung::get_time_iso_utc();
         ASSERT_FALSE(time.empty());
         std::cout << time << std::endl;
+
+        {
+            const auto time2 = sung::backend::get_time_iso_utc_strftime();
+            ASSERT_FALSE(time2.empty());
+            ASSERT_STREQ(time.c_str(), time2.c_str());
+            std::cout << time2 << std::endl;
+        }
+
+        {
+            const auto time2 = sung::backend::get_time_iso_utc_put_time();
+            ASSERT_FALSE(time2.empty());
+            ASSERT_STREQ(time.c_str(), time2.c_str());
+            std::cout << time2 << std::endl;
+        }
     }
 
 

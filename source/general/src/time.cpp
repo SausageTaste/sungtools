@@ -46,6 +46,14 @@ namespace sung { namespace backend {
         return out;
     }
 
+    std::string get_time_iso_utc_put_time() {
+        const auto now = std::chrono::system_clock::now();
+        const auto itt = std::chrono::system_clock::to_time_t(now);
+
+        std::ostringstream ss;
+        ss << std::put_time(gmtime(&itt), "%FT%TZ");
+        return ss.str();
+    }
 }}  // namespace sung::backend
 
 

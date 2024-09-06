@@ -18,6 +18,7 @@ namespace sung { namespace backend {
     double get_time_unix_time_t();
 
     std::string get_time_iso_utc_strftime();
+    std::string get_time_iso_utc_put_time();
 
 }}  // namespace sung::backend
 
