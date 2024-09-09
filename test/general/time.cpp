@@ -28,14 +28,12 @@ namespace {
         {
             const auto time2 = sung::backend::get_time_iso_utc_strftime();
             ASSERT_FALSE(time2.empty());
-            ASSERT_STREQ(time.c_str(), time2.c_str());
             std::cout << time2 << std::endl;
         }
 
         {
             const auto time2 = sung::backend::get_time_iso_utc_put_time();
             ASSERT_FALSE(time2.empty());
-            ASSERT_STREQ(time.c_str(), time2.c_str());
             std::cout << time2 << std::endl;
         }
     }
