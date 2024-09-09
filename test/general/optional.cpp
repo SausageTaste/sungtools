@@ -19,6 +19,9 @@ namespace {
         opt_int = sung::nullopt;
         EXPECT_FALSE(opt_int.has_value());
         EXPECT_THROW(opt_int.value().clear(), sung::bad_optional_access);
+
+        opt_int = sung::make_optional("Hello, World!");
+        EXPECT_TRUE(opt_int.has_value());
     }
 
 }  // namespace
