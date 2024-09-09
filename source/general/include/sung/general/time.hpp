@@ -19,6 +19,7 @@ namespace sung { namespace backend {
 
     std::string get_time_iso_utc_strftime();
     std::string get_time_iso_utc_put_time();
+    std::string get_time_iso_local_put_time();
 
 }}  // namespace sung::backend
 
@@ -50,6 +51,8 @@ namespace sung {
         return backend::get_time_iso_utc_strftime();
 #endif
     }
+
+    std::string get_time_iso_local();
 
 
     class MonotonicRealtimeClock {

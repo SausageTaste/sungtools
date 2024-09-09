@@ -49,9 +49,10 @@ namespace sung { namespace backend {
     std::string get_time_iso_utc_put_time() {
         const auto now = std::chrono::system_clock::now();
         const auto itt = std::chrono::system_clock::to_time_t(now);
+        const auto tmm = *std::gmtime(&itt);
 
         std::ostringstream ss;
-        ss << std::put_time(gmtime(&itt), "%FT%TZ");
+        ss << std::put_time(&tmm, "%FT%TZ");
         return ss.str();
     }
 
@@ -85,6 +86,18 @@ namespace sung {
         while (duration_t(clock_t::now() - start).count() < seconds) {
             std::this_thread::sleep_for(MIN_SLEEP_DURATION);
         }
+    }
+
+    std::string get_time_iso_local() {
+        const auto now = std::chrono::system_clock::now();
+        const auto itt = std::chrono::system_clock::to_time_t(now);
+        const auto tmm = *std::localtime(&itt);
+
+        std::ostringstream ss;
+        ss << std::put_time(&tmm, "%FT%T%z");
+        auto str = ss.str();
+        str.insert(str.size() - 2, ":");
+        return str;
     }
 
 }  // namespace sung

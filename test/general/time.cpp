@@ -26,16 +26,25 @@ namespace {
         std::cout << time << std::endl;
 
         {
-            const auto time2 = sung::backend::get_time_iso_utc_strftime();
-            ASSERT_FALSE(time2.empty());
-            std::cout << time2 << std::endl;
+            const auto t = sung::backend::get_time_iso_utc_strftime();
+            ASSERT_FALSE(t.empty());
+            ASSERT_STREQ(time.substr(0, 19).c_str(), t.substr(0, 19).c_str());
+            std::cout << t << std::endl;
         }
 
         {
-            const auto time2 = sung::backend::get_time_iso_utc_put_time();
-            ASSERT_FALSE(time2.empty());
-            std::cout << time2 << std::endl;
+            const auto t = sung::backend::get_time_iso_utc_put_time();
+            ASSERT_FALSE(t.empty());
+            ASSERT_STREQ(time.substr(0, 19).c_str(), t.substr(0, 19).c_str());
+            std::cout << t << std::endl;
         }
+    }
+
+
+    TEST(Time, IsoLocalTimeStr) {
+        const auto time = sung::get_time_iso_local();
+        ASSERT_FALSE(time.empty());
+        std::cout << time << std::endl;
     }
 
 
