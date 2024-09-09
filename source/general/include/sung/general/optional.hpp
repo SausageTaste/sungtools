@@ -6,6 +6,8 @@
     #include <tl/optional.hpp>
 #endif
 
+#include "sung/general/os_detect.hpp"
+
 
 namespace sung {
 
@@ -18,7 +20,7 @@ namespace sung {
     static constexpr auto nullopt = std::nullopt;
 
     template <typename T>
-    [[nodiscard]] auto make_optional(T&& value) {
+    SUNG_NODISCARD auto make_optional(T&& value) {
         return std::make_optional(std::forward<T>(value));
     }
 
@@ -31,7 +33,7 @@ namespace sung {
     static constexpr auto nullopt = tl::nullopt;
 
     template <typename T>
-    [[nodiscard]] auto make_optional(T&& value) {
+    SUNG_NODISCARD auto make_optional(T&& value) {
         return tl::make_optional(std::forward<T>(value));
     }
 

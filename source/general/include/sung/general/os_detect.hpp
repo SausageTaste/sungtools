@@ -61,3 +61,10 @@
 #elif SUNG__cplusplus >= 201103L
     #define SUNG_CPP11
 #endif
+
+
+#if SUNG__cplusplus >= 201703L
+    #define SUNG_NODISCARD [[nodiscard]]
+#else
+    #define SUNG_NODISCARD
+#endif
