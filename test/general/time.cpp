@@ -3,20 +3,29 @@
 #include <gtest/gtest.h>
 
 #include "sung/general/random.hpp"
+#include "sung/general/stringtool.hpp"
 
 
 namespace {
 
     TEST(Time, UnixTime) {
-        const auto time_time_t = sung::backend::get_time_unix_time_t();
-        ASSERT_NE(time_time_t, 0);
-        std::cout << std::fixed << "time_t: " << time_time_t << std::endl;
-
         const auto time = sung::get_time_unix();
         ASSERT_NE(time, 0);
-        std::cout << "default: " << time << std::endl;
+        std::cout << std::fixed << time << std::endl;
 
-        ASSERT_NEAR(time_time_t, time, 1);
+        {
+            const auto t = sung::backend::get_time_unix_time_t();
+            ASSERT_NE(t, 0);
+            ASSERT_NEAR(t, time, 1);
+            std::cout << t << std::endl;
+        }
+
+        {
+            const auto t = sung::backend::get_time_unix_chrono();
+            ASSERT_NE(t, 0);
+            ASSERT_NEAR(t, time, 1);
+            std::cout << t << std::endl;
+        }
     }
 
 
@@ -43,8 +52,10 @@ namespace {
 
     TEST(Time, IsoLocalTimeStr) {
         const auto time = sung::get_time_iso_local();
+        const auto slug = sung::get_time_iso_local_slug();
         ASSERT_FALSE(time.empty());
-        std::cout << time << std::endl;
+        ASSERT_FALSE(slug.empty());
+        std::cout << time << " (" << slug << ")" << std::endl;
     }
 
 

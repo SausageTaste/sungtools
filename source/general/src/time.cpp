@@ -17,6 +17,19 @@ namespace {
         return chr::duration_cast<chr::duration<double>>(dur).count();
     }
 
+    double dur_cast(std::chrono::system_clock::duration dur) {
+        namespace chr = std::chrono;
+        return chr::duration_cast<chr::duration<double>>(dur).count();
+    }
+
+    std::string make_sec_frac_str(size_t digits = 3) {
+        const auto sec = sung::backend::get_time_unix_chrono();
+        const auto frac_sec = std::fmod(sec, 1.0);
+        std::stringstream ss;
+        ss << std::fixed << frac_sec;
+        return ss.str().substr(2, digits);
+    }
+
 }  // namespace
 
 
@@ -33,6 +46,11 @@ namespace sung { namespace backend {
         return static_cast<double>(std::time(nullptr));
     }
 
+    double get_time_unix_chrono() {
+        const auto now = std::chrono::system_clock::now();
+        return ::dur_cast(now.time_since_epoch());
+    }
+
     std::string get_time_iso_utc_strftime() {
         std::string out;  // Please RVO!
 
@@ -47,9 +65,8 @@ namespace sung { namespace backend {
     }
 
     std::string get_time_iso_utc_put_time() {
-        const auto now = std::chrono::system_clock::now();
-        const auto itt = std::chrono::system_clock::to_time_t(now);
-        const auto tmm = *std::gmtime(&itt);
+        const auto tit = std::time(nullptr);
+        const auto tmm = *std::gmtime(&tit);
 
         std::ostringstream ss;
         ss << std::put_time(&tmm, "%FT%TZ");
@@ -89,15 +106,28 @@ namespace sung {
     }
 
     std::string get_time_iso_local() {
-        const auto now = std::chrono::system_clock::now();
-        const auto itt = std::chrono::system_clock::to_time_t(now);
-        const auto tmm = *std::localtime(&itt);
+        const auto tit = std::time(nullptr);
+        const auto tmm = *std::localtime(&tit);
 
         std::ostringstream ss;
-        ss << std::put_time(&tmm, "%FT%T%z");
+        ss << std::put_time(&tmm, "%FT%T");
+        ss << "." << ::make_sec_frac_str();
+        ss << std::put_time(&tmm, "%z");
+
         auto str = ss.str();
         str.insert(str.size() - 2, ":");
         return str;
+    }
+
+    std::string get_time_iso_local_slug() {
+        const auto tit = std::time(nullptr);
+        const auto tmm = *std::localtime(&tit);
+
+        std::ostringstream ss;
+        ss << std::put_time(&tmm, "%Y%m%dT%H%M%S");
+        ss << "." << ::make_sec_frac_str();
+        ss << std::put_time(&tmm, "%z");
+        return ss.str();
     }
 
 }  // namespace sung

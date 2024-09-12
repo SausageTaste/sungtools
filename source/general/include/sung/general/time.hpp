@@ -15,7 +15,9 @@
 namespace sung { namespace backend {
 
     uint64_t get_itime_unix();
+
     double get_time_unix_time_t();
+    double get_time_unix_chrono();
 
     std::string get_time_iso_utc_strftime();
     std::string get_time_iso_utc_put_time();
@@ -33,11 +35,7 @@ namespace sung {
 
     inline double get_time_unix() {
 #if SUNG__cplusplus >= 202002L
-        namespace chr = std::chrono;
-        using clock = chr::system_clock;
-        const auto since = clock::now().time_since_epoch();
-        const auto nanoseconds = chr::duration_cast<chr::nanoseconds>(since);
-        return nanoseconds.count() / 1e9;
+        return backend::get_time_unix_chrono();
 #else
         return backend::get_time_unix_time_t();
 #endif
@@ -53,6 +51,7 @@ namespace sung {
     }
 
     std::string get_time_iso_local();
+    std::string get_time_iso_local_slug();
 
 
     class MonotonicRealtimeClock {
