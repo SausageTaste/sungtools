@@ -26,6 +26,13 @@ namespace {
 
 namespace sung {
 
+    std::string lstrip(std::string str, const std::string& prefix) {
+        if (str.find(prefix) == 0) {
+            str.erase(0, prefix.size());
+        }
+        return str;
+    }
+
     std::string slugify(std::string str, const char* r) {
         // Replace invalid characters with replacer
         str = std::regex_replace(str, std::regex("[^\\w\\s$*_+~.()\'\"-]"), r);
