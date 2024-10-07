@@ -3,6 +3,7 @@
 #include "sung/general/time.hpp"
 
 #include <array>
+#include <cmath>
 #include <ctime>
 #include <iomanip>
 #include <sstream>
@@ -14,12 +15,8 @@
 namespace {
 
     // Duration cast
-    double dur_cast(std::chrono::steady_clock::duration dur) {
-        namespace chr = std::chrono;
-        return chr::duration_cast<chr::duration<double>>(dur).count();
-    }
-
-    double dur_cast(std::chrono::system_clock::duration dur) {
+    template <typename TRep, typename TPeriod>
+    double dur_cast(std::chrono::duration<TRep, TPeriod> dur) {
         namespace chr = std::chrono;
         return chr::duration_cast<chr::duration<double>>(dur).count();
     }
