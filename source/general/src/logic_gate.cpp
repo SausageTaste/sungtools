@@ -45,6 +45,8 @@ namespace sung {
                     return Type::none;
                 }
                 break;
+            case EdgeDetector::Type::none:
+                break;
         }
 
         if (consumed_)
