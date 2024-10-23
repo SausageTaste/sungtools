@@ -26,6 +26,19 @@ namespace {
 
 namespace sung {
 
+    std::vector<std::string> split(
+        const std::string& str, const std::string& delim
+    ) {
+        std::vector<std::string> tokens;
+        size_t start = 0, end = 0;
+        while ((end = str.find(delim, start)) != std::string::npos) {
+            tokens.push_back(str.substr(start, end - start));
+            start = end + delim.size();
+        }
+        tokens.push_back(str.substr(start));
+        return tokens;
+    }
+
     std::string lstrip(std::string str, const std::string& prefix) {
         if (str.find(prefix) == 0) {
             str.erase(0, prefix.size());
@@ -58,6 +71,14 @@ namespace sung {
             return ::format_float(bytes / (1024.0 * 1024.0)) + " MiB";
         } else {
             return ::format_float(bytes / (1024.0 * 1024.0 * 1024.0)) + " GiB";
+        }
+    }
+
+    sung::Optional<int> str2int(const std::string& str) {
+        try {
+            return std::stoi(str);
+        } catch (const std::exception&) {
+            return sung::nullopt;
         }
     }
 
