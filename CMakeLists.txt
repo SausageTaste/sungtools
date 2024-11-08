@@ -7,6 +7,8 @@ project(SungTools
 include(FetchContent)
 
 
+set(extern_dir ${CMAKE_CURRENT_SOURCE_DIR}/extern)
+
 set(SUNG_ENABLE_TEST OFF CACHE BOOL "Enable testing")
 
 
@@ -28,21 +30,6 @@ else()
     set(sung_cpp23_supported OFF)
 endif()
 
-
-FetchContent_Declare(
-    sung_fetch_optional
-    GIT_REPOSITORY https://github.com/TartanLlama/optional
-    GIT_TAG        v1.1.0
-)
-
-FetchContent_Declare(
-    sung_fetch_expected
-    GIT_REPOSITORY https://github.com/TartanLlama/expected/
-    GIT_TAG        v1.1.0
-)
-
-FetchContent_Populate(sung_fetch_optional)
-FetchContent_Populate(sung_fetch_expected)
 
 add_subdirectory(source)
 

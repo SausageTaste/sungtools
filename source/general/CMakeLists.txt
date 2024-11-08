@@ -8,6 +8,6 @@ add_library(sungtools_general STATIC
 add_library(sungtools::general ALIAS sungtools_general)
 target_include_directories(sungtools_general PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${sung_fetch_optional_SOURCE_DIR}/include
-    ${sung_fetch_expected_SOURCE_DIR}/include
+    ${extern_dir}/expected/include
+    ${extern_dir}/optional/include
 )
