@@ -62,6 +62,40 @@ namespace sung {
 }  // namespace sung
 
 
+// RepeatedPulseGenerator
+namespace sung {
+
+    void RepeatedPulseGenerator::notify(bool signal) {
+        active_ = signal;
+        edge_.notify_signal(active_);
+    }
+
+    bool RepeatedPulseGenerator::poll(double pulse_interval) {
+        const auto edge = edge_.check_edge();
+
+        switch (edge) {
+            case EdgeDetector::Type::rising:
+                timer_.check();
+                return true;
+            case EdgeDetector::Type::falling:
+                return false;
+        }
+
+        if (active_)
+            return timer_.check_if_elapsed(pulse_interval);
+
+        return false;
+    }
+
+    void RepeatedPulseGenerator::discard() {
+        edge_.check();
+        if (active_)
+            timer_.check();
+    }
+
+}  // namespace sung
+
+
 // PulseResponseFuture
 namespace sung {
 

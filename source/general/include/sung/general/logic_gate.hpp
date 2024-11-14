@@ -160,6 +160,20 @@ namespace sung {
     };
 
 
+    class RepeatedPulseGenerator {
+
+    public:
+        void notify(bool signal);
+        bool poll(double pulse_interval);
+        void discard();
+
+    private:
+        EdgeDetector edge_;
+        MonotonicRealtimeTimer timer_;
+        bool active_ = false;
+    };
+
+
     class PulseResponseFuture {
 
     public:
