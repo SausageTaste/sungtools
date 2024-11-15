@@ -44,9 +44,9 @@ def main():
                     os.makedirs(lib_output_path, exist_ok=True)
                     shutil.copy(os.path.join(config_path, item3), os.path.join(lib_output_path, item3))
 
-    deps_path = os.path.join(root_path, "build", "_deps")
-    shutil.copytree(os.path.join(deps_path, "sung_fetch_optional-src", "include"), bundle_include_path, dirs_exist_ok=True)
-    shutil.copytree(os.path.join(deps_path, "sung_fetch_expected-src", "include"), bundle_include_path, dirs_exist_ok=True)
+    extern_path = os.path.join(root_path, "extern")
+    shutil.copytree(os.path.join(extern_path, "expected", "include"), bundle_include_path, dirs_exist_ok=True)
+    shutil.copytree(os.path.join(extern_path, "optional", "include"), bundle_include_path, dirs_exist_ok=True)
 
 
 if __name__ == "__main__":
