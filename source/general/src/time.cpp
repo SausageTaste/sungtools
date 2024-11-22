@@ -21,12 +21,31 @@ namespace {
         return chr::duration_cast<chr::duration<double>>(dur).count();
     }
 
-    std::string make_sec_frac_str(size_t digits = 3) {
-        const auto sec = sung::backend::get_time_unix_chrono();
-        const auto frac_sec = std::fmod(sec, 1.0);
+    std::string make_sec_frac_str(
+        double unix_time, bool remove_tail_zero, size_t digits
+    ) {
+        std::string out;  // RVO!!!
+
         std::stringstream ss;
-        ss << std::fixed << frac_sec;
-        return ss.str().substr(2, digits);
+        ss << std::fixed << std::fmod(unix_time, 1.0);
+        out = ss.str().substr(1, digits + 1);
+
+        if (remove_tail_zero) {
+            while (true) {
+                if (out.empty()) {
+                    break;
+                } else if (out.back() == '0') {
+                    out.pop_back();
+                } else if (out.back() == '.') {
+                    out.clear();
+                    break;
+                } else {
+                    break;
+                }
+            }
+        }
+
+        return out;
     }
 
 }  // namespace
@@ -48,28 +67,6 @@ namespace sung { namespace backend {
     double get_time_unix_chrono() {
         const auto now = std::chrono::system_clock::now();
         return ::dur_cast(now.time_since_epoch());
-    }
-
-    std::string get_time_iso_utc_strftime() {
-        std::string out;  // Please RVO!
-
-        const auto now = std::time(nullptr);
-        std::array<char, 128> buf;
-        auto res = strftime(buf.data(), buf.size(), "%FT%TZ", gmtime(&now));
-        // strftime(buf, sizeof buf, "%Y-%m-%dT%H:%M:%SZ", gmtime(&now));
-
-        if (0 != res)
-            out.assign(buf.data(), res);
-        return out;
-    }
-
-    std::string get_time_iso_utc_put_time() {
-        const auto tit = std::time(nullptr);
-        const auto tmm = *std::gmtime(&tit);
-
-        std::ostringstream ss;
-        ss << std::put_time(&tmm, "%FT%TZ");
-        return ss.str();
     }
 
 }}  // namespace sung::backend
@@ -104,13 +101,32 @@ namespace sung {
         }
     }
 
-    std::string get_time_iso_local() {
-        const auto tit = std::time(nullptr);
+    std::string get_time_iso_utc(
+        bool milisec, bool remove_tail_zero, size_t digits
+    ) {
+        const auto uti = get_time_unix();
+        const auto tit = static_cast<time_t>(uti);
+        const auto tmm = *std::gmtime(&tit);
+
+        std::ostringstream ss;
+        ss << std::put_time(&tmm, "%FT%T");
+        if (milisec)
+            ss << ::make_sec_frac_str(uti, remove_tail_zero, digits);
+        ss << std::put_time(&tmm, "Z");
+        return ss.str();
+    }
+
+    std::string get_time_iso_local(
+        bool milisec, bool remove_tail_zero, size_t digits
+    ) {
+        const auto uti = get_time_unix();
+        const auto tit = static_cast<time_t>(uti);
         const auto tmm = *std::localtime(&tit);
 
         std::ostringstream ss;
         ss << std::put_time(&tmm, "%FT%T");
-        ss << "." << ::make_sec_frac_str();
+        if (milisec)
+            ss << ::make_sec_frac_str(uti, remove_tail_zero, digits);
         ss << std::put_time(&tmm, "%z");
 
         auto str = ss.str();
@@ -118,13 +134,17 @@ namespace sung {
         return str;
     }
 
-    std::string get_time_iso_local_slug() {
-        const auto tit = std::time(nullptr);
+    std::string get_time_iso_local_slug(
+        bool milisec, bool remove_tail_zero, size_t digits
+    ) {
+        const auto uti = get_time_unix();
+        const auto tit = static_cast<time_t>(uti);
         const auto tmm = *std::localtime(&tit);
 
         std::ostringstream ss;
         ss << std::put_time(&tmm, "%Y%m%dT%H%M%S");
-        ss << "." << ::make_sec_frac_str();
+        if (milisec)
+            ss << ::make_sec_frac_str(uti, remove_tail_zero, digits);
         ss << std::put_time(&tmm, "%z");
         return ss.str();
     }

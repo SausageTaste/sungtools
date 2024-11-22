@@ -5,8 +5,10 @@
 
 #include "sung/general/os_detect.hpp"
 
-#ifdef __cpp_lib_format
-    #include <format>
+#if SUNG__cplusplus >= 202002L
+    #define SUNG_UNIX_CHRONO
+#elif defined(SUNG_OS_WINDOWS)
+    #define SUNG_UNIX_CHRONO
 #endif
 
 
@@ -16,10 +18,6 @@ namespace sung { namespace backend {
 
     double get_time_unix_time_t();
     double get_time_unix_chrono();
-
-    std::string get_time_iso_utc_strftime();
-    std::string get_time_iso_utc_put_time();
-    std::string get_time_iso_local_put_time();
 
 }}  // namespace sung::backend
 
@@ -32,24 +30,22 @@ namespace sung {
 
 
     inline double get_time_unix() {
-#if SUNG__cplusplus >= 202002L
+#ifdef SUNG_UNIX_CHRONO
         return backend::get_time_unix_chrono();
 #else
         return backend::get_time_unix_time_t();
 #endif
     }
 
-    inline std::string get_time_iso_utc() {
-#ifdef __cpp_lib_format
-        const auto now = std::chrono::system_clock::now();
-        return std::format("{:%FT%TZ}", now);
-#else
-        return backend::get_time_iso_utc_strftime();
-#endif
-    }
-
-    std::string get_time_iso_local();
-    std::string get_time_iso_local_slug();
+    std::string get_time_iso_utc(
+        bool milisec = false, bool remove_tail_zero = false, size_t digits = 3
+    );
+    std::string get_time_iso_local(
+        bool milisec = false, bool remove_tail_zero = false, size_t digits = 3
+    );
+    std::string get_time_iso_local_slug(
+        bool milisec = false, bool remove_tail_zero = false, size_t digits = 3
+    );
 
 
     class MonotonicRealtimeClock {

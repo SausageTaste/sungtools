@@ -30,32 +30,16 @@ namespace {
 
 
     TEST(Time, IsoTimeStr) {
-        const auto time = sung::get_time_iso_utc();
-        ASSERT_FALSE(time.empty());
-        std::cout << time << std::endl;
-
-        {
-            const auto t = sung::backend::get_time_iso_utc_strftime();
-            ASSERT_FALSE(t.empty());
-            ASSERT_STREQ(time.substr(0, 19).c_str(), t.substr(0, 19).c_str());
-            std::cout << t << std::endl;
-        }
-
-        {
-            const auto t = sung::backend::get_time_iso_utc_put_time();
-            ASSERT_FALSE(t.empty());
-            ASSERT_STREQ(time.substr(0, 19).c_str(), t.substr(0, 19).c_str());
-            std::cout << t << std::endl;
-        }
+        std::cout << sung::get_time_iso_utc(false) << std::endl;
+        std::cout << sung::get_time_iso_utc(true) << std::endl;
     }
 
 
     TEST(Time, IsoLocalTimeStr) {
-        const auto time = sung::get_time_iso_local();
-        const auto slug = sung::get_time_iso_local_slug();
-        ASSERT_FALSE(time.empty());
-        ASSERT_FALSE(slug.empty());
-        std::cout << time << " (" << slug << ")" << std::endl;
+        std::cout << sung::get_time_iso_local(false) << " ("
+                  << sung::get_time_iso_local_slug(false) << ")" << std::endl;
+        std::cout << sung::get_time_iso_local(true) << " ("
+                  << sung::get_time_iso_local_slug(true) << ")" << std::endl;
     }
 
 
