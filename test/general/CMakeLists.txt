@@ -13,6 +13,10 @@ add_executable(sungtest_general_angle angle.cpp)
 add_test(sungtest_general_angle sungtest_general_angle)
 target_link_libraries(sungtest_general_angle ${LIB_GENERAL})
 
+add_executable(sungtest_general_cvar cvar.cpp)
+add_test(sungtest_general_cvar sungtest_general_cvar)
+target_link_libraries(sungtest_general_cvar ${LIB_GENERAL})
+
 add_executable(sungtest_general_expected expected.cpp)
 add_test(sungtest_general_expected sungtest_general_expected)
 target_link_libraries(sungtest_general_expected ${LIB_GENERAL})
