@@ -46,6 +46,15 @@ namespace sung {
         return str;
     }
 
+    std::string rstrip(std::string str, const std::string& suffix) {
+        if (str.size() >= suffix.size() &&
+            str.compare(str.size() - suffix.size(), suffix.size(), suffix) ==
+                0) {
+            str.erase(str.size() - suffix.size(), suffix.size());
+        }
+        return str;
+    }
+
     std::string slugify(std::string str, const char* r) {
         // Replace invalid characters with replacer
         str = std::regex_replace(str, std::regex("[^\\w\\s$*_+~.()\'\"-]"), r);

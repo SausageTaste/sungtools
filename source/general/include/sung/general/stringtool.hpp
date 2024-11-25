@@ -13,6 +13,7 @@ namespace sung {
     );
 
     std::string lstrip(std::string str, const std::string& prefix);
+    std::string rstrip(std::string str, const std::string& suffix);
 
     std::string slugify(std::string str, const char* replacer = "");
 
