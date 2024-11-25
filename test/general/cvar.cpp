@@ -6,7 +6,7 @@
 namespace {
 
     sung::AutoCVarInt cvar_int1{ "key1", "help1", 10 };
-    sung::AutoCVarFloat cvar_float1{ "key3", "help1", 3.14 };
+    sung::AutoCVarFlt cvar_float1{ "key3", "help1", 3.14 };
     sung::AutoCVarStr cvar_str1{ "key4", "help1", "value1" };
 
 

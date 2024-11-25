@@ -118,10 +118,10 @@ namespace sung {
     };
 
 
-    class AutoCVarFloat : public ICVarFloat {
+    class AutoCVarFlt : public ICVarFloat {
 
     public:
-        AutoCVarFloat(
+        AutoCVarFlt(
             const std::string& id,
             const std::string& help,
             double value,
@@ -131,7 +131,7 @@ namespace sung {
             cvar_ = cvars.create_float(id, help, value, predicate);
         }
 
-        AutoCVarFloat(
+        AutoCVarFlt(
             const std::string& id,
             const std::string& help,
             double value,
@@ -140,7 +140,7 @@ namespace sung {
             cvar_ = cvars.create_float(id, help, value);
         }
 
-        AutoCVarFloat(
+        AutoCVarFlt(
             const std::string& id, const std::string& help, double value
         ) {
             cvar_ = sung::gcvars().create_float(id, help, value);
