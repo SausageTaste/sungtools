@@ -5,13 +5,9 @@
 
 namespace {
 
-    sung::AutoCVarInt cvar_int1{ "key1", "help1", 10, nullptr, sung::gcvars() };
-    sung::AutoCVarFloat cvar_float1{
-        "key3", "help1", 3.14, nullptr, sung::gcvars()
-    };
-    sung::AutoCVarStr cvar_str1{
-        "key4", "help1", "value1", nullptr, sung::gcvars()
-    };
+    sung::AutoCVarInt cvar_int1{ "key1", "help1", 10 };
+    sung::AutoCVarFloat cvar_float1{ "key3", "help1", 3.14 };
+    sung::AutoCVarStr cvar_str1{ "key4", "help1", "value1" };
 
 
     TEST(CVar, CVars) {
@@ -56,7 +52,6 @@ namespace {
             "\xec\x95\x88\xeb\x85\x95",
             "help5",
             "Hello\n\xec\x84\xb8\xec\x83\x81"
-
         );
         std::cout << sung::gcvars().serialize_str() << std::endl;
     }

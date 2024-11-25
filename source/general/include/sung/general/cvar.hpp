@@ -93,6 +93,21 @@ namespace sung {
             cvar_ = cvars.create_int(id, help, value, predicate);
         }
 
+        AutoCVarInt(
+            const std::string& id,
+            const std::string& help,
+            int64_t value,
+            ICVars& cvars
+        ) {
+            cvar_ = cvars.create_int(id, help, value);
+        }
+
+        AutoCVarInt(
+            const std::string& id, const std::string& help, int64_t value
+        ) {
+            cvar_ = sung::gcvars().create_int(id, help, value);
+        }
+
         const std::string& id() override { return cvar_->id(); }
         const std::string& help() override { return cvar_->help(); }
         int64_t get() override { return cvar_->get(); }
@@ -116,6 +131,21 @@ namespace sung {
             cvar_ = cvars.create_float(id, help, value, predicate);
         }
 
+        AutoCVarFloat(
+            const std::string& id,
+            const std::string& help,
+            double value,
+            ICVars& cvars
+        ) {
+            cvar_ = cvars.create_float(id, help, value);
+        }
+
+        AutoCVarFloat(
+            const std::string& id, const std::string& help, double value
+        ) {
+            cvar_ = sung::gcvars().create_float(id, help, value);
+        }
+
         const std::string& id() override { return cvar_->id(); }
         const std::string& help() override { return cvar_->help(); }
         double get() override { return cvar_->get(); }
@@ -137,6 +167,23 @@ namespace sung {
             ICVars& cvars
         ) {
             cvar_ = cvars.create_str(id, help, value, predicate);
+        }
+
+        AutoCVarStr(
+            const std::string& id,
+            const std::string& help,
+            const std::string& value,
+            ICVars& cvars
+        ) {
+            cvar_ = cvars.create_str(id, help, value);
+        }
+
+        AutoCVarStr(
+            const std::string& id,
+            const std::string& help,
+            const std::string& value
+        ) {
+            cvar_ = sung::gcvars().create_str(id, help, value);
         }
 
         const std::string& id() override { return cvar_->id(); }
