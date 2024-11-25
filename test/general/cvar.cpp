@@ -21,7 +21,7 @@ namespace {
         cvar_int1.set(20);
         ASSERT_EQ(cv.geti("key1")->get(), 20);
         cv.geti("key1")->set(30);
-        ASSERT_THROW(cv.create_int("key1", "", 4, nullptr), std::runtime_error);
+        ASSERT_THROW(cv.create_int("key1", "", 4), std::runtime_error);
 
         ASSERT_EQ(cv.getf("key1"), nullptr);
         ASSERT_EQ(cv.getf("key2"), nullptr);
@@ -46,12 +46,26 @@ namespace {
         ASSERT_EQ(cvar_int2.get(), 10);
         ASSERT_TRUE(cvar_int2.set(20));
         ASSERT_EQ(cvar_int2.get(), 20);
+        ASSERT_THROW(cv.create_str("key\"2", "", ""), std::runtime_error);
+    }
+
+
+    TEST(CVar, Serialize) {
+        sung::gcvars().create_str("key5", "help5", "Hello\n\tworld");
+        sung::gcvars().create_str(
+            "\xec\x95\x88\xeb\x85\x95",
+            "help5",
+            "Hello\n\xec\x84\xb8\xec\x83\x81"
+
+        );
+        std::cout << sung::gcvars().serialize_str() << std::endl;
     }
 
 }  // namespace
 
 
 int main(int argc, char** argv) {
+    system("chcp 65001 > nul");
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }

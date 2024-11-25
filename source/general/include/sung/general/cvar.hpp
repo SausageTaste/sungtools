@@ -39,24 +39,26 @@ namespace sung {
             const std::string& id,
             const std::string& help,
             int64_t value,
-            std::function<bool(int64_t)> predicate
+            std::function<bool(int64_t)> predicate = nullptr
         ) = 0;
 
         virtual std::shared_ptr<ICVarFloat> create_float(
             const std::string& id,
             const std::string& help,
             double value,
-            std::function<bool(double)> predicate
+            std::function<bool(double)> predicate = nullptr
         ) = 0;
 
         virtual std::shared_ptr<ICVarStr> create_str(
             const std::string& id,
             const std::string& help,
             const std::string& value,
-            std::function<bool(const std::string&)> predicate
+            std::function<bool(const std::string&)> predicate = nullptr
         ) = 0;
 
         virtual std::shared_ptr<ICVarValue> get(const std::string& id) = 0;
+
+        virtual std::string serialize_str() = 0;
 
         std::shared_ptr<ICVarInt> geti(const std::string& id) {
             return std::dynamic_pointer_cast<ICVarInt>(this->get(id));
