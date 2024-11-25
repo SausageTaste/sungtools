@@ -74,6 +74,52 @@ namespace sung {
         }
     }
 
+    std::string serialize_str(const std::string& str) {
+        std::string result = "\"";
+        for (const auto& c : str) {
+            if (c == '\n') {
+                result += "\\n";
+            } else if (c == '\r') {
+                result += "\\r";
+            } else if (c == '\t') {
+                result += "\\t";
+            } else if (c == '\\') {
+                result += "\\\\";
+            } else if (c == '\"') {
+                result += "\\\"";
+            } else {
+                result += c;
+            }
+        }
+        result += "\"";
+        return result;
+    }
+
+    std::string deserialize_str(const std::string& str) {
+        std::string result;
+        for (size_t i = 1; i < str.size() - 1; ++i) {
+            if (str[i] == '\\') {
+                if (str[i + 1] == 'n') {
+                    result += '\n';
+                } else if (str[i + 1] == 'r') {
+                    result += '\r';
+                } else if (str[i + 1] == 't') {
+                    result += '\t';
+                } else if (str[i + 1] == '\\') {
+                    result += '\\';
+                } else if (str[i + 1] == '\"') {
+                    result += '\"';
+                } else {
+                    result += str[i + 1];
+                }
+                ++i;
+            } else {
+                result += str[i];
+            }
+        }
+        return result;
+    }
+
     sung::Optional<int> str2int(const std::string& str) {
         try {
             return std::stoi(str);

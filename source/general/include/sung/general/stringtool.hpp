@@ -18,6 +18,9 @@ namespace sung {
 
     std::string format_bytes(size_t bytes);
 
+    std::string serialize_str(const std::string& str);
+    std::string deserialize_str(const std::string& str);
+
     sung::Optional<int> str2int(const std::string& str);
 
 }  // namespace sung

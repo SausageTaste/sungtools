@@ -29,6 +29,30 @@ namespace {
                       << "\"\n";
     }
 
+
+    TEST(StringTool, Serialization) {
+        const std::vector<std::string> TEST_CASES{
+            "Hello, World!",
+            "Hello\nWorld!",
+            "Hello\rWorld!",
+            "Hello\tWorld!",
+            "Hello\\World!",
+            "Hello\"World!",
+            "Hello\nWorld!\n",
+            "Hello\nWorld!\n\n",
+            "Hello\nWorld!\n\n\n",
+            "Hello\nWorld!\n\n\n\n",
+            "Hello\nWorld!\n\n\n\n\n",
+        };
+
+        for (auto& x : TEST_CASES) {
+            const auto y = sung::serialize_str(x);
+            const auto z = sung::deserialize_str(y);
+            ASSERT_STREQ(x.c_str(), z.c_str());
+            std::cout << y << std::endl;
+        }
+    }
+
 }  // namespace
 
 
