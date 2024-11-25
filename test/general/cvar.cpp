@@ -56,6 +56,28 @@ namespace {
         std::cout << sung::gcvars().serialize_str() << std::endl;
     }
 
+
+    class Visitor : public sung::ICVarVisitor {
+
+    public:
+        void visit(sung::ICVarInt& cvar) override {
+            std::cout << "Visited " << cvar.id() << ": " << cvar.get() << '\n';
+        }
+
+        void visit(sung::ICVarFloat& cvar) override {
+            std::cout << "Visited " << cvar.id() << ": " << cvar.get() << '\n';
+        }
+
+        void visit(sung::ICVarStr& cvar) override {
+            std::cout << "Visited " << cvar.id() << ": " << cvar.get() << '\n';
+        }
+    };
+
+    TEST(CVar, Visitor) {
+        ::Visitor visitor;
+        sung::gcvars().visit(visitor);
+    }
+
 }  // namespace
 
 

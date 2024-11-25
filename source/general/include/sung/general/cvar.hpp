@@ -32,6 +32,14 @@ namespace sung {
     };
 
 
+    struct ICVarVisitor {
+        virtual ~ICVarVisitor() = default;
+        virtual void visit(ICVarInt& cvar) = 0;
+        virtual void visit(ICVarFloat& cvar) = 0;
+        virtual void visit(ICVarStr& cvar) = 0;
+    };
+
+
     struct ICVars {
         virtual ~ICVars() = default;
 
@@ -57,6 +65,8 @@ namespace sung {
         ) = 0;
 
         virtual std::shared_ptr<ICVarValue> get(const std::string& id) = 0;
+
+        virtual void visit(ICVarVisitor& visitor) = 0;
 
         virtual std::string serialize_str() = 0;
 

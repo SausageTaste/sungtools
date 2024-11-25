@@ -154,7 +154,21 @@ namespace {
                 return it->second;
         }
 
-        virtual std::string serialize_str() override {
+        void visit(sung::ICVarVisitor& visitor) override {
+            for (const auto& it : dat_) {
+                auto cvar = it.second.get();
+                if (auto cvar_int = dynamic_cast<::CVarInt*>(cvar))
+                    visitor.visit(*cvar_int);
+                else if (auto cvar_float = dynamic_cast<::CVarFloat*>(cvar))
+                    visitor.visit(*cvar_float);
+                else if (auto cvar_str = dynamic_cast<::CVarStr*>(cvar))
+                    visitor.visit(*cvar_str);
+                else
+                    throw std::runtime_error("Unknown CVar type");
+            }
+        }
+
+        std::string serialize_str() override {
             std::stringstream ss;
             for (const auto& it : dat_) {
                 ss << it.first;
