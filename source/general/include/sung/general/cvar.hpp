@@ -16,20 +16,24 @@ namespace sung {
 
     struct ICVarInt : public ICVarValue {
         virtual int64_t get() = 0;
-        virtual void set(int64_t value) = 0;
+        virtual bool set(int64_t value) = 0;
     };
 
 
     struct ICVarFloat : public ICVarValue {
         virtual double get() = 0;
-        virtual void set(double value) = 0;
+        virtual bool set(double value) = 0;
+    };
+
+
+    struct ICVarStr : public ICVarValue {
+        virtual const std::string& get() = 0;
+        virtual bool set(const std::string& value) = 0;
     };
 
 
     struct ICVars {
         virtual ~ICVars() = default;
-
-        virtual bool has(const std::string& id) = 0;
 
         virtual std::shared_ptr<ICVarInt> create_int(
             const std::string& id,
@@ -45,6 +49,13 @@ namespace sung {
             std::function<bool(double)> predicate
         ) = 0;
 
+        virtual std::shared_ptr<ICVarStr> create_str(
+            const std::string& id,
+            const std::string& help,
+            const std::string& value,
+            std::function<bool(const std::string&)> predicate
+        ) = 0;
+
         virtual std::shared_ptr<ICVarValue> get(const std::string& id) = 0;
 
         std::shared_ptr<ICVarInt> geti(const std::string& id) {
@@ -52,6 +63,9 @@ namespace sung {
         }
         std::shared_ptr<ICVarFloat> getf(const std::string& id) {
             return std::dynamic_pointer_cast<ICVarFloat>(this->get(id));
+        }
+        std::shared_ptr<ICVarStr> gets(const std::string& id) {
+            return std::dynamic_pointer_cast<ICVarStr>(this->get(id));
         }
     };
 
@@ -80,7 +94,7 @@ namespace sung {
         const std::string& id() override { return cvar_->id(); }
         const std::string& help() override { return cvar_->help(); }
         int64_t get() override { return cvar_->get(); }
-        void set(int64_t value) override { cvar_->set(value); }
+        bool set(int64_t value) override { return cvar_->set(value); }
 
     private:
         std::shared_ptr<ICVarInt> cvar_;
@@ -103,10 +117,35 @@ namespace sung {
         const std::string& id() override { return cvar_->id(); }
         const std::string& help() override { return cvar_->help(); }
         double get() override { return cvar_->get(); }
-        void set(double value) override { cvar_->set(value); }
+        bool set(double value) override { return cvar_->set(value); }
 
     private:
         std::shared_ptr<ICVarFloat> cvar_;
+    };
+
+
+    class AutoCVarStr : public ICVarStr {
+
+    public:
+        AutoCVarStr(
+            const std::string& id,
+            const std::string& help,
+            const std::string& value,
+            std::function<bool(const std::string&)> predicate,
+            ICVars& cvars
+        ) {
+            cvar_ = cvars.create_str(id, help, value, predicate);
+        }
+
+        const std::string& id() override { return cvar_->id(); }
+        const std::string& help() override { return cvar_->help(); }
+        const std::string& get() override { return cvar_->get(); }
+        bool set(const std::string& value) override {
+            return cvar_->set(value);
+        }
+
+    private:
+        std::shared_ptr<ICVarStr> cvar_;
     };
 
 }  // namespace sung

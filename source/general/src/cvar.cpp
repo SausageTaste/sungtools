@@ -15,7 +15,13 @@ namespace {
         const std::string& id() override { return id_; }
         const std::string& help() override { return help_text_; }
         int64_t get() override { return value_; }
-        void set(int64_t value) override { value_ = value; }
+        bool set(int64_t value) override {
+            if (predicate_ && !predicate_(value))
+                return false;
+
+            value_ = value;
+            return true;
+        }
 
         std::string id_;
         std::string help_text_;
@@ -30,7 +36,13 @@ namespace {
         const std::string& id() override { return id_; }
         const std::string& help() override { return help_text_; }
         double get() override { return value_; }
-        void set(double value) override { value_ = value; }
+        bool set(double value) override {
+            if (predicate_ && !predicate_(value))
+                return false;
+
+            value_ = value;
+            return true;
+        }
 
         std::string id_;
         std::string help_text_;
@@ -39,13 +51,30 @@ namespace {
     };
 
 
+    class CVarStr : public sung::ICVarStr {
+
+    public:
+        const std::string& id() override { return id_; }
+        const std::string& help() override { return help_text_; }
+        const std::string& get() override { return value_; }
+        bool set(const std::string& value) override {
+            if (predicate_ && !predicate_(value))
+                return false;
+
+            value_ = value;
+            return true;
+        }
+
+        std::string id_;
+        std::string help_text_;
+        std::function<bool(const std::string&)> predicate_;
+        std::string value_;
+    };
+
+
     class CVars : public sung::ICVars {
 
     public:
-        bool has(const std::string& id) override {
-            return dat_.find(id) != dat_.end();
-        }
-
         std::shared_ptr<sung::ICVarInt> create_int(
             const std::string& id,
             const std::string& help,
@@ -68,6 +97,21 @@ namespace {
             std::function<bool(double)> predicate
         ) override {
             auto cvar = std::make_shared<CVarFloat>();
+            cvar->id_ = id;
+            cvar->help_text_ = help;
+            cvar->predicate_ = predicate;
+            cvar->value_ = value;
+            this->try_insert(id, cvar);
+            return cvar;
+        }
+
+        std::shared_ptr<sung::ICVarStr> create_str(
+            const std::string& id,
+            const std::string& help,
+            const std::string& value,
+            std::function<bool(const std::string&)> predicate
+        ) override {
+            auto cvar = std::make_shared<CVarStr>();
             cvar->id_ = id;
             cvar->help_text_ = help;
             cvar->predicate_ = predicate;
