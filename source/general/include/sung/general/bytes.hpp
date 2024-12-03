@@ -27,13 +27,13 @@ namespace sung {
     }
 
     template <>
-    float flip_byte_order(float value) {
+    inline float flip_byte_order(float value) {
         uint32_t result = flip_byte_order(*reinterpret_cast<uint32_t*>(&value));
         return *reinterpret_cast<float*>(&result);
     }
 
     template <>
-    double flip_byte_order(double value) {
+    inline double flip_byte_order(double value) {
         uint64_t result = flip_byte_order(*reinterpret_cast<uint64_t*>(&value));
         return *reinterpret_cast<double*>(&result);
     }
@@ -260,6 +260,30 @@ namespace sung {
         const uint8_t* const data_;
         const size_t size_;
         size_t pos_ = 0;
+    };
+
+
+    template <typename T>
+    class BEValue {
+
+    public:
+        BEValue() = default;
+
+        BEValue(const T& value) {
+            decompose_to_be(value, data_.data(), data_.size());
+        }
+
+        T get() const { return assemble_be_data<T>(data_.data()); }
+
+        void set(T value) {
+            decompose_to_be(value, data_.data(), data_.size());
+        }
+
+        const uint8_t* data() const { return data_.data(); }
+        size_t size() const { return data_.size(); }
+
+    private:
+        std::array<uint8_t, sizeof(T)> data_;
     };
 
 }  // namespace sung

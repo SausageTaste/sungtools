@@ -113,6 +113,41 @@ namespace {
         return;
     }
 
+
+    struct BETestData {
+        sung::BEValue<uint16_t> v0;
+        sung::BEValue<uint8_t> v1;
+        sung::BEValue<uint16_t> v2;
+        sung::BEValue<uint32_t> v3;
+        sung::BEValue<uint8_t> v4;
+        sung::BEValue<uint64_t> v5;
+        sung::BEValue<uint8_t> v6;
+        sung::BEValue<uint8_t> v7;
+        sung::BEValue<uint64_t> v8;
+        sung::BEValue<uint8_t> v9;
+        sung::BEValue<uint32_t> v10;
+        sung::BEValue<uint16_t> v11;
+    };
+
+
+    TEST(Bytes, BEValue) {
+        sung::BEValue<int> v0 = 50;
+        ASSERT_EQ(v0.get(), 50);
+
+        ASSERT_EQ(offsetof(BETestData, v0), 0);
+        ASSERT_EQ(offsetof(BETestData, v1), 2);
+        ASSERT_EQ(offsetof(BETestData, v2), 3);
+        ASSERT_EQ(offsetof(BETestData, v3), 5);
+        ASSERT_EQ(offsetof(BETestData, v4), 9);
+        ASSERT_EQ(offsetof(BETestData, v5), 10);
+        ASSERT_EQ(offsetof(BETestData, v6), 18);
+        ASSERT_EQ(offsetof(BETestData, v7), 19);
+        ASSERT_EQ(offsetof(BETestData, v8), 20);
+        ASSERT_EQ(offsetof(BETestData, v9), 28);
+        ASSERT_EQ(offsetof(BETestData, v10), 29);
+        ASSERT_EQ(offsetof(BETestData, v11), 33);
+    }
+
 }  // namespace
 
 
