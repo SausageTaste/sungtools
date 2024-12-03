@@ -16,6 +16,30 @@ namespace sung {
 
 
     template <typename T>
+    T flip_byte_order(T value) {
+        T result = 0;
+        for (size_t i = 0; i < sizeof(T); ++i) {
+            result <<= 8;
+            result |= value & 0xFF;
+            value >>= 8;
+        }
+        return result;
+    }
+
+    template <>
+    float flip_byte_order(float value) {
+        uint32_t result = flip_byte_order(*reinterpret_cast<uint32_t*>(&value));
+        return *reinterpret_cast<float*>(&result);
+    }
+
+    template <>
+    double flip_byte_order(double value) {
+        uint64_t result = flip_byte_order(*reinterpret_cast<uint64_t*>(&value));
+        return *reinterpret_cast<double*>(&result);
+    }
+
+
+    template <typename T>
     T assemble_be_data(const uint8_t* buf) {
         if (is_big_endian()) {
             return *reinterpret_cast<const T*>(buf);
