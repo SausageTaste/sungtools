@@ -283,7 +283,7 @@ namespace sung {
         size_t size() const { return data_.size(); }
 
     private:
-        std::array<uint8_t, sizeof(T)> data_;
+        std::array<uint8_t, sizeof(T)> data_ = { 0 };
     };
 
 }  // namespace sung
