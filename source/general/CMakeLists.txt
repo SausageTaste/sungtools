@@ -4,6 +4,7 @@ add_library(sungtools_general STATIC
     src/cvar.cpp
     src/logic_gate.cpp
     src/stringtool.cpp
+    src/threading.cpp
     src/time.cpp
 )
 add_library(sungtools::general ALIAS sungtools_general)
