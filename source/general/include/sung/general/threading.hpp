@@ -26,6 +26,7 @@ namespace sung {
     };
 
 
-    std::shared_ptr<ITaskScheduler> create_task_scheduler();
+    using HTaskSche = std::shared_ptr<ITaskScheduler>;
+    HTaskSche create_task_scheduler();
 
 }  // namespace sung
