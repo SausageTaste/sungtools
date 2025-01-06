@@ -32,15 +32,18 @@ def main():
         for item2 in os.listdir(item_path):
             if item2 not in configurations:
                 continue
+            item2 = item2.lower()
 
             config_path = os.path.join(item_path, item2)
             config_output_path = os.path.join(bundle_path, item2)
-            os.makedirs(config_output_path, exist_ok=True)
 
             # copy only lib files
             for item3 in os.listdir(config_path):
                 if item3.endswith(".lib"):
-                    lib_output_path = os.path.join(config_output_path, "lib")
+                    if config_output_path.endswith("Release"):
+                        lib_output_path = os.path.join(config_output_path, "..", "lib")
+                    else:
+                        lib_output_path = os.path.join(config_output_path, "lib")
                     os.makedirs(lib_output_path, exist_ok=True)
                     shutil.copy(os.path.join(config_path, item3), os.path.join(lib_output_path, item3))
 
