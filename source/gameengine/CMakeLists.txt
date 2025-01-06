@@ -1,5 +1,6 @@
 add_library(sungtools_gameengine STATIC
     ${CMAKE_CURRENT_SOURCE_DIR}/src/inputs.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/mesh_builder.cpp
 )
 add_library(sungtools::gameengine ALIAS sungtools_gameengine)
 target_include_directories(sungtools_gameengine PUBLIC
