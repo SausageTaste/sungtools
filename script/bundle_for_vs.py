@@ -40,7 +40,7 @@ def main():
             # copy only lib files
             for item3 in os.listdir(config_path):
                 if item3.endswith(".lib"):
-                    if config_output_path.endswith("Release"):
+                    if config_output_path.endswith("release"):
                         lib_output_path = os.path.join(config_output_path, "..", "lib")
                     else:
                         lib_output_path = os.path.join(config_output_path, "lib")
