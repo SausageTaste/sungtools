@@ -42,20 +42,16 @@ namespace sung {
 
 namespace sung {
 
-    void UvSphereBuilder::build(MeshData& mesh_data) {
+    void UvSphereBuilder::build(MeshData& mesh_data) const {
         using Angle = sung::TAngle<double>;
-        const auto lat_min = Angle::from_deg(-89.99).normalize_neg();
-        const auto lat_max = Angle::from_deg(89.99).normalize_neg();
-        const auto lon_min = Angle::from_deg(-179.99).normalize_neg();
-        const auto lon_max = Angle::from_deg(179.99).normalize_neg();
 
-        const auto lon_step = (lon_max.rad() - lon_min.rad()) / slices_;
-        const auto lat_step = (lat_max.rad() - lat_min.rad()) / stacks_;
+        const auto lon_step = (lon_max_.rad() - lon_min_.rad()) / slices_;
+        const auto lat_step = (lat_max_.rad() - lat_min_.rad()) / stacks_;
         const auto len_inv = 1.0 / radius_;
 
         std::vector<std::vector<MeshData::Vertex>> vertex_lists;
         for (size_t i_stack = 0; i_stack <= stacks_; ++i_stack) {
-            const auto lat_angle = lat_max.rad() - lat_step * i_stack;
+            const auto lat_angle = lat_max_.rad() - lat_step * i_stack;
             const auto xy = radius_ * std::cos(lat_angle);
             const auto z = radius_ * std::sin(lat_angle);
 
@@ -65,7 +61,7 @@ namespace sung {
                 vertices.emplace_back();
                 auto& v = vertices.back();
 
-                const auto lon_angle = lon_min.rad() + lon_step * i_slice;
+                const auto lon_angle = lon_min_.rad() + lon_step * i_slice;
                 v.pos_.x() = xy * std::cos(lon_angle);
                 v.pos_.y() = xy * std::sin(lon_angle);
                 v.pos_.z() = z;

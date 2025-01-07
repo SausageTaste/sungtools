@@ -39,7 +39,20 @@ namespace sung {
     class UvSphereBuilder {
 
     public:
-        void build(MeshData& mesh_data);
+        using Angle = sung::TAngle<double>;
+
+        void build(MeshData& mesh_data) const;
+
+        MeshData build() const {
+            MeshData mesh_data;
+            this->build(mesh_data);
+            return mesh_data;
+        }
+
+        Angle lat_min_ = Angle::from_deg(-90);
+        Angle lat_max_ = Angle::from_deg(90);
+        Angle lon_min_ = Angle::from_deg(-180);
+        Angle lon_max_ = Angle::from_deg(180);
 
         double radius_ = 1.0;
         size_t slices_ = 16;
