@@ -1,4 +1,5 @@
 add_library(sungtools_gameengine STATIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/data_central.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/inputs.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/mesh_builder.cpp
 )
