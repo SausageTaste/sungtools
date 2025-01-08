@@ -2,6 +2,7 @@ add_library(sungtools_general STATIC
     src/angle.cpp
     src/bytes.cpp
     src/cvar.cpp
+    src/geometry3d.cpp
     src/logic_gate.cpp
     src/stringtool.cpp
     src/threading.cpp

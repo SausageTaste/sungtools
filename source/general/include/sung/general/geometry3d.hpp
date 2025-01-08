@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <vector>
 
 #include "linalg.hpp"
 #include "optional.hpp"
@@ -13,15 +14,22 @@ namespace sung {
         double distance_ = 0;
         bool from_front_ = false;
     };
+    using OptSegIntersec = sung::Optional<SegIntersecInfo>;
 
 
     class LineSegment3 {
 
     public:
         using Vec3 = TVec3<double>;
+        using Vec4 = TVec4<double>;
 
         LineSegment3() = default;
         LineSegment3(const Vec3& pos, const Vec3& dir) : pos_(pos), dir_(dir) {}
+
+        void apply_transform(const TMat4<double>& m) {
+            pos_ = m * Vec4{ pos_, 1 };
+            dir_ = m * Vec4{ dir_, 0 };
+        }
 
         const Vec3& pos() const { return pos_; }
         const Vec3& dir() const { return dir_; }
@@ -34,6 +42,7 @@ namespace sung {
         Vec3 pos_;
         Vec3 dir_;
     };
+    using LineSeg3 = LineSegment3;
 
 
     class Plane3 {
@@ -43,38 +52,20 @@ namespace sung {
         using Vec4 = TVec4<double>;
 
         Plane3() = default;
-        Plane3(const Vec3& center, const Vec3& normal)
-            : center_(center), normal_(normal.normalize()) {}
+        Plane3(const Vec3& center, const Vec3& normal);
 
-        Vec4 coeff() const {
-            const auto d = -normal_.dot(center_);
-            return Vec4{ normal_, d };
-        }
+        const Vec3& center() const { return center_; }
+        const Vec3& normal() const { return normal_; }
 
-        double calc_signed_dist(const Vec3& p) const {
-            return this->coeff().dot(Vec4{ p, 1 });
-        }
+        Vec4 coeff() const;
+        double calc_signed_dist(const Vec3& p) const;
 
-        sung::Optional<SegIntersecInfo> find_intersection(
-            const LineSegment3& seg
-        ) const {
-            constexpr auto ZERO = static_cast<double>(0);
-
-            const auto pos_dist = this->calc_signed_dist(seg.pos());
-            const auto end_dist = this->calc_signed_dist(seg.end());
-            if ((pos_dist * end_dist) > ZERO)
-                return sung::nullopt;
-
-            const auto pos_dist_abs = std::abs(pos_dist);
-            const auto denominator = pos_dist_abs + std::abs(end_dist);
-            if (ZERO == denominator)
-                return SegIntersecInfo{ 0, pos_dist > end_dist };
-
-            const auto distance = seg.len() * pos_dist_abs / denominator;
-            if (std::isnan(distance))
-                return sung::nullopt;
-
-            return SegIntersecInfo{ distance, pos_dist > end_dist };
+        bool find_seg_intersec(SegIntersecInfo& out, const LineSeg3& seg) const;
+        OptSegIntersec find_seg_intersec(const LineSeg3& seg) const {
+            SegIntersecInfo out;
+            if (this->find_seg_intersec(out, seg))
+                return out;
+            return sung::nullopt;
         }
 
     private:
@@ -86,7 +77,8 @@ namespace sung {
     class Triangle3 {
 
     public:
-        using Vec3 = TVec3<double>;
+        using Vec3 = Plane3::Vec3;
+        using Vec4 = Plane3::Vec4;
 
         constexpr Triangle3() = default;
         constexpr Triangle3(const Vec3& a, const Vec3& b, const Vec3& c)
@@ -96,57 +88,103 @@ namespace sung {
         constexpr auto& b() const { return b_; }
         constexpr auto& c() const { return c_; }
 
-        double area() const { return (b_ - a_).cross(c_ - a_).len() / 2; }
+        void apply_transform(const TMat4<double>& m);
 
+        double area() const;
         // Counter-clockwise
-        Vec3 normal() const { return (b_ - a_).cross(c_ - a_).normalize(); }
-
-        Plane3 plane() const { return Plane3{ a_, this->normal() }; }
+        Vec3 normal() const;
+        Plane3 plane() const;
 
         sung::Optional<double> radius_circumcircle() const {
-            const auto ab = b_ - a_;
-            const auto ac = c_ - a_;
-            const auto bc = c_ - b_;
-
-            const auto a = ab.len();
-            const auto b = ac.len();
-            const auto c = bc.len();
-
-            const auto cross_area = ab.cross(ac).len_sqr();
-            if (cross_area <= 1e-128)
-                return sung::nullopt;
-
-            return a * b * c / (2 * std::sqrt(cross_area));
+            double out;
+            if (this->radius_circumcircle(out))
+                return out;
+            return sung::nullopt;
         }
 
         // https://www.desmos.com/3d/xf0tqmgkfo
         sung::Optional<Vec3> circumcenter() const {
-            const auto ab = b_ - a_;
-            const auto bc = c_ - b_;
-            const auto ca = a_ - c_;
+            Vec3 out;
+            if (this->circumcenter(out))
+                return out;
+            return sung::nullopt;
+        }
 
-            const auto cross_area = ab.cross(ca).len_sqr();
-            if (cross_area <= 1e-128)
-                return sung::nullopt;
+        bool find_seg_intersec(
+            SegIntersecInfo& out, const LineSeg3& seg, bool ignore_back
+        ) const;
 
-            const auto A = bc.len();
-            const auto B = ca.len();
-            const auto C = ab.len();
-            const auto r = (A * B * C) / (2 * std::sqrt(cross_area));
-
-            const auto half_edge_len = A * 0.5;
-            const auto dist_sqr = (r + half_edge_len) * (r - half_edge_len);
-            const auto dist = std::sqrt(dist_sqr);
-
-            const auto tri_normal = ab.cross(bc);
-            const auto to_center = tri_normal.cross(bc).normalize() * dist;
-            return (b_ + c_) * 0.5 + to_center;
+        OptSegIntersec find_seg_intersec(const LineSeg3& seg, bool ignore_back)
+            const {
+            SegIntersecInfo out;
+            if (this->find_seg_intersec(out, seg, ignore_back))
+                return out;
+            return sung::nullopt;
         }
 
     private:
+        bool radius_circumcircle(double& out) const;
+        bool circumcenter(Vec3& out) const;
+
         Vec3 a_;
         Vec3 b_;
         Vec3 c_;
+    };
+
+
+    class Sphere3 {
+
+    public:
+        using Vec3 = sung::TVec3<double>;
+
+        Sphere3();
+        Sphere3(double radius);
+        Sphere3(double x, double y, double z, double radius);
+        Sphere3(const Vec3& pos, double radius);
+
+        bool is_intersecting(const LineSeg3& ray) const;
+        bool find_intersection(Vec3& out, const LineSeg3& ray) const;
+
+        sung::Optional<Vec3> find_ray_intersec(const LineSeg3& ray) const {
+            Vec3 out;
+            if (this->find_intersection(out, ray))
+                return out;
+            return sung::nullopt;
+        }
+
+        Vec3 pos_;
+        double radius_;
+    };
+
+
+    // Triangle soup
+    class TriSoup3 {
+
+    public:
+        using Vec3 = Triangle3::Vec3;
+        using Vec4 = Triangle3::Vec4;
+
+        void add_vtx(const Vec3& v);
+
+        size_t tri_count() const;
+
+        bool find_seg_intersec(
+            SegIntersecInfo& out,
+            const sung::LineSegment3& ray,
+            bool ignore_back
+        ) const;
+
+        OptSegIntersec find_seg_intersec(
+            const sung::LineSegment3& ray, bool ignore_back
+        ) const {
+            SegIntersecInfo out;
+            if (this->find_seg_intersec(out, ray, ignore_back))
+                return out;
+            return sung::nullopt;
+        }
+
+        std::vector<Vec3> vtx_;
+        std::vector<uint32_t> idx_;
     };
 
 }  // namespace sung

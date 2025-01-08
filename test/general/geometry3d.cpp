@@ -39,7 +39,7 @@ namespace {
         };
 
         for (auto& test_case : test_cases) {
-            const auto info = plane.find_intersection(test_case.seg_);
+            const auto info = plane.find_seg_intersec(test_case.seg_);
             const auto inter = test_case.seg_.pos() +
                                test_case.seg_.dir().normalize() *
                                    info->distance_;
@@ -80,6 +80,23 @@ namespace {
             const auto p = tri.plane();
             ASSERT_NEAR(p.calc_signed_dist(tri.a()), 0, 1e-6);
         }
+    }
+
+
+    TEST(Geometry3D, TriSoup) {
+        sung::TriSoup3 soup;
+        soup.add_vtx({ 0, 0, 0 });
+        soup.add_vtx({ 2, 0, 0 });
+        soup.add_vtx({ 0, 2, 0 });
+
+        const sung::LineSegment3 ray{ { 1, 1, 1 }, { 0, 0, -2 } };
+        const auto in = soup.find_seg_intersec(ray, false);
+        ASSERT_TRUE(in.has_value());
+
+        auto p = ray.pos() + ray.dir().normalize() * in->distance_;
+        ASSERT_DOUBLE_EQ(p[0], 1);
+        ASSERT_DOUBLE_EQ(p[1], 1);
+        ASSERT_DOUBLE_EQ(p[2], 0);
     }
 
 }  // namespace
