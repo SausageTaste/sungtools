@@ -35,6 +35,9 @@ namespace sung {
         MeshData& add_aa_xy_quad(
             double x0, double x1, double y0, double y1, double z
         );
+        MeshData& add_aa_xz_quad(
+            double x0, double x1, double z0, double z1, double y
+        );
 
         std::vector<Vertex> vertices_;
         std::vector<size_t> indices_;
