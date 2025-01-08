@@ -37,6 +37,44 @@ namespace sung {
         return *this;
     }
 
+    MeshData& MeshData::add_aa_xy_quad(
+        double x0, double x1, double y0, double y1, double z
+    ) {
+        const AABB1<double> x{ x0, x1 };
+        const AABB1<double> y{ y0, y1 };
+
+        Vertex v0;
+        v0.pos_.x() = x.mini();
+        v0.pos_.y() = y.maxi();
+        v0.pos_.z() = z;
+        v0.normal_ = { 0, 0, 1 };
+        v0.texco0_ = { 0, 1 };
+
+        Vertex v1;
+        v1.pos_.x() = x.mini();
+        v1.pos_.y() = y.mini();
+        v1.pos_.z() = z;
+        v1.normal_ = { 0, 0, 1 };
+        v1.texco0_ = { 0, 0 };
+
+        Vertex v2;
+        v2.pos_.x() = x.maxi();
+        v2.pos_.y() = y.mini();
+        v2.pos_.z() = z;
+        v2.normal_ = { 0, 0, 1 };
+        v2.texco0_ = { 1, 0 };
+
+        Vertex v3;
+        v3.pos_.x() = x.maxi();
+        v3.pos_.y() = y.maxi();
+        v3.pos_.z() = z;
+        v3.normal_ = { 0, 0, 1 };
+        v3.texco0_ = { 1, 1 };
+
+        this->add_quad(v0, v1, v2, v3);
+        return *this;
+    }
+
 }  // namespace sung
 
 

@@ -9,6 +9,7 @@
 
 namespace sung {
 
+    // Always CCW winding order
     class MeshData {
 
     public:
@@ -29,6 +30,10 @@ namespace sung {
             const Vertex& v1,
             const Vertex& v2,
             const Vertex& v3
+        );
+
+        MeshData& add_aa_xy_quad(
+            double x0, double x1, double y0, double y1, double z
         );
 
         std::vector<Vertex> vertices_;
