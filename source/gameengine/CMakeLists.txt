@@ -8,3 +8,4 @@ target_include_directories(sungtools_gameengine PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 target_link_libraries(sungtools_gameengine PUBLIC sungtools::general)
+target_compile_features(sungtools_gameengine PUBLIC cxx_std_17)
