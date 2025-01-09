@@ -4,8 +4,6 @@
 #include <optional>
 #include <shared_mutex>
 
-#include "sung/general/threading.hpp"
-
 
 namespace sung {
 
@@ -80,7 +78,8 @@ namespace sung {
             const DataReader& accessor
         ) = 0;
     };
+    using HDataCentral = std::shared_ptr<IDataCentral>;
 
-    std::unique_ptr<IDataCentral> create_data_central(HTaskSche task_sche);
+    std::unique_ptr<IDataCentral> create_data_central();
 
 }  // namespace sung

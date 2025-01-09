@@ -22,8 +22,6 @@ namespace {
     class DataCentral : public sung::IDataCentral {
 
     public:
-        DataCentral(sung::HTaskSche task_sche) : task_sche_{ task_sche } {}
-
         sung::DataReader add(std::unique_ptr<sung::IDataAdapter> data
         ) override {
             auto data_ptr = std::make_shared<sung::InternalDataSharedPtr>();
@@ -60,7 +58,6 @@ namespace {
 
     private:
         std::vector<std::shared_ptr<sung::InternalDataSharedPtr>> data_list_;
-        sung::HTaskSche task_sche_;
     };
 
 }  // namespace
@@ -164,8 +161,8 @@ namespace sung {
 
 namespace sung {
 
-    std::unique_ptr<IDataCentral> create_data_central(HTaskSche task_sche) {
-        return std::make_unique<::DataCentral>(task_sche);
+    std::unique_ptr<IDataCentral> create_data_central() {
+        return std::make_unique<::DataCentral>();
     }
 
 }  // namespace sung
