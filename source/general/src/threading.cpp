@@ -155,7 +155,7 @@ namespace {
         }
 
     private:
-        constexpr static int THREAD_COUNT = 2;
+        constexpr static int THREAD_COUNT = 8;
         std::array<::ThreadFunc, THREAD_COUNT> functions_;
         std::array<std::thread, THREAD_COUNT> threads_;
         ::TaskList tasks_;
