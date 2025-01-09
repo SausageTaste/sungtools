@@ -140,16 +140,14 @@ namespace sung {
             return std::nullopt;
         }
 
-        try {
-            if (!lock_.try_lock())
-                return std::nullopt;
-
-            ResPair out{ std::move(lock_), data->data_.get() };
-            lock_ = Lock{ data->mut_, std::defer_lock };
-            return out;
-        } catch (const std::system_error&) {
+        if (lock_.owns_lock())
             return std::nullopt;
-        }
+        if (!lock_.try_lock())
+            return std::nullopt;
+
+        ResPair out{ std::move(lock_), data->data_.get() };
+        lock_ = Lock{ data->mut_, std::defer_lock };
+        return out;
     }
 
     size_t DataWriter::id() const { return data_.lock()->id(); }
