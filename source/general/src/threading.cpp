@@ -17,6 +17,7 @@ namespace {
         struct Record {
             sung::MonotonicRealtimeTimer select_time_;
             std::shared_ptr<sung::ITask> task_;
+            bool occupied_ = false;
         };
 
         void add_task(std::shared_ptr<sung::ITask> task) {
@@ -25,6 +26,7 @@ namespace {
             auto& r = this->find_empty_slot();
             r.select_time_.check();
             r.task_ = task;
+            r.occupied_ = false;
         }
 
         void remove_task(sung::ITask& task) {
@@ -33,6 +35,17 @@ namespace {
             for (auto& r : tasks_) {
                 if (r.task_.get() == &task) {
                     r.task_.reset();
+                    r.occupied_ = false;
+                }
+            }
+        }
+
+        void yield(sung::ITask& task) {
+            std::lock_guard<std::mutex> lock(mut_);
+            for (auto& r : tasks_) {
+                if (r.task_.get() == &task) {
+                    r.occupied_ = false;
+                    break;
                 }
             }
         }
@@ -46,6 +59,8 @@ namespace {
             for (auto& r : tasks_) {
                 if (!r.task_)
                     continue;
+                if (r.occupied_)
+                    continue;
 
                 const auto elapsed = r.select_time_.elapsed();
                 if (elapsed > max_wait) {
@@ -56,6 +71,7 @@ namespace {
 
             if (out) {
                 out->select_time_.check();
+                out->occupied_ = true;
                 return out->task_;
             }
 
@@ -94,7 +110,10 @@ namespace {
                 const auto status = task->tick();
                 if (status == sung::TaskStatus::finished) {
                     this->remove_task(*task);
+                } else {
+                    this->yield_task(*task);
                 }
+
                 std::this_thread::yield();
             }
         }
@@ -114,6 +133,11 @@ namespace {
         void remove_task(sung::ITask& task) {
             if (tasks_)
                 tasks_->remove_task(task);
+        }
+
+        void yield_task(sung::ITask& task) {
+            if (tasks_)
+                tasks_->yield(task);
         }
 
         ::TaskList* tasks_ = nullptr;
