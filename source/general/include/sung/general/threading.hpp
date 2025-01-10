@@ -1,6 +1,8 @@
 #pragma once
 
+#include <atomic>
 #include <memory>
+#include <string>
 
 
 namespace sung {
@@ -14,6 +16,33 @@ namespace sung {
     struct ITask {
         virtual ~ITask() = default;
         virtual TaskStatus tick() = 0;
+    };
+
+
+    class StandardLoadTask : public ITask {
+
+    public:
+        const std::string& err_msg() const { return err_msg_; }
+        bool is_done() const { return done_; }
+        bool has_succeeded() const { return done_ && err_msg_.empty(); }
+        bool has_failed() const { return done_ && !err_msg_.empty(); }
+
+    protected:
+        TaskStatus success() {
+            err_msg_.clear();
+            done_ = true;
+            return TaskStatus::finished;
+        }
+
+        TaskStatus fail(const char* err_msg) {
+            err_msg_ = err_msg;
+            done_ = true;
+            return TaskStatus::finished;
+        }
+
+    private:
+        std::string err_msg_;
+        std::atomic_bool done_{ false };
     };
 
 
