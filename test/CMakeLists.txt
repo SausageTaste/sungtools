@@ -1,3 +1,6 @@
+include(FetchContent)
+
+
 FetchContent_Declare(
     sung_fetch_googletest
     GIT_REPOSITORY https://github.com/google/googletest
@@ -18,5 +21,4 @@ FetchContent_MakeAvailable(
 )
 
 
-add_subdirectory(general)
-add_subdirectory(gameengine)
+add_subdirectory(basic)

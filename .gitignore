@@ -3,3 +3,5 @@
 /build
 /bundle_*
 /out
+/script/installed_here
+/script/installing_here
