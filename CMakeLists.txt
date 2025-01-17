@@ -77,9 +77,9 @@ configure_package_config_file(
 
 install(TARGETS sungtools_basic
     EXPORT ${PROJECT_NAME}Targets
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib
-    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION $<IF:$<CONFIG:Debug>,debug/lib,lib>
+    ARCHIVE DESTINATION $<IF:$<CONFIG:Debug>,debug/lib,lib>
+    RUNTIME DESTINATION $<IF:$<CONFIG:Debug>,debug/bin,bin>
     INCLUDES DESTINATION include
 )
 install(DIRECTORY include/ DESTINATION include)
