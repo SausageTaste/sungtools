@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.11)
 
-project(SungTools
+project(sungtools
     VERSION 0.1.0
     LANGUAGES CXX
 )
@@ -84,11 +84,11 @@ install(DIRECTORY extern/optional/include/ DESTINATION include)
 install(EXPORT SungToolsTargets
     FILE SungToolsTargets.cmake
     NAMESPACE sungtools::
-    DESTINATION lib/cmake/SungTools
+    DESTINATION lib/cmake/sungtools
 )
 install(FILES
     "${CMAKE_CURRENT_BINARY_DIR}/SungToolsConfigVersion.cmake"
-    DESTINATION lib/cmake/SungTools
+    DESTINATION lib/cmake/sungtools
 )
 
 
