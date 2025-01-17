@@ -50,7 +50,7 @@ set(sung_src_basic
 )
 
 add_library(sungtools_basic STATIC ${sung_src_basic})
-add_library(sungtools::basic ALIAS sungtools_basic)
+add_library(sungtools::sungtools_basic ALIAS sungtools_basic)
 target_include_directories(sungtools_basic PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${sung_extern_dir}/expected/include>
