@@ -1,6 +1,0 @@
-[submodule "extern/optional"]
-	path = extern/optional
-	url = https://github.com/TartanLlama/optional
-[submodule "extern/expected"]
-	path = extern/expected
-	url = https://github.com/TartanLlama/expected/
