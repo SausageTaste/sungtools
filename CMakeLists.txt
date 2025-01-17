@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.11)
 
 project(sungtools
-    VERSION 0.1.0
+    VERSION 0.1.1
     LANGUAGES CXX
 )
 
