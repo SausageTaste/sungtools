@@ -66,13 +66,19 @@ target_include_directories(sungtools_basic PUBLIC
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
-    SungToolsConfigVersion.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
     VERSION ${PROJECT_VERSION}
     COMPATIBILITY SameMajorVersion
 )
 
+configure_package_config_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+    INSTALL_DESTINATION share/${PROJECT_NAME}
+)
+
 install(TARGETS sungtools_basic
-    EXPORT SungToolsTargets
+    EXPORT ${PROJECT_NAME}Targets
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
     RUNTIME DESTINATION bin
@@ -81,14 +87,15 @@ install(TARGETS sungtools_basic
 install(DIRECTORY include/ DESTINATION include)
 install(DIRECTORY extern/expected/include/ DESTINATION include)
 install(DIRECTORY extern/optional/include/ DESTINATION include)
-install(EXPORT SungToolsTargets
-    FILE SungToolsTargets.cmake
-    NAMESPACE sungtools::
-    DESTINATION lib/cmake/sungtools
+install(EXPORT ${PROJECT_NAME}Targets
+    FILE ${PROJECT_NAME}Targets.cmake
+    NAMESPACE ${PROJECT_NAME}::
+    DESTINATION share/${PROJECT_NAME}
 )
 install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/SungToolsConfigVersion.cmake"
-    DESTINATION lib/cmake/sungtools
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+    DESTINATION share/${PROJECT_NAME}
 )
 
 
