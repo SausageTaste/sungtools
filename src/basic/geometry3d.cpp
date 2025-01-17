@@ -192,14 +192,16 @@ namespace sung {
 namespace sung {
 
     void TriSoup3::add_vtx(const Vec3& v) {
-        for (size_t i = 0; i < vtx_.size(); ++i) {
+        const auto vtx_size = static_cast<uint32_t>(vtx_.size());
+
+        for (uint32_t i = 0; i < vtx_size; ++i) {
             if (v.are_similar(vtx_[i])) {
                 idx_.push_back(i);
                 return;
             }
         }
 
-        idx_.push_back(vtx_.size());
+        idx_.push_back(vtx_size);
         vtx_.push_back(v);
     }
 
