@@ -56,8 +56,6 @@ target_include_directories(sungtools_basic PUBLIC
     $<BUILD_INTERFACE:${sung_extern_dir}/expected/include>
     $<BUILD_INTERFACE:${sung_extern_dir}/optional/include>
     $<INSTALL_INTERFACE:include>
-    $<INSTALL_INTERFACE:expected/include>
-    $<INSTALL_INTERFACE:optional/include>
 )
 
 
