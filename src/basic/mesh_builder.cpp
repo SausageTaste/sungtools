@@ -3,6 +3,36 @@
 #include "sung/basic/angle.hpp"
 
 
+namespace {
+
+    void calc_tangents(
+        sung::MeshData::Vertex& p0,
+        sung::MeshData::Vertex& p1,
+        sung::MeshData::Vertex& p2
+    ) {
+        auto edge1 = p1.pos_ - p0.pos_;
+        auto edge2 = p2.pos_ - p0.pos_;
+        auto d_uv1 = p1.texco0_ - p0.texco0_;
+        auto d_uv2 = p2.texco0_ - p0.texco0_;
+        const auto deno = d_uv1.x() * d_uv2.y() - d_uv2.x() * d_uv1.y();
+        if (0 == deno)
+            return;
+
+        const auto f = 1 / deno;
+        sung::MeshData::Vec3 tangent;
+        tangent.x() = f * (d_uv2.y() * edge1.x() - d_uv1.y() * edge2.x());
+        tangent.y() = f * (d_uv2.y() * edge1.y() - d_uv1.y() * edge2.y());
+        tangent.z() = f * (d_uv2.y() * edge1.z() - d_uv1.y() * edge2.z());
+        tangent = tangent.normalize();
+
+        p0.tangent_ = tangent;
+        p1.tangent_ = tangent;
+        p2.tangent_ = tangent;
+    }
+
+}  // namespace
+
+
 // MeshData
 namespace sung {
 
@@ -111,6 +141,21 @@ namespace sung {
 
         this->add_quad(v0, v1, v2, v3);
         return *this;
+    }
+
+    void MeshData::build_tangents() {
+        const auto tri_count = indices_.size() / 3;
+        for (size_t i = 0; i < tri_count; ++i) {
+            const auto i0 = indices_.at(i * 3 + 0);
+            const auto i1 = indices_.at(i * 3 + 1);
+            const auto i2 = indices_.at(i * 3 + 2);
+
+            auto& v0 = vertices_.at(i0);
+            auto& v1 = vertices_.at(i1);
+            auto& v2 = vertices_.at(i2);
+
+            ::calc_tangents(v0, v1, v2);
+        }
     }
 
 }  // namespace sung

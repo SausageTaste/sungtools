@@ -21,6 +21,7 @@ namespace sung {
 
             Vec3 pos_;
             Vec3 normal_;
+            Vec3 tangent_;
             Vec2 texco0_;
         };
 
@@ -38,6 +39,8 @@ namespace sung {
         MeshData& add_aa_xz_quad(
             double x0, double x1, double z0, double z1, double y
         );
+
+        void build_tangents();
 
         std::vector<Vertex> vertices_;
         std::vector<size_t> indices_;
