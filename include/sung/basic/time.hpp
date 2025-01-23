@@ -129,4 +129,46 @@ namespace sung {
     using MonotonicRealtimeTimer = TTimer<MonotonicRealtimeClock>;
     using ManualNumericTimer = TTimer<ManualNumericClock>;
 
+
+    class SimClock {
+
+    public:
+        SimClock() { rt_check_.check(); }
+
+        void tick() { this->update_snapshot(); }
+
+        void sync_rt(const SimClock& src) {
+            const auto src_rt = src.rt_accum_.elapsed();
+            const auto this_rt = src.latest_.sim_;
+            const auto diff = src_rt - this_rt;
+            return;
+        }
+
+        // Simulation time
+        double t() const { return latest_.sim_; }
+
+        // Delta simulation time
+        double dt() const { return latest_.delta_sim_; }
+
+    private:
+        struct TimeSnapshot {
+            double rt_ = 0;
+            double sim_ = 0;
+            double delta_rt_ = 0;
+            double delta_sim_ = 0;
+        };
+
+        void update_snapshot() {
+            latest_.rt_ = rt_accum_.elapsed();
+            latest_.delta_rt_ = rt_check_.check_get_elapsed();
+            latest_.delta_sim_ = latest_.delta_rt_ * time_scale_;
+            latest_.sim_ += latest_.delta_sim_;
+        }
+
+        MonotonicRealtimeTimer rt_accum_;
+        MonotonicRealtimeTimer rt_check_;
+        TimeSnapshot latest_;
+        double time_scale_ = 1;
+    };
+
 }  // namespace sung
