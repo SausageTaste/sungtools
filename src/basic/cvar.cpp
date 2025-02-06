@@ -2,7 +2,7 @@
 
 #include <sstream>
 #include <stdexcept>
-#include <unordered_map>
+#include <map>
 
 #include "sung/basic/stringtool.hpp"
 
@@ -198,7 +198,7 @@ namespace {
                 throw std::runtime_error("CVar already exists: " + id);
         }
 
-        std::unordered_map<std::string, std::shared_ptr<sung::ICVarValue>> dat_;
+        std::map<std::string, std::shared_ptr<sung::ICVarValue>> dat_;
     };
 
 }  // namespace
