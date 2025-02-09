@@ -13,32 +13,42 @@ namespace sung {
     };
 
 
-    struct ITask {
+    class ITask {
+
+    public:
         virtual ~ITask() = default;
         virtual TaskStatus tick() = 0;
+
+        int16_t priority() const;
+        void set_priority(int16_t priority);
+
+    private:
+        std::atomic_int16_t priority_ = 0;
     };
 
 
     class IStandardLoadTask : public ITask {
 
     public:
-        const std::string& err_msg() const { return err_msg_; }
-        bool is_done() const { return done_; }
-        bool has_succeeded() const { return done_ && err_msg_.empty(); }
-        bool has_failed() const { return done_ && !err_msg_.empty(); }
+        enum class Status {
+            running,
+            success,
+            failed,
+        };
+
+        const std::string& err_msg() const;
+
+        bool is_done() const;
+        bool has_succeeded() const;
+        bool has_failed() const;
+        Status status() const;
 
     protected:
-        TaskStatus success() {
-            err_msg_.clear();
-            done_ = true;
-            return TaskStatus::finished;
-        }
-
-        TaskStatus fail(const char* err_msg) {
-            err_msg_ = err_msg;
-            done_ = true;
-            return TaskStatus::finished;
-        }
+        static TaskStatus running();
+        TaskStatus success();
+        TaskStatus fail(const char* err_msg);
+        TaskStatus fail(const std::string& err_msg);
+        TaskStatus fail(std::string&& err_msg);
 
     private:
         std::string err_msg_;

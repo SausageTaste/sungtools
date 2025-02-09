@@ -188,6 +188,67 @@ namespace {
 }  // namespace
 
 
+// ITask
+namespace sung {
+
+    int16_t ITask::priority() const { return priority_.load(); }
+
+    void ITask::set_priority(int16_t priority) { priority_.store(priority); }
+
+}  // namespace sung
+
+
+// IStandardLoadTask
+namespace sung {
+
+    const std::string& IStandardLoadTask::err_msg() const { return err_msg_; }
+
+    bool IStandardLoadTask::is_done() const { return done_; }
+
+    bool IStandardLoadTask::has_succeeded() const {
+        return done_ && err_msg_.empty();
+    }
+
+    bool IStandardLoadTask::has_failed() const {
+        return done_ && !err_msg_.empty();
+    }
+
+    IStandardLoadTask::Status IStandardLoadTask::status() const {
+        if (done_) {
+            return err_msg_.empty() ? Status::success : Status::failed;
+        }
+        return Status::running;
+    }
+
+    TaskStatus IStandardLoadTask::running() { return TaskStatus::running; }
+
+    TaskStatus IStandardLoadTask::success() {
+        err_msg_.clear();
+        done_ = true;
+        return TaskStatus::finished;
+    }
+
+    TaskStatus IStandardLoadTask::fail(const char* err_msg) {
+        err_msg_ = err_msg;
+        done_ = true;
+        return TaskStatus::finished;
+    }
+
+    TaskStatus IStandardLoadTask::fail(const std::string& err_msg) {
+        err_msg_ = err_msg;
+        done_ = true;
+        return TaskStatus::finished;
+    }
+
+    TaskStatus IStandardLoadTask::fail(std::string&& err_msg) {
+        err_msg_ = std::move(err_msg);
+        done_ = true;
+        return TaskStatus::finished;
+    }
+
+}  // namespace sung
+
+
 namespace sung {
 
     std::shared_ptr<ITaskScheduler> create_task_scheduler() {
