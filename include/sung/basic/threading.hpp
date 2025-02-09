@@ -19,7 +19,7 @@ namespace sung {
     };
 
 
-    class StandardLoadTask : public ITask {
+    class IStandardLoadTask : public ITask {
 
     public:
         const std::string& err_msg() const { return err_msg_; }
