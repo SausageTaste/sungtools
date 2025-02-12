@@ -105,9 +105,21 @@ namespace sung {
             return output;
         }
 
+        constexpr void set_or_expand(T val) {
+            if (once_)
+                this->expand_to_span(val);
+            else {
+                this->set(val);
+                once_ = true;
+            }
+        }
+
     private:
         T min_{};
         T max_{};
+
+        // It is only set in `set_or_expand` method
+        bool once_ = false;
     };
 
 
