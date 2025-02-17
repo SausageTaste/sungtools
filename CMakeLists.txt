@@ -38,6 +38,7 @@ endif()
 
 set(sung_src_basic
     ${sung_src_dir}/basic/angle.cpp
+    ${sung_src_dir}/basic/byte_arr.cpp
     ${sung_src_dir}/basic/bytes.cpp
     ${sung_src_dir}/basic/cvar.cpp
     ${sung_src_dir}/basic/geometry3d.cpp
