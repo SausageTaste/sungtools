@@ -6,11 +6,11 @@ namespace sung {
 
     size_t BytesBuilder::size() const noexcept { return data_.size(); }
 
-    uint8_t* BytesBuilder::data() noexcept { return data_.data(); }
+    byte8* BytesBuilder::data() noexcept { return data_.data(); }
 
-    const uint8_t* BytesBuilder::data() const noexcept { return data_.data(); }
+    const byte8* BytesBuilder::data() const noexcept { return data_.data(); }
 
-    const std::vector<uint8_t>& BytesBuilder::vector() const noexcept {
+    const std::vector<byte8>& BytesBuilder::vector() const noexcept {
         return data_;
     }
 
@@ -40,7 +40,7 @@ namespace sung {
 // BytesReader
 namespace sung {
 
-    BytesReader::BytesReader(const uint8_t* data, size_t size)
+    BytesReader::BytesReader(const byte8* data, size_t size)
         : data_{ data }, size_{ size } {}
 
     bool BytesReader::is_eof() const noexcept { return pos_ == size_; }

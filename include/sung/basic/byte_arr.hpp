@@ -16,15 +16,15 @@ namespace sung {
 
     public:
         size_t size() const noexcept;
-        uint8_t* data() noexcept;
-        const uint8_t* data() const noexcept;
-        const std::vector<uint8_t>& vector() const noexcept;
+        byte8* data() noexcept;
+        const byte8* data() const noexcept;
+        const std::vector<byte8>& vector() const noexcept;
 
         void clear() noexcept { data_.clear(); }
 
         // Once you call this, it is safe to call this->clear() before calling
         // any other methods
-        std::vector<uint8_t>&& release() noexcept { return std::move(data_); }
+        std::vector<byte8>&& release() noexcept { return std::move(data_); }
 
         void enlarge(size_t size);
 
@@ -78,7 +78,7 @@ namespace sung {
         void add_float64(double val) { this->add_val(val); }
 
     private:
-        std::vector<uint8_t> data_;
+        std::vector<byte8> data_;
     };
 
 
@@ -86,12 +86,12 @@ namespace sung {
     class BytesReader {
 
     public:
-        BytesReader(const uint8_t* data, size_t size);
+        BytesReader(const byte8* data, size_t size);
 
         size_t size() const noexcept { return size_; }
         size_t remaining() const noexcept { return size_ - pos_; }
-        const uint8_t* data() const noexcept { return data_; }
-        const uint8_t* head() const noexcept { return data_ + pos_; }
+        const byte8* data() const noexcept { return data_; }
+        const byte8* head() const noexcept { return data_ + pos_; }
 
         bool is_eof() const noexcept;
         bool has_overflow() const noexcept;
@@ -137,7 +137,7 @@ namespace sung {
             return sung::nullopt;
         }
 
-        bool read_raw_arr(uint8_t* dst, size_t count) {
+        bool read_raw_arr(byte8* dst, size_t count) {
             if (pos_ + count > size_)
                 return false;
 
@@ -172,7 +172,7 @@ namespace sung {
         }
 
     private:
-        const uint8_t* const data_;
+        const byte8* const data_;
         const size_t size_;
         size_t pos_ = 0;
     };
