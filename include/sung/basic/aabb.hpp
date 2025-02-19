@@ -49,6 +49,13 @@ namespace sung {
             return val >= min_ && val <= max_;
         }
 
+        constexpr T remap_linear(T val, T new_min, T new_max) const {
+            return new_min + (val - min_) * (new_max - new_min) / (max_ - min_);
+        }
+        constexpr T remap_linear(T val) const {
+            return (val - min_) / (max_ - min_);
+        }
+
         constexpr bool are_similar(const AABB1& rhs, T epsilon) const {
             return sung::are_similiar(min_, rhs.min_, epsilon) &&
                    sung::are_similiar(max_, rhs.max_, epsilon);
@@ -105,6 +112,7 @@ namespace sung {
             return output;
         }
 
+        constexpr void reset() { once_ = false; }
         constexpr void set_or_expand(T val) {
             if (once_)
                 this->expand_to_span(val);
