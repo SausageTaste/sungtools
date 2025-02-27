@@ -1,4 +1,4 @@
-set(sungtest_lib_basic GTest::gtest_main sungtools::basic)
+set(sungtest_lib_basic GTest::gtest_main sungtools::sungtools_basic)
 
 
 add_executable(sungtest_basic_aabb_units aabb_units.cpp)
@@ -12,6 +12,10 @@ target_link_libraries(sungtest_basic_aabb ${sungtest_lib_basic})
 add_executable(sungtest_basic_angle angle.cpp)
 add_test(sungtest_basic_angle sungtest_basic_angle)
 target_link_libraries(sungtest_basic_angle ${sungtest_lib_basic})
+
+add_executable(sungtest_basic_byte_arr byte_arr.cpp)
+add_test(sungtest_basic_byte_arr sungtest_basic_byte_arr)
+target_link_libraries(sungtest_basic_byte_arr ${sungtest_lib_basic})
 
 add_executable(sungtest_basic_cvar cvar.cpp)
 add_test(sungtest_basic_cvar sungtest_basic_cvar)
