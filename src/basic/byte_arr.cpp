@@ -53,4 +53,13 @@ namespace sung {
         return out;
     }
 
+    bool BytesReader::read_raw_arr(void* dst, size_t count) {
+        if (pos_ + count > size_)
+            return false;
+
+        std::memcpy(dst, data_ + pos_, count);
+        pos_ += count;
+        return true;
+    }
+
 }  // namespace sung

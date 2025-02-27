@@ -110,6 +110,8 @@ namespace sung {
             return out;
         }
 
+        bool read_raw_arr(void* dst, size_t count);
+
         template <typename T>
         bool read_val_arr(T* dst, size_t count) {
             const auto read_size = sizeof(T) * count;
@@ -135,15 +137,6 @@ namespace sung {
             if (this->read_val_arr<T>(out.data(), TSize))
                 return out;
             return sung::nullopt;
-        }
-
-        bool read_raw_arr(byte8* dst, size_t count) {
-            if (pos_ + count > size_)
-                return false;
-
-            std::memcpy(dst, data_ + pos_, count);
-            pos_ += count;
-            return true;
         }
 
         sung::Optional<int8_t> read_bool() { return read_val<int8_t>() != 0; }
