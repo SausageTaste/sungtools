@@ -1,6 +1,9 @@
 #pragma once
 
 #include <array>
+#include <cstdint>
+#include <cstring>
+
 
 namespace sung {
 
@@ -14,7 +17,7 @@ namespace sung {
     template <typename T>
     T flip_byte_order(T value) {
         T result = 0;
-        for (size_t i = 0; i < sizeof(T); ++i) {
+        for (std::size_t i = 0; i < sizeof(T); ++i) {
             result <<= 8;
             result |= value & 0xFF;
             value >>= 8;
@@ -41,7 +44,7 @@ namespace sung {
             return *reinterpret_cast<const T*>(buf);
         } else {
             byte8 tmp[sizeof(T)];
-            for (size_t i = 0; i < sizeof(T); ++i)
+            for (std::size_t i = 0; i < sizeof(T); ++i)
                 tmp[i] = buf[sizeof(T) - i - 1];
             return *reinterpret_cast<const T*>(tmp);
         }
@@ -53,14 +56,14 @@ namespace sung {
             return *reinterpret_cast<const T*>(buf);
         } else {
             byte8 tmp[sizeof(T)];
-            for (size_t i = 0; i < sizeof(T); ++i)
+            for (std::size_t i = 0; i < sizeof(T); ++i)
                 tmp[i] = buf[sizeof(T) - i - 1];
             return *reinterpret_cast<const T*>(tmp);
         }
     }
 
     template <typename T>
-    bool decompose_to_be(T src, byte8* dst, size_t dst_size) {
+    bool decompose_to_be(T src, byte8* dst, std::size_t dst_size) {
         if (dst_size < sizeof(T))
             return false;
 
