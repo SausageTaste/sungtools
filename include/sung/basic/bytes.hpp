@@ -118,4 +118,28 @@ namespace sung {
         std::array<byte8, sizeof(T)> data_ = { 0 };
     };
 
+
+    template <typename T>
+    class LEValue {
+
+    public:
+        LEValue() = default;
+
+        LEValue(const T& value) {
+            decompose_to_le(value, data_.data(), data_.size());
+        }
+
+        T get() const { return assemble_le_data<T>(data_.data()); }
+
+        void set(T value) {
+            decompose_to_le(value, data_.data(), data_.size());
+        }
+
+        const byte8* data() const { return data_.data(); }
+        size_t size() const { return data_.size(); }
+
+    private:
+        std::array<byte8, sizeof(T)> data_ = { 0 };
+    };
+
 }  // namespace sung
