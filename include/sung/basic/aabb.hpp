@@ -174,6 +174,22 @@ namespace sung {
                    y_.is_intersecting_cl(rhs.y_);
         }
 
+        constexpr double closest_distance(const TVec2<T>& point) const {
+            double dx = 0.0;
+            if (point.x() < x_min())
+                dx = x_min() - point.x();
+            else if (point.x() > x_max())
+                dx = point.x() - x_max();
+
+            double dy = 0.0;
+            if (point.y() < y_min())
+                dy = y_min() - point.y();
+            else if (point.y() > y_max())
+                dy = point.y() - y_max();
+
+            return std::sqrt(dx * dx + dy * dy);
+        }
+
         constexpr bool make_intersection(const AABB2& rhs, AABB2& out) const {
             if (auto x_intersection = x_.make_intersection(rhs.x_)) {
                 if (auto y_intersection = y_.make_intersection(rhs.y_)) {
