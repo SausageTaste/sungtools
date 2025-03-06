@@ -31,11 +31,6 @@ namespace sung {
         std::pair<size_t, size_t> add_arr(const void* src, size_t size);
 
         template <typename T>
-        std::pair<size_t, size_t> add_arr(const T& src) {
-            return this->add_arr(src.data(), src.size());
-        }
-
-        template <typename T>
         std::pair<size_t, size_t> add_val_arr(const T* src, size_t size) {
             if (is_little_endian()) {
                 return this->add_arr(src, sizeof(T) * size);
@@ -49,7 +44,7 @@ namespace sung {
         }
 
         template <typename T>
-        std::pair<size_t, size_t> add_val_arr(const T& src) {
+        std::pair<size_t, size_t> add_std_arr(const T& src) {
             return this->add_val_arr(src.data(), src.size());
         }
 
