@@ -114,12 +114,14 @@ namespace sung {
 
         void init(
             const size_t dim_count,
+            const size_t desc_len,
             const size_t data_count,
             const DataType data_type,
             const CompMethod comp_method
         );
 
         size_t dim_count() const;
+        size_t desc_len() const;
         size_t data_count() const;
         DataType data_type() const;
         CompMethod comp_method() const;
@@ -132,11 +134,13 @@ namespace sung {
     private:
         std::array<uint8_t, 8> magic_;
         LEValue<size_t> dim_count_;
+        LEValue<size_t> desc_len_;
         LEValue<size_t> data_count_;
         LEValue<size_t> data_type_;
         LEValue<size_t> comp_method_;
 
         // array<Dimension, dim_count_>
+        // array<int8_t, desc_len_>
         // array<data_type_, data_count_>
     };
 

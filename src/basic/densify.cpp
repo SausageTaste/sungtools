@@ -247,6 +247,7 @@ namespace sung {
 
     void AaddHeader::init(
         const size_t dim_count,
+        const size_t desc_len,
         const size_t data_count,
         const DataType data_type,
         const CompMethod comp_method
@@ -254,12 +255,15 @@ namespace sung {
         std::memcpy(magic_.data(), "AADD\0\0\0\0", 8);
 
         dim_count_.set(dim_count);
+        desc_len_.set(desc_len);
         data_count_.set(data_count);
         data_type_.set(static_cast<int>(data_type));
         comp_method_.set(static_cast<int>(comp_method));
     }
 
     size_t AaddHeader::dim_count() const { return dim_count_.get(); }
+
+    size_t AaddHeader::desc_len() const { return desc_len_.get(); }
 
     size_t AaddHeader::data_count() const { return data_count_.get(); }
 
