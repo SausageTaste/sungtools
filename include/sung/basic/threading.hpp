@@ -43,6 +43,8 @@ namespace sung {
         bool has_failed() const;
         Status status() const;
 
+        void wait_spinlock() const;
+
     protected:
         static TaskStatus running();
         TaskStatus success();

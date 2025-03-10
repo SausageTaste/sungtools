@@ -220,6 +220,12 @@ namespace sung {
         return Status::running;
     }
 
+    void IStandardLoadTask::wait_spinlock() const {
+        while (!done_) {
+            std::this_thread::yield();
+        }
+    }
+
     TaskStatus IStandardLoadTask::running() { return TaskStatus::running; }
 
     TaskStatus IStandardLoadTask::success() {
