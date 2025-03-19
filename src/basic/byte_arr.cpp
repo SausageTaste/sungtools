@@ -14,6 +14,8 @@ namespace sung {
         return data_;
     }
 
+    void BytesBuilder::reserve(size_t size) { data_.reserve(size); }
+
     void BytesBuilder::enlarge(size_t size) {
         data_.resize(data_.size() + size);
     }

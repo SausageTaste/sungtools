@@ -26,6 +26,7 @@ namespace sung {
         // any other methods
         std::vector<byte8>&& release() noexcept { return std::move(data_); }
 
+        void reserve(size_t size);
         void enlarge(size_t size);
 
         std::pair<size_t, size_t> add_arr(const void* src, size_t size);
