@@ -148,8 +148,9 @@ namespace {
     class TaskScheduler : public sung::ITaskScheduler {
 
     public:
-        TaskScheduler() {
-            for (int i = 0; i < THREAD_COUNT; ++i) {
+        TaskScheduler(size_t thread_count)
+            : functions_(thread_count), threads_(thread_count) {
+            for (int i = 0; i < thread_count; ++i) {
                 functions_[i].give_tasks(tasks_);
                 threads_[i] = std::thread(std::ref(functions_[i]));
             }
@@ -179,9 +180,8 @@ namespace {
         }
 
     private:
-        constexpr static int THREAD_COUNT = 8;
-        std::array<::ThreadFunc, THREAD_COUNT> functions_;
-        std::array<std::thread, THREAD_COUNT> threads_;
+        std::vector<::ThreadFunc> functions_;
+        std::vector<std::thread> threads_;
         ::TaskList tasks_;
     };
 
@@ -257,8 +257,12 @@ namespace sung {
 
 namespace sung {
 
-    std::shared_ptr<ITaskScheduler> create_task_scheduler() {
-        return std::make_shared<TaskScheduler>();
+    HTaskSche create_task_scheduler() {
+        return create_task_scheduler(std::thread::hardware_concurrency());
+    }
+
+    HTaskSche create_task_scheduler(size_t thread_count) {
+        return std::make_shared<TaskScheduler>(thread_count);
     }
 
 }  // namespace sung

@@ -69,5 +69,6 @@ namespace sung {
 
     using HTaskSche = std::shared_ptr<ITaskScheduler>;
     HTaskSche create_task_scheduler();
+    HTaskSche create_task_scheduler(size_t thread_count);
 
 }  // namespace sung
