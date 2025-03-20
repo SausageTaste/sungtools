@@ -9,15 +9,15 @@ namespace {
         sung::BytesBuilder bb;
 
         std::array<double, 5> doubles{ 1.0, 2.0, 3.0, 4.0, 5.0 };
-        bb.add_val_arr(doubles);
+        bb.add_std_arr(doubles);
 
         std::array<float, 7> floats{ 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f };
-        bb.add_val_arr(floats);
+        bb.add_std_arr(floats);
 
         std::array<uint64_t, 3> uints{ 0x1234567890ABCDEF,
                                        0xFEDCBA0987654321,
                                        0x0000000000000000 };
-        bb.add_val_arr(uints);
+        bb.add_std_arr(uints);
 
         bb.add_nt_str("Hello, World!");
 
