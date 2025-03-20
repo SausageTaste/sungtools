@@ -173,6 +173,9 @@ namespace {
             for (auto& t : threads_) {
                 t.join();
             }
+
+            functions_.clear();
+            threads_.clear();
         }
 
         void add_task(std::shared_ptr<sung::ITask> task) override {
