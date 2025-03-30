@@ -114,6 +114,8 @@ namespace sung {
             return TAngle{ 0 };
         }  // You can just use default ctor but for explicitness
 
+        constexpr TAngle operator-() const { return TAngle{ -radians_ }; }
+
         constexpr TAngle operator+(const TAngle& rhs) const {
             return TAngle{ radians_ + rhs.radians_ };
         }
