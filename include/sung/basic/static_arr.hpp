@@ -12,7 +12,12 @@ namespace sung {
 
     public:
         StaticVector() {}
-        ~StaticVector() { this->clear(); }
+        ~StaticVector() noexcept { this->clear(); }
+
+        StaticVector(const StaticVector&) = delete;
+        StaticVector& operator=(const StaticVector&) = delete;
+        StaticVector(StaticVector&&) = delete;
+        StaticVector& operator=(StaticVector&&) = delete;
 
         bool push_back(const T& item) {
             if (top_ >= N)
@@ -42,7 +47,7 @@ namespace sung {
             return true;
         }
 
-        void clear() {
+        void clear() noexcept {
             for (size_t i = 0; i < top_; ++i) {
                 auto& ptr = this->storage_at(i);
                 ptr.~T();
@@ -122,16 +127,17 @@ namespace sung {
         }
 
         size_t size() const { return top_; }
+        size_t capacity() const { return N; }
 
     private:
         T& storage_at(size_t item_index) {
-            return *reinterpret_cast<T*>(&data_[item_index * sizeof(T)]);
+            return *reinterpret_cast<T*>(&data_[item_index]);
         }
         const T& storage_at(size_t item_index) const {
-            return *reinterpret_cast<T*>(&data_[item_index * sizeof(T)]);
+            return *reinterpret_cast<const T*>(&data_[item_index]);
         }
 
-        std::array<uint8_t, sizeof(T) * N> data_;
+        std::aligned_storage_t<sizeof(T), alignof(T)> data_[N];
         size_t top_ = 0;  // Item index
     };
 
