@@ -151,7 +151,9 @@ namespace sung {
         enum class Type { none, short_press, long_press };
 
         // Call it periodically to poll the signal.
-        Type notify_poll(bool pressed, double threshold_sec);
+        Type notify_poll(
+            bool pressed, double threshold_sec, bool long_press_repeat = false
+        );
 
     private:
         EdgeDetector edge_detector_;

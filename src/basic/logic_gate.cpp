@@ -28,7 +28,7 @@ namespace sung {
 namespace sung {
 
     LongPressDetector::Type LongPressDetector::notify_poll(
-        bool pressed, double threshold
+        bool pressed, double threshold, bool long_press_repeat
     ) {
         switch (edge_detector_.notify_check_edge(pressed)) {
             case EdgeDetector::Type::rising:
@@ -49,7 +49,7 @@ namespace sung {
                 break;
         }
 
-        if (consumed_)
+        if (!long_press_repeat && consumed_)
             return Type::none;
         if (pressed && last_state_changed_.elapsed() >= threshold) {
             consumed_ = true;
