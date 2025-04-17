@@ -117,24 +117,32 @@ namespace {
 
 
     TEST(AABB, Aabb2DLazyInit) {
-        sung::Aabb2DLazyInit<double> aabb;
+        using AABB = sung::Aabb2DLazyInit<double>;
+        using Vec2 = AABB::Vec2;
+
+        AABB aabb;
 
         aabb.set_or_expand(1, 2);
         aabb.set_or_expand(9, 9);
-
         ASSERT_EQ(aabb.x_min(), 1);
         ASSERT_EQ(aabb.y_min(), 2);
-
         ASSERT_EQ(aabb.x_max(), 9);
         ASSERT_EQ(aabb.y_max(), 9);
 
         aabb.reset();
         aabb.set_or_expand(2, 3);
-
         ASSERT_EQ(aabb.x_min(), 2);
         ASSERT_EQ(aabb.y_min(), 3);
         ASSERT_EQ(aabb.x_max(), 2);
         ASSERT_EQ(aabb.y_max(), 3);
+
+        aabb.offset(1, 2);
+        ASSERT_EQ(aabb.x_min(), 3);
+        ASSERT_EQ(aabb.y_min(), 5);
+
+        aabb.offset(-Vec2(1, 1));
+        ASSERT_EQ(aabb.x_min(), 2);
+        ASSERT_EQ(aabb.y_min(), 4);
     }
 
 

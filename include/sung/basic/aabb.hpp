@@ -243,6 +243,11 @@ namespace sung { namespace internal {
             y_.offset(y);
         }
 
+        constexpr void offset(const Vec2& v) {
+            x_.offset(v.x());
+            y_.offset(v.y());
+        }
+
     protected:
         TAabb1D x_, y_;
     };
