@@ -11,7 +11,7 @@ namespace {
 
         constexpr auto MIN_RANGE = Dist::from_nm(1);
         constexpr auto MAX_RANGE = Dist::from_nm(2);
-        constexpr sung::AABB1<Dist> aabb(MIN_RANGE, MAX_RANGE);
+        constexpr sung::Aabb1D<Dist> aabb(MIN_RANGE, MAX_RANGE);
 
         static_assert(aabb.is_inside_op(Dist::from_m(2000)), "");
         static_assert(!aabb.is_inside_op(Dist::from_m(1000)), "");

@@ -7,7 +7,7 @@ namespace {
 
     TEST(AABB, FloatAABB1) {
         using T = float;
-        using AABB1 = sung::AABB1<T>;
+        using AABB1 = sung::Aabb1D<T>;
 
         constexpr AABB1 aabb{ -1, 2 };
 
@@ -36,7 +36,7 @@ namespace {
 
     TEST(AABB, FloatAABB2) {
         using T = float;
-        using AABB2 = sung::AABB2<T>;
+        using AABB2 = sung::Aabb2D<T>;
 
         constexpr AABB2 a{ 2, -1, 3, 5 };
         constexpr AABB2 b{ (T)-2.3, (T)1.4, 7, (T)3.14 };
@@ -72,7 +72,7 @@ namespace {
     TEST(AABB, FloatAABB3) {
         using T = float;
         using Vec3 = sung::TVec3<T>;
-        using AABB3 = sung::AABB3<T>;
+        using AABB3 = sung::Aabb3D<T>;
 
         constexpr AABB3 a{ 2, -1, 3, 5, 7, 11 };
         constexpr AABB3 b{ Vec3{ -2, 7, 5 }, Vec3{ 1, 3, 13 } };
@@ -113,6 +113,54 @@ namespace {
             a_expanded.are_similar(AABB3{ 12, -1, -12, 5, 0, 11 }, (T)0.001),
             "AABB3::get_expanded_to_span failed"
         );
+    }
+
+
+    TEST(AABB, Aabb2DLazyInit) {
+        sung::Aabb2DLazyInit<double> aabb;
+
+        aabb.set_or_expand(1, 2);
+        aabb.set_or_expand(9, 9);
+
+        ASSERT_EQ(aabb.x_min(), 1);
+        ASSERT_EQ(aabb.y_min(), 2);
+
+        ASSERT_EQ(aabb.x_max(), 9);
+        ASSERT_EQ(aabb.y_max(), 9);
+
+        aabb.reset();
+        aabb.set_or_expand(2, 3);
+
+        ASSERT_EQ(aabb.x_min(), 2);
+        ASSERT_EQ(aabb.y_min(), 3);
+        ASSERT_EQ(aabb.x_max(), 2);
+        ASSERT_EQ(aabb.y_max(), 3);
+    }
+
+
+    TEST(AABB, Aabb3DLazyInit) {
+        sung::Aabb3DLazyInit<double> aabb;
+
+        aabb.set_or_expand(1, 2, 3);
+        aabb.set_or_expand(9, 9, 9);
+
+        ASSERT_EQ(aabb.x_min(), 1);
+        ASSERT_EQ(aabb.y_min(), 2);
+        ASSERT_EQ(aabb.z_min(), 3);
+
+        ASSERT_EQ(aabb.x_max(), 9);
+        ASSERT_EQ(aabb.y_max(), 9);
+        ASSERT_EQ(aabb.z_max(), 9);
+
+        aabb.reset();
+        aabb.set_or_expand(2, 3, 4);
+
+        ASSERT_EQ(aabb.x_min(), 2);
+        ASSERT_EQ(aabb.y_min(), 3);
+        ASSERT_EQ(aabb.z_min(), 4);
+        ASSERT_EQ(aabb.x_max(), 2);
+        ASSERT_EQ(aabb.y_max(), 3);
+        ASSERT_EQ(aabb.z_max(), 4);
     }
 
 }  // namespace

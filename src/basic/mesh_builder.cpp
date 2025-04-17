@@ -70,8 +70,8 @@ namespace sung {
     MeshData& MeshData::add_aa_xy_quad(
         double x0, double x1, double y0, double y1, double z
     ) {
-        const AABB1<double> x{ x0, x1 };
-        const AABB1<double> y{ y0, y1 };
+        const Aabb1D<double> x{ x0, x1 };
+        const Aabb1D<double> y{ y0, y1 };
 
         Vertex v0;
         v0.pos_.x() = x.mini();
@@ -108,8 +108,8 @@ namespace sung {
     MeshData& MeshData::add_aa_xz_quad(
         double x0, double x1, double z0, double z1, double y
     ) {
-        const AABB1<double> x{ x0, x1 };
-        const AABB1<double> z{ z0, z1 };
+        const Aabb1D<double> x{ x0, x1 };
+        const Aabb1D<double> z{ z0, z1 };
 
         Vertex v0;
         v0.pos_.x() = x.mini();

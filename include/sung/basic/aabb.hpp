@@ -7,28 +7,30 @@
 #include "optional.hpp"
 
 
-namespace sung {
+namespace sung { namespace internal {
 
     // This class must allow integers as T
     template <typename T>
-    class AABB1 {
+    class Aabb1DBase {
 
     public:
-        constexpr AABB1() = default;
-        constexpr AABB1(T val0, T val1) { this->set(val0, val1); }
+        using val_t = T;
 
-        constexpr AABB1 operator+(T val) const {
-            return AABB1{ min_ + val, max_ + val };
+        constexpr Aabb1DBase() = default;
+        constexpr Aabb1DBase(T val0, T val1) { this->set(val0, val1); }
+
+        constexpr Aabb1DBase operator+(T val) const {
+            return Aabb1DBase{ min_ + val, max_ + val };
         }
-        constexpr AABB1 operator-(T val) const {
-            return AABB1{ min_ - val, max_ - val };
+        constexpr Aabb1DBase operator-(T val) const {
+            return Aabb1DBase{ min_ - val, max_ - val };
         }
-        constexpr AABB1& operator+=(T val) {
+        constexpr Aabb1DBase& operator+=(T val) {
             min_ += val;
             max_ += val;
             return *this;
         }
-        constexpr AABB1& operator-=(T val) {
+        constexpr Aabb1DBase& operator-=(T val) {
             min_ -= val;
             max_ -= val;
             return *this;
@@ -56,19 +58,21 @@ namespace sung {
             return (val - min_) / (max_ - min_);
         }
 
-        constexpr bool are_similar(const AABB1& rhs, T epsilon) const {
+        constexpr bool are_similar(const Aabb1DBase& rhs, T epsilon) const {
             return sung::are_similiar(min_, rhs.min_, epsilon) &&
                    sung::are_similiar(max_, rhs.max_, epsilon);
         }
 
-        constexpr bool is_intersecting_op(const AABB1& rhs) const {
+        constexpr bool is_intersecting_op(const Aabb1DBase& rhs) const {
             return max_ > rhs.min_ && min_ < rhs.max_;
         }
-        constexpr bool is_intersecting_cl(const AABB1& rhs) const {
+        constexpr bool is_intersecting_cl(const Aabb1DBase& rhs) const {
             return max_ >= rhs.min_ && min_ <= rhs.max_;
         }
 
-        constexpr bool make_intersection(const AABB1& rhs, AABB1& out) const {
+        constexpr bool make_intersection(
+            const Aabb1DBase& rhs, Aabb1DBase& out
+        ) const {
             if (!this->is_intersecting_cl(rhs))
                 return false;
 
@@ -77,8 +81,10 @@ namespace sung {
             return true;
         }
 
-        constexpr Optional<AABB1> make_intersection(const AABB1& rhs) const {
-            AABB1 output;
+        constexpr Optional<Aabb1DBase> make_intersection(
+            const Aabb1DBase& rhs
+        ) const {
+            Aabb1DBase output;
             if (this->make_intersection(rhs, output))
                 return output;
             else
@@ -106,8 +112,8 @@ namespace sung {
             if (max_ < val)
                 max_ = val;
         }
-        constexpr AABB1 get_expanded_to_span(T val) const {
-            AABB1 output = *this;
+        constexpr Aabb1DBase get_expanded_to_span(T val) const {
+            Aabb1DBase output = *this;
             output.expand_to_span(val);
             return output;
         }
@@ -118,69 +124,53 @@ namespace sung {
     };
 
 
-    template <typename T>
-    class AABB1Grow : public AABB1<T> {
+    template <typename TAabb1D>
+    class Aabb2DBase {
 
     public:
-        constexpr void reset() { once_ = false; }
-        constexpr void set_or_expand(T val) {
-            if (once_)
-                this->expand_to_span(val);
-            else {
-                this->set(val);
-                once_ = true;
-            }
+        using val_t = typename TAabb1D::val_t;
+
+        constexpr Aabb2DBase() = default;
+        constexpr Aabb2DBase(val_t x0, val_t x1, val_t y0, val_t y1) {
+            this->set(x0, x1, y0, y1);
         }
 
-    private:
-        bool once_ = false;
-    };
+        constexpr val_t x_min() const { return x_.mini(); }
+        constexpr val_t x_max() const { return x_.maxi(); }
+        constexpr val_t y_min() const { return y_.mini(); }
+        constexpr val_t y_max() const { return y_.maxi(); }
 
+        constexpr val_t x_mid() const { return x_.mid(); }
+        constexpr val_t y_mid() const { return y_.mid(); }
+        constexpr val_t x_len() const { return x_.len(); }
+        constexpr val_t y_len() const { return y_.len(); }
 
-    // This class must allow integers as T
-    template <typename T>
-    class AABB2 {
+        constexpr val_t width() const { return x_.len(); }
+        constexpr val_t height() const { return y_.len(); }
+        constexpr val_t area() const { return this->width() * this->height(); }
 
-    public:
-        constexpr AABB2() = default;
-        constexpr AABB2(T x0, T x1, T y0, T y1) { this->set(x0, x1, y0, y1); }
-
-        constexpr T x_min() const { return x_.mini(); }
-        constexpr T x_max() const { return x_.maxi(); }
-        constexpr T y_min() const { return y_.mini(); }
-        constexpr T y_max() const { return y_.maxi(); }
-
-        constexpr T x_mid() const { return x_.mid(); }
-        constexpr T y_mid() const { return y_.mid(); }
-        constexpr T x_len() const { return x_.len(); }
-        constexpr T y_len() const { return y_.len(); }
-
-        constexpr T width() const { return x_.len(); }
-        constexpr T height() const { return y_.len(); }
-        constexpr T area() const { return this->width() * this->height(); }
-
-        constexpr bool are_similar(const AABB2& rhs, T epsilon) const {
+        constexpr bool are_similar(const Aabb2DBase& rhs, val_t epsilon) const {
             return x_.are_similar(rhs.x_, epsilon) &&
                    y_.are_similar(rhs.y_, epsilon);
         }
 
-        constexpr bool is_inside_op(T x, T y) const {
+        constexpr bool is_inside_op(val_t x, val_t y) const {
             return x_.is_inside_op(x) && y_.is_inside_op(y);
         }
-        constexpr bool is_inside_cl(T x, T y) const {
+        constexpr bool is_inside_cl(val_t x, val_t y) const {
             return x_.is_inside_cl(x) && y_.is_inside_cl(y);
         }
 
-        constexpr bool is_intersecting_op(const AABB2& rhs) const {
+        constexpr bool is_intersecting_op(const Aabb2DBase& rhs) const {
             return x_.is_intersecting_op(rhs.x_) &&
                    y_.is_intersecting_op(rhs.y_);
         }
-        constexpr bool is_intersecting_cl(const AABB2& rhs) const {
+        constexpr bool is_intersecting_cl(const Aabb2DBase& rhs) const {
             return x_.is_intersecting_cl(rhs.x_) &&
                    y_.is_intersecting_cl(rhs.y_);
         }
 
-        constexpr double closest_distance(const TVec2<T>& point) const {
+        constexpr double closest_distance(const TVec2<val_t>& point) const {
             double dx = 0.0;
             if (point.x() < x_min())
                 dx = x_min() - point.x();
@@ -196,7 +186,9 @@ namespace sung {
             return std::sqrt(dx * dx + dy * dy);
         }
 
-        constexpr bool make_intersection(const AABB2& rhs, AABB2& out) const {
+        constexpr bool make_intersection(
+            const Aabb2DBase& rhs, Aabb2DBase& out
+        ) const {
             if (auto x_intersection = x_.make_intersection(rhs.x_)) {
                 if (auto y_intersection = y_.make_intersection(rhs.y_)) {
                     out.x_ = *x_intersection;
@@ -207,8 +199,11 @@ namespace sung {
 
             return false;
         }
-        constexpr Optional<AABB2> make_intersection(const AABB2& rhs) const {
-            AABB2 output;
+
+        constexpr Optional<Aabb2DBase> make_intersection(
+            const Aabb2DBase& rhs
+        ) const {
+            Aabb2DBase output;
             if (this->make_intersection(rhs, output))
                 return output;
             else
@@ -216,119 +211,125 @@ namespace sung {
         }
 
         // Yes it makes the volume 0
-        constexpr void set(T x, T y) {
+        constexpr void set(val_t x, val_t y) {
             x_.set(x);
             y_.set(y);
         }
-        constexpr void set(T x0, T x1, T y0, T y1) {
+        constexpr void set(val_t x0, val_t x1, val_t y0, val_t y1) {
             x_.set(x0, x1);
             y_.set(y0, y1);
         }
 
-        constexpr void expand_to_span(T x, T y) {
+        constexpr void expand_to_span(val_t x, val_t y) {
             x_.expand_to_span(x);
             y_.expand_to_span(y);
         }
-        constexpr AABB2 get_expanded_to_span(T x, T y) const {
-            AABB2 output = *this;
+        constexpr Aabb2DBase get_expanded_to_span(val_t x, val_t y) const {
+            Aabb2DBase output = *this;
             output.expand_to_span(x, y);
             return output;
         }
 
-    private:
-        AABB1<T> x_, y_;
+    protected:
+        TAabb1D x_, y_;
     };
 
 
-    template <typename T>
-    class AABB3 {
+    template <typename TAabb1D>
+    class Aabb3DBase {
 
     public:
-        constexpr AABB3() = default;
-        constexpr AABB3(T x0, T x1, T y0, T y1, T z0, T z1) {
+        using val_t = typename TAabb1D::val_t;
+
+        constexpr Aabb3DBase() = default;
+        constexpr Aabb3DBase(
+            val_t x0, val_t x1, val_t y0, val_t y1, val_t z0, val_t z1
+        ) {
             this->set(x0, x1, y0, y1, z0, z1);
         }
-        constexpr AABB3(const TVec3<T>& min, const TVec3<T>& max) {
+        constexpr Aabb3DBase(const TVec3<val_t>& min, const TVec3<val_t>& max) {
             this->set(min, max);
         }
 
-        constexpr AABB3 operator+(const TVec3<T>& v) const {
-            return AABB3{ x_ + v.x(), y_ + v.y(), z_ + v.z() };
+        constexpr Aabb3DBase operator+(const TVec3<val_t>& v) const {
+            return Aabb3DBase{ x_ + v.x(), y_ + v.y(), z_ + v.z() };
         }
-        constexpr AABB3 operator-(const TVec3<T>& v) const {
-            return AABB3{ x_ - v.x(), y_ - v.y(), z_ - v.z() };
+        constexpr Aabb3DBase operator-(const TVec3<val_t>& v) const {
+            return Aabb3DBase{ x_ - v.x(), y_ - v.y(), z_ - v.z() };
         }
-        constexpr AABB3& operator+=(const TVec3<T>& v) {
+        constexpr Aabb3DBase& operator+=(const TVec3<val_t>& v) {
             x_ += v.x();
             y_ += v.y();
             z_ += v.z();
             return *this;
         }
-        constexpr AABB3& operator-=(const TVec3<T>& v) {
+        constexpr Aabb3DBase& operator-=(const TVec3<val_t>& v) {
             x_ -= v.x();
             y_ -= v.y();
             z_ -= v.z();
             return *this;
         }
 
-        constexpr T x_min() const { return x_.mini(); }
-        constexpr T x_max() const { return x_.maxi(); }
-        constexpr T y_min() const { return y_.mini(); }
-        constexpr T y_max() const { return y_.maxi(); }
-        constexpr T z_min() const { return z_.mini(); }
-        constexpr T z_max() const { return z_.maxi(); }
+        constexpr val_t x_min() const { return x_.mini(); }
+        constexpr val_t x_max() const { return x_.maxi(); }
+        constexpr val_t y_min() const { return y_.mini(); }
+        constexpr val_t y_max() const { return y_.maxi(); }
+        constexpr val_t z_min() const { return z_.mini(); }
+        constexpr val_t z_max() const { return z_.maxi(); }
 
-        constexpr TVec3<T> mini() const {
-            return TVec3<T>{ this->x_min(), this->y_min(), this->z_min() };
+        constexpr TVec3<val_t> mini() const {
+            return TVec3<val_t>{ this->x_min(), this->y_min(), this->z_min() };
         }
-        constexpr TVec3<T> maxi() const {
-            return TVec3<T>{ this->x_max(), this->y_max(), this->z_max() };
+        constexpr TVec3<val_t> maxi() const {
+            return TVec3<val_t>{ this->x_max(), this->y_max(), this->z_max() };
         }
 
-        constexpr T x_mid() const { return x_.mid(); }
-        constexpr T y_mid() const { return y_.mid(); }
-        constexpr T z_mid() const { return z_.mid(); }
-        constexpr T x_len() const { return x_.len(); }
-        constexpr T y_len() const { return y_.len(); }
-        constexpr T z_len() const { return z_.len(); }
+        constexpr val_t x_mid() const { return x_.mid(); }
+        constexpr val_t y_mid() const { return y_.mid(); }
+        constexpr val_t z_mid() const { return z_.mid(); }
+        constexpr val_t x_len() const { return x_.len(); }
+        constexpr val_t y_len() const { return y_.len(); }
+        constexpr val_t z_len() const { return z_.len(); }
 
-        constexpr T volume() const {
+        constexpr val_t volume() const {
             return this->x_len() * this->y_len() * this->z_len();
         }
 
-        constexpr bool are_similar(const AABB3& rhs, T epsilon) const {
+        constexpr bool are_similar(const Aabb3DBase& rhs, val_t epsilon) const {
             return x_.are_similar(rhs.x_, epsilon) &&
                    y_.are_similar(rhs.y_, epsilon) &&
                    z_.are_similar(rhs.z_, epsilon);
         }
 
-        constexpr bool is_inside_op(T x, T y, T z) const {
+        constexpr bool is_inside_op(val_t x, val_t y, val_t z) const {
             return x_.is_inside_op(x) && y_.is_inside_op(y) &&
                    z_.is_inside_op(z);
         }
-        constexpr bool is_inside_op(const TVec3<T>& point) const {
+        constexpr bool is_inside_op(const TVec3<val_t>& point) const {
             return this->is_inside_op(point.x(), point.y(), point.z());
         }
-        constexpr bool is_inside_cl(T x, T y, T z) const {
+        constexpr bool is_inside_cl(val_t x, val_t y, val_t z) const {
             return x_.is_inside_cl(x) && y_.is_inside_cl(y) &&
                    z_.is_inside_cl(z);
         }
-        constexpr bool is_inside_cl(const TVec3<T>& point) const {
+        constexpr bool is_inside_cl(const TVec3<val_t>& point) const {
             return this->is_inside_cl(point.x(), point.y(), point.z());
         }
 
-        constexpr bool is_intersecting_op(const AABB3& rhs) const {
+        constexpr bool is_intersecting_op(const Aabb3DBase& rhs) const {
             return x_.is_intersecting_op(rhs.x_) &&
                    y_.is_intersecting_op(rhs.y_) &&
                    z_.is_intersecting_op(rhs.z_);
         }
-        constexpr bool is_intersecting_cl(const AABB3& rhs) const {
+        constexpr bool is_intersecting_cl(const Aabb3DBase& rhs) const {
             return x_.is_intersecting_cl(rhs.x_) &&
                    y_.is_intersecting_cl(rhs.y_) &&
                    z_.is_intersecting_cl(rhs.z_);
         }
 
-        constexpr bool make_intersection(const AABB3& rhs, AABB3& out) const {
+        constexpr bool make_intersection(
+            const Aabb3DBase& rhs, Aabb3DBase& out
+        ) const {
             if (auto x_intersection = x_.make_intersection(rhs.x_)) {
                 if (auto y_intersection = y_.make_intersection(rhs.y_)) {
                     if (auto z_intersection = z_.make_intersection(rhs.z_)) {
@@ -342,50 +343,126 @@ namespace sung {
 
             return false;
         }
-        constexpr Optional<AABB3> make_intersection(const AABB3& rhs) const {
-            AABB3 output;
+        constexpr Optional<Aabb3DBase> make_intersection(
+            const Aabb3DBase& rhs
+        ) const {
+            Aabb3DBase output;
             if (this->make_intersection(rhs, output))
                 return output;
             else
                 return sung::nullopt;
         }
 
-        constexpr void set(T x, T y, T z) {
+        constexpr void set(val_t x, val_t y, val_t z) {
             x_.set(x);
             y_.set(y);
-            z_.set(y);
+            z_.set(z);
         }
-        constexpr void set(const TVec3<T>& point) {
+        constexpr void set(const TVec3<val_t>& point) {
             this->set(point.x(), point.y(), point.z());
         }
-        constexpr void set(T x0, T x1, T y0, T y1, T z0, T z1) {
+        constexpr void set(
+            val_t x0, val_t x1, val_t y0, val_t y1, val_t z0, val_t z1
+        ) {
             x_.set(x0, x1);
             y_.set(y0, y1);
             z_.set(z0, z1);
         }
-        constexpr void set(const TVec3<T>& min, const TVec3<T>& max) {
+        constexpr void set(const TVec3<val_t>& min, const TVec3<val_t>& max) {
             this->set(min.x(), max.x(), min.y(), max.y(), min.z(), max.z());
         }
 
-        constexpr void expand_to_span(T x, T y, T z) {
+        constexpr void expand_to_span(val_t x, val_t y, val_t z) {
             x_.expand_to_span(x);
             y_.expand_to_span(y);
             z_.expand_to_span(z);
         }
-        constexpr void expand_to_span(const TVec3<T>& point) {
+        constexpr void expand_to_span(const TVec3<val_t>& point) {
             this->expand_to_span(point.x(), point.y(), point.z());
         }
-        constexpr AABB3 get_expanded_to_span(T x, T y, T z) const {
-            AABB3 output = *this;
+        constexpr Aabb3DBase get_expanded_to_span(
+            val_t x, val_t y, val_t z
+        ) const {
+            Aabb3DBase output = *this;
             output.expand_to_span(x, y, z);
             return output;
         }
-        constexpr AABB3 get_expanded_to_span(const TVec3<T>& point) const {
+        constexpr Aabb3DBase get_expanded_to_span(
+            const TVec3<val_t>& point
+        ) const {
             return this->get_expanded_to_span(point.x(), point.y(), point.z());
         }
 
+    protected:
+        TAabb1D x_, y_, z_;
+    };
+
+}}  // namespace sung::internal
+
+
+namespace sung {
+
+    template <typename T>
+    using Aabb1D = internal::Aabb1DBase<T>;
+
+    template <typename T>
+    using Aabb2D = internal::Aabb2DBase<Aabb1D<T>>;
+
+    template <typename T>
+    using Aabb3D = internal::Aabb3DBase<Aabb1D<T>>;
+
+
+    template <typename T>
+    class Aabb1DLazyInit : public internal::Aabb1DBase<T> {
+
+    public:
+        constexpr void reset() { once_ = false; }
+
+        constexpr void set_or_expand(T val) {
+            if (once_)
+                this->expand_to_span(val);
+            else {
+                this->set(val);
+                once_ = true;
+            }
+        }
+
     private:
-        AABB1<T> x_, y_, z_;
+        bool once_ = false;
+    };
+
+
+    template <typename T>
+    class Aabb2DLazyInit : public internal::Aabb2DBase<Aabb1DLazyInit<T>> {
+
+    public:
+        constexpr void reset() {
+            x_.reset();
+            y_.reset();
+        }
+
+        constexpr void set_or_expand(T x, T y) {
+            x_.set_or_expand(x);
+            y_.set_or_expand(y);
+        }
+    };
+
+
+    template <typename T>
+    class Aabb3DLazyInit : public internal::Aabb3DBase<Aabb1DLazyInit<T>> {
+
+    public:
+        constexpr void reset() {
+            x_.reset();
+            y_.reset();
+            z_.reset();
+        }
+
+        constexpr void set_or_expand(T x, T y, T z) {
+            x_.set_or_expand(x);
+            y_.set_or_expand(y);
+            z_.set_or_expand(z);
+        }
     };
 
 }  // namespace sung
