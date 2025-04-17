@@ -449,13 +449,13 @@ namespace sung {
 
     public:
         constexpr void reset() {
-            x_.reset();
-            y_.reset();
+            this->x_.reset();
+            this->y_.reset();
         }
 
         constexpr void set_or_expand(T x, T y) {
-            x_.set_or_expand(x);
-            y_.set_or_expand(y);
+            this->x_.set_or_expand(x);
+            this->y_.set_or_expand(y);
         }
     };
 
@@ -464,22 +464,24 @@ namespace sung {
     class Aabb3DLazyInit : public internal::Aabb3DBase<Aabb1DLazyInit<T>> {
 
     public:
+        using Vec3 = typename internal::Aabb3DBase<Aabb1DLazyInit<T>>::Vec3;
+
         constexpr void reset() {
-            x_.reset();
-            y_.reset();
-            z_.reset();
+            this->x_.reset();
+            this->y_.reset();
+            this->z_.reset();
         }
 
         constexpr void set_or_expand(T x, T y, T z) {
-            x_.set_or_expand(x);
-            y_.set_or_expand(y);
-            z_.set_or_expand(z);
+            this->x_.set_or_expand(x);
+            this->y_.set_or_expand(y);
+            this->z_.set_or_expand(z);
         }
 
         constexpr void set_or_expand(const Vec3& v) {
-            x_.set_or_expand(v.x());
-            y_.set_or_expand(v.y());
-            z_.set_or_expand(v.z());
+            this->x_.set_or_expand(v.x());
+            this->y_.set_or_expand(v.y());
+            this->z_.set_or_expand(v.z());
         }
     };
 
