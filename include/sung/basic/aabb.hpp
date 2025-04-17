@@ -215,6 +215,9 @@ namespace sung { namespace internal {
                 return sung::nullopt;
         }
 
+        constexpr void set_x(val_t x0, val_t x1) { x_.set(x0, x1); }
+        constexpr void set_y(val_t y0, val_t y1) { y_.set(y0, y1); }
+
         // Yes it makes the volume 0
         constexpr void set(val_t x, val_t y) {
             x_.set(x);
@@ -268,19 +271,22 @@ namespace sung { namespace internal {
         constexpr val_t z_min() const { return z_.mini(); }
         constexpr val_t z_max() const { return z_.maxi(); }
 
-        constexpr TVec3<val_t> mini() const {
-            return TVec3<val_t>{ this->x_min(), this->y_min(), this->z_min() };
-        }
-        constexpr TVec3<val_t> maxi() const {
-            return TVec3<val_t>{ this->x_max(), this->y_max(), this->z_max() };
-        }
-
         constexpr val_t x_mid() const { return x_.mid(); }
         constexpr val_t y_mid() const { return y_.mid(); }
         constexpr val_t z_mid() const { return z_.mid(); }
         constexpr val_t x_len() const { return x_.len(); }
         constexpr val_t y_len() const { return y_.len(); }
         constexpr val_t z_len() const { return z_.len(); }
+
+        constexpr TVec3<val_t> mini() const {
+            return TVec3<val_t>{ this->x_min(), this->y_min(), this->z_min() };
+        }
+        constexpr TVec3<val_t> maxi() const {
+            return TVec3<val_t>{ this->x_max(), this->y_max(), this->z_max() };
+        }
+        constexpr TVec3<val_t> center() const {
+            return TVec3<val_t>{ this->x_mid(), this->y_mid(), this->z_mid() };
+        }
 
         constexpr val_t volume() const {
             return this->x_len() * this->y_len() * this->z_len();
