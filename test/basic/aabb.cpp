@@ -143,24 +143,31 @@ namespace {
 
         aabb.set_or_expand(1, 2, 3);
         aabb.set_or_expand(9, 9, 9);
-
         ASSERT_EQ(aabb.x_min(), 1);
         ASSERT_EQ(aabb.y_min(), 2);
         ASSERT_EQ(aabb.z_min(), 3);
-
         ASSERT_EQ(aabb.x_max(), 9);
         ASSERT_EQ(aabb.y_max(), 9);
         ASSERT_EQ(aabb.z_max(), 9);
 
         aabb.reset();
         aabb.set_or_expand(2, 3, 4);
-
         ASSERT_EQ(aabb.x_min(), 2);
         ASSERT_EQ(aabb.y_min(), 3);
         ASSERT_EQ(aabb.z_min(), 4);
         ASSERT_EQ(aabb.x_max(), 2);
         ASSERT_EQ(aabb.y_max(), 3);
         ASSERT_EQ(aabb.z_max(), 4);
+
+        aabb.offset(1, 2, 3);
+        ASSERT_EQ(aabb.x_min(), 3);
+        ASSERT_EQ(aabb.y_min(), 5);
+        ASSERT_EQ(aabb.z_min(), 7);
+
+        aabb.offset(-sung::TVec3<double>(1, 1, 1));
+        ASSERT_EQ(aabb.x_min(), 2);
+        ASSERT_EQ(aabb.y_min(), 4);
+        ASSERT_EQ(aabb.z_min(), 6);
     }
 
 }  // namespace

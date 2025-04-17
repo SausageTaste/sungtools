@@ -118,6 +118,11 @@ namespace sung { namespace internal {
             return output;
         }
 
+        constexpr void offset(T val) {
+            min_ += val;
+            max_ += val;
+        }
+
     private:
         T min_{};
         T max_{};
@@ -230,6 +235,11 @@ namespace sung { namespace internal {
             return output;
         }
 
+        constexpr void offset(val_t x, val_t y) {
+            x_.offset(x);
+            y_.offset(y);
+        }
+
     protected:
         TAabb1D x_, y_;
     };
@@ -249,25 +259,6 @@ namespace sung { namespace internal {
         }
         constexpr Aabb3DBase(const TVec3<val_t>& min, const TVec3<val_t>& max) {
             this->set(min, max);
-        }
-
-        constexpr Aabb3DBase operator+(const TVec3<val_t>& v) const {
-            return Aabb3DBase{ x_ + v.x(), y_ + v.y(), z_ + v.z() };
-        }
-        constexpr Aabb3DBase operator-(const TVec3<val_t>& v) const {
-            return Aabb3DBase{ x_ - v.x(), y_ - v.y(), z_ - v.z() };
-        }
-        constexpr Aabb3DBase& operator+=(const TVec3<val_t>& v) {
-            x_ += v.x();
-            y_ += v.y();
-            z_ += v.z();
-            return *this;
-        }
-        constexpr Aabb3DBase& operator-=(const TVec3<val_t>& v) {
-            x_ -= v.x();
-            y_ -= v.y();
-            z_ -= v.z();
-            return *this;
         }
 
         constexpr val_t x_min() const { return x_.mini(); }
@@ -393,6 +384,18 @@ namespace sung { namespace internal {
             return this->get_expanded_to_span(point.x(), point.y(), point.z());
         }
 
+        constexpr void offset(val_t x, val_t y, val_t z) {
+            x_.offset(x);
+            y_.offset(y);
+            z_.offset(z);
+        }
+
+        constexpr void offset(const TVec3<val_t>& v) {
+            x_.offset(v.x());
+            y_.offset(v.y());
+            z_.offset(v.z());
+        }
+
     protected:
         TAabb1D x_, y_, z_;
     };
@@ -462,6 +465,12 @@ namespace sung {
             x_.set_or_expand(x);
             y_.set_or_expand(y);
             z_.set_or_expand(z);
+        }
+
+        constexpr void set_or_expand(const TVec3<val_t>& v) {
+            x_.set_or_expand(v.x());
+            y_.set_or_expand(v.y());
+            z_.set_or_expand(v.z());
         }
     };
 
