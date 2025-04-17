@@ -112,6 +112,16 @@ namespace sung {
             return output;
         }
 
+    private:
+        T min_{};
+        T max_{};
+    };
+
+
+    template <typename T>
+    class AABB1Grow : public AABB1<T> {
+
+    public:
         constexpr void reset() { once_ = false; }
         constexpr void set_or_expand(T val) {
             if (once_)
@@ -123,10 +133,6 @@ namespace sung {
         }
 
     private:
-        T min_{};
-        T max_{};
-
-        // It is only set in `set_or_expand` method
         bool once_ = false;
     };
 

@@ -42,8 +42,8 @@ namespace sung {
         double diff_theshold_ = 0;
 
     private:
-        sung::AABB1<double> value_range_;
-        sung::AABB1<double> diff_range_;
+        sung::AABB1Grow<double> value_range_;
+        sung::AABB1Grow<double> diff_range_;
         size_t count_;
         double last_value_;
         bool last_value_set_;
