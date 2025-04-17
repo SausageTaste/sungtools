@@ -134,6 +134,8 @@ namespace sung { namespace internal {
 
     public:
         using val_t = typename TAabb1D::val_t;
+        using Vec2 = TVec2<val_t>;
+        using OptSelf = Optional<Aabb2DBase>;
 
         constexpr Aabb2DBase() = default;
         constexpr Aabb2DBase(val_t x0, val_t x1, val_t y0, val_t y1) {
@@ -175,7 +177,7 @@ namespace sung { namespace internal {
                    y_.is_intersecting_cl(rhs.y_);
         }
 
-        constexpr double closest_distance(const TVec2<val_t>& point) const {
+        constexpr double closest_distance(const Vec2& point) const {
             double dx = 0.0;
             if (point.x() < x_min())
                 dx = x_min() - point.x();
@@ -205,9 +207,7 @@ namespace sung { namespace internal {
             return false;
         }
 
-        constexpr Optional<Aabb2DBase> make_intersection(
-            const Aabb2DBase& rhs
-        ) const {
+        constexpr OptSelf make_intersection(const Aabb2DBase& rhs) const {
             Aabb2DBase output;
             if (this->make_intersection(rhs, output))
                 return output;
@@ -253,6 +253,8 @@ namespace sung { namespace internal {
 
     public:
         using val_t = typename TAabb1D::val_t;
+        using Vec3 = TVec3<val_t>;
+        using OptSelf = Optional<Aabb3DBase>;
 
         constexpr Aabb3DBase() = default;
         constexpr Aabb3DBase(
@@ -260,7 +262,7 @@ namespace sung { namespace internal {
         ) {
             this->set(x0, x1, y0, y1, z0, z1);
         }
-        constexpr Aabb3DBase(const TVec3<val_t>& min, const TVec3<val_t>& max) {
+        constexpr Aabb3DBase(const Vec3& min, const Vec3& max) {
             this->set(min, max);
         }
 
@@ -278,14 +280,14 @@ namespace sung { namespace internal {
         constexpr val_t y_len() const { return y_.len(); }
         constexpr val_t z_len() const { return z_.len(); }
 
-        constexpr TVec3<val_t> mini() const {
-            return TVec3<val_t>{ this->x_min(), this->y_min(), this->z_min() };
+        constexpr Vec3 mini() const {
+            return Vec3{ this->x_min(), this->y_min(), this->z_min() };
         }
-        constexpr TVec3<val_t> maxi() const {
-            return TVec3<val_t>{ this->x_max(), this->y_max(), this->z_max() };
+        constexpr Vec3 maxi() const {
+            return Vec3{ this->x_max(), this->y_max(), this->z_max() };
         }
-        constexpr TVec3<val_t> center() const {
-            return TVec3<val_t>{ this->x_mid(), this->y_mid(), this->z_mid() };
+        constexpr Vec3 center() const {
+            return Vec3{ this->x_mid(), this->y_mid(), this->z_mid() };
         }
 
         constexpr val_t volume() const {
@@ -302,14 +304,14 @@ namespace sung { namespace internal {
             return x_.is_inside_op(x) && y_.is_inside_op(y) &&
                    z_.is_inside_op(z);
         }
-        constexpr bool is_inside_op(const TVec3<val_t>& point) const {
+        constexpr bool is_inside_op(const Vec3& point) const {
             return this->is_inside_op(point.x(), point.y(), point.z());
         }
         constexpr bool is_inside_cl(val_t x, val_t y, val_t z) const {
             return x_.is_inside_cl(x) && y_.is_inside_cl(y) &&
                    z_.is_inside_cl(z);
         }
-        constexpr bool is_inside_cl(const TVec3<val_t>& point) const {
+        constexpr bool is_inside_cl(const Vec3& point) const {
             return this->is_inside_cl(point.x(), point.y(), point.z());
         }
 
@@ -340,9 +342,7 @@ namespace sung { namespace internal {
 
             return false;
         }
-        constexpr Optional<Aabb3DBase> make_intersection(
-            const Aabb3DBase& rhs
-        ) const {
+        constexpr OptSelf make_intersection(const Aabb3DBase& rhs) const {
             Aabb3DBase output;
             if (this->make_intersection(rhs, output))
                 return output;
@@ -355,7 +355,7 @@ namespace sung { namespace internal {
             y_.set(y);
             z_.set(z);
         }
-        constexpr void set(const TVec3<val_t>& point) {
+        constexpr void set(const Vec3& point) {
             this->set(point.x(), point.y(), point.z());
         }
         constexpr void set(
@@ -365,7 +365,7 @@ namespace sung { namespace internal {
             y_.set(y0, y1);
             z_.set(z0, z1);
         }
-        constexpr void set(const TVec3<val_t>& min, const TVec3<val_t>& max) {
+        constexpr void set(const Vec3& min, const Vec3& max) {
             this->set(min.x(), max.x(), min.y(), max.y(), min.z(), max.z());
         }
 
@@ -374,7 +374,7 @@ namespace sung { namespace internal {
             y_.expand_to_span(y);
             z_.expand_to_span(z);
         }
-        constexpr void expand_to_span(const TVec3<val_t>& point) {
+        constexpr void expand_to_span(const Vec3& point) {
             this->expand_to_span(point.x(), point.y(), point.z());
         }
         constexpr Aabb3DBase get_expanded_to_span(
@@ -384,9 +384,7 @@ namespace sung { namespace internal {
             output.expand_to_span(x, y, z);
             return output;
         }
-        constexpr Aabb3DBase get_expanded_to_span(
-            const TVec3<val_t>& point
-        ) const {
+        constexpr Aabb3DBase get_expanded_to_span(const Vec3& point) const {
             return this->get_expanded_to_span(point.x(), point.y(), point.z());
         }
 
@@ -396,7 +394,7 @@ namespace sung { namespace internal {
             z_.offset(z);
         }
 
-        constexpr void offset(const TVec3<val_t>& v) {
+        constexpr void offset(const Vec3& v) {
             x_.offset(v.x());
             y_.offset(v.y());
             z_.offset(v.z());
@@ -473,7 +471,7 @@ namespace sung {
             z_.set_or_expand(z);
         }
 
-        constexpr void set_or_expand(const TVec3<val_t>& v) {
+        constexpr void set_or_expand(const Vec3& v) {
             x_.set_or_expand(v.x());
             y_.set_or_expand(v.y());
             z_.set_or_expand(v.z());
