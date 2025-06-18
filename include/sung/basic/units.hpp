@@ -16,6 +16,15 @@ namespace sung {
         constexpr void set_m(T metres) { metres_ = metres; }
         constexpr T m() const { return metres_; }
 
+        // Kilometres
+        constexpr static TDistance from_km(T kilometres) {
+            return TDistance(kilometres * M_PER_KM.value<T>());
+        }
+        constexpr void set_km(T kilometres) {
+            metres_ = kilometres * M_PER_KM.value<T>();
+        }
+        constexpr T km() const { return metres_ * M_PER_KM.reciprocal<T>(); }
+
         // Feet
         constexpr static TDistance from_ft(T feet) {
             return TDistance(feet * M_PER_FT.value<T>());
@@ -74,6 +83,8 @@ namespace sung {
         }
 
         // These are exact values
+        // metres per kilometre
+        constexpr static Ratio<int> M_PER_KM{ 1000 };
         // metres per foot
         constexpr static Ratio<int> M_PER_FT{ 3048, 10000 };
         // metres per mile
