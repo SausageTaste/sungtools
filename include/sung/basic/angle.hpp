@@ -188,6 +188,9 @@ namespace sung {
             return (*this) + this->calc_short_diff_to(dst) * t;
         }
 
+        T sin() const { return std::sin(radians_); }
+        T cos() const { return std::cos(radians_); }
+
     private:
         constexpr explicit TAngle(T radians) : radians_(radians) {}
 
