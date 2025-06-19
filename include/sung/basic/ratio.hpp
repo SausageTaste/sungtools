@@ -3,7 +3,7 @@
 #include <type_traits>
 
 
-namespace sung {
+namespace sung { namespace internal {
 
     template <typename T>
     constexpr T gcd_rec(T a, T b) {
@@ -11,13 +11,38 @@ namespace sung {
         return b == 0 ? a : gcd_rec(b, a % b);
     }
 
+    template <typename T>
+    constexpr T safe_abs(T x) {
+        if (std::is_signed<T>::value)
+            return x < 0 ? -x : x;
+        else
+            return x;
+    }
+
+}}  // namespace sung::internal
+
+
+namespace sung {
 
     template <typename T>
     class Ratio {
 
     public:
         constexpr Ratio(T num = 0, T den = 1) : num_(num), den_(den) {
-            const auto g = gcd_rec(num_, den_);
+            if (0 == den_) {
+                throw std::invalid_argument("Denominator cannot be zero");
+            }
+
+            if (std::is_signed<T>::value) {
+                if (den_ < 0) {
+                    num_ = -num_;
+                    den_ = -den_;
+                }
+            }
+
+            const auto g = internal::gcd_rec(
+                internal::safe_abs(num_), internal::safe_abs(den_)
+            );
             num_ /= g;
             den_ /= g;
         }
@@ -33,6 +58,10 @@ namespace sung {
 
         template <typename U>
         constexpr U reciprocal() const {
+            if (num_ == 0) {
+                throw std::domain_error("Cannot take reciprocal of zero.");
+            }
+
             return static_cast<U>(den_) / static_cast<U>(num_);
         }
 
@@ -50,6 +79,14 @@ namespace sung {
 
         constexpr Ratio operator/(const Ratio& rhs) const {
             return Ratio(num_ * rhs.den_, den_ * rhs.num_);
+        }
+
+        constexpr bool operator==(const Ratio& rhs) const {
+            return num_ == rhs.num_ && den_ == rhs.den_;
+        }
+
+        constexpr bool operator<(const Ratio& rhs) const {
+            return num_ * rhs.den_ < rhs.num_ * den_;
         }
 
     private:
