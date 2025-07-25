@@ -51,6 +51,9 @@ namespace sung { namespace internal {
             return val >= min_ && val <= max_;
         }
 
+        // [0, 1] -> [min, max]
+        constexpr T sample(T val) const { return min_ + val * (max_ - min_); }
+
         constexpr T remap_linear(T val, T new_min, T new_max) const {
             return new_min + (val - min_) * (new_max - new_min) / (max_ - min_);
         }
