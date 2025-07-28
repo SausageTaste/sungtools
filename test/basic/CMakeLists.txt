@@ -21,6 +21,10 @@ add_executable(sungtest_basic_cvar cvar.cpp)
 add_test(sungtest_basic_cvar sungtest_basic_cvar)
 target_link_libraries(sungtest_basic_cvar ${sungtest_lib_basic})
 
+add_executable(sungtest_basic_densify densify.cpp)
+add_test(sungtest_basic_densify sungtest_basic_densify)
+target_link_libraries(sungtest_basic_densify ${sungtest_lib_basic})
+
 add_executable(sungtest_basic_expected expected.cpp)
 add_test(sungtest_basic_expected sungtest_basic_expected)
 target_link_libraries(sungtest_basic_expected ${sungtest_lib_basic})
