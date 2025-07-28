@@ -85,18 +85,19 @@ namespace sung {
         class Dimension {
 
         public:
-            void init(double min, double max, size_t count, const char* name);
+            void init(double min, double max, uint64_t count, const char* name);
 
             double mini() const;
             double maxi() const;
-            size_t count() const;
+            uint64_t count() const;
+            std::string name() const;
 
             double calc_precision() const;
 
         private:
             LEValue<double> min_;
             LEValue<double> max_;
-            LEValue<size_t> count_;
+            LEValue<uint64_t> count_;
             std::array<int8_t, 40> name_;
         };
 
@@ -122,31 +123,31 @@ namespace sung {
         };
 
         void init(
-            const size_t dim_count,
-            const size_t desc_len,
-            const size_t data_count,
+            const uint64_t dim_count,
+            const uint64_t desc_len,
+            const uint64_t data_count,
             const DataType data_type,
             const CompMethod comp_method
         );
 
-        size_t dim_count() const;
-        size_t desc_len() const;
-        size_t data_count() const;
+        uint64_t dim_count() const;
+        uint64_t desc_len() const;
+        uint64_t data_count() const;
         DataType data_type() const;
         CompMethod comp_method() const;
 
-        size_t mem_size() const;
+        uint64_t mem_size() const;
         bool is_magic_valid() const;
 
-        static size_t get_data_type_size(DataType type);
+        static uint64_t get_data_type_size(DataType type);
 
     private:
         std::array<uint8_t, 8> magic_;
-        LEValue<size_t> dim_count_;
-        LEValue<size_t> desc_len_;
-        LEValue<size_t> data_count_;
-        LEValue<size_t> data_type_;
-        LEValue<size_t> comp_method_;
+        LEValue<uint64_t> dim_count_;
+        LEValue<uint64_t> desc_len_;
+        LEValue<uint64_t> data_count_;
+        LEValue<uint64_t> data_type_;
+        LEValue<uint64_t> comp_method_;
 
         // array<Dimension, dim_count_>
         // array<int8_t, desc_len_>

@@ -223,7 +223,7 @@ namespace sung {
 namespace sung {
 
     void AaddHeader::Dimension::init(
-        double min, double max, size_t count, const char* name
+        double min, double max, uint64_t count, const char* name
     ) {
         min_.set(min);
         max_.set(max);
@@ -238,7 +238,19 @@ namespace sung {
 
     double AaddHeader::Dimension::maxi() const { return max_.get(); }
 
-    size_t AaddHeader::Dimension::count() const { return count_.get(); }
+    uint64_t AaddHeader::Dimension::count() const { return count_.get(); }
+
+    std::string AaddHeader::Dimension::name() const {
+        const auto cstr_buf = reinterpret_cast<const char*>(name_.data());
+
+        for (size_t i = 0; i < name_.size(); ++i) {
+            if (name_[i] == '\0') {
+                return std::string(cstr_buf, i);
+            }
+        }
+
+        return std::string(cstr_buf, name_.size());
+    }
 
     double AaddHeader::Dimension::calc_precision() const {
         return (max_.get() - min_.get()) / count_.get();
@@ -246,9 +258,9 @@ namespace sung {
 
 
     void AaddHeader::init(
-        const size_t dim_count,
-        const size_t desc_len,
-        const size_t data_count,
+        const uint64_t dim_count,
+        const uint64_t desc_len,
+        const uint64_t data_count,
         const DataType data_type,
         const CompMethod comp_method
     ) {
@@ -261,11 +273,11 @@ namespace sung {
         comp_method_.set(static_cast<int>(comp_method));
     }
 
-    size_t AaddHeader::dim_count() const { return dim_count_.get(); }
+    uint64_t AaddHeader::dim_count() const { return dim_count_.get(); }
 
-    size_t AaddHeader::desc_len() const { return desc_len_.get(); }
+    uint64_t AaddHeader::desc_len() const { return desc_len_.get(); }
 
-    size_t AaddHeader::data_count() const { return data_count_.get(); }
+    uint64_t AaddHeader::data_count() const { return data_count_.get(); }
 
     AaddHeader::DataType AaddHeader::data_type() const {
         return static_cast<DataType>(data_type_.get());
@@ -275,7 +287,7 @@ namespace sung {
         return static_cast<CompMethod>(comp_method_.get());
     }
 
-    size_t AaddHeader::mem_size() const {
+    uint64_t AaddHeader::mem_size() const {
         const auto type_size = this->get_data_type_size(this->data_type());
         return data_count_.get() * type_size;
     }
@@ -284,7 +296,7 @@ namespace sung {
         return std::memcmp(magic_.data(), "AADD\0\0\0\0", 8) == 0;
     }
 
-    size_t AaddHeader::get_data_type_size(DataType type) {
+    uint64_t AaddHeader::get_data_type_size(DataType type) {
         switch (type) {
             case DataType::int8:
                 return sizeof(int8_t);
