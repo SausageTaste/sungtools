@@ -474,7 +474,7 @@ namespace sung {
         // Do you trust AI?
         constexpr sung::Optional<TMat3> inverse() const {
             const auto det = this->determinant();
-            if (sung::are_similiar<T>(det, 0, static_cast<T>(1e-8)))
+            if (sung::are_similiar<T>(det, 0, T{ 1e-8 }))
                 return sung::nullopt;
 
             TMat3 m = *this;

@@ -15,8 +15,8 @@ namespace sung {
     /// @return Normalized angle in radians in range [0, 2pi)
     template <typename T>
     constexpr T wrap_rad_positive(T x) {
-        constexpr auto TAU = static_cast<T>(SUNG_TAU);
-        constexpr auto TAU_INV = static_cast<T>(1.0 / (SUNG_TAU));
+        constexpr T TAU{ SUNG_TAU };
+        constexpr T TAU_INV{ 1.0 / (SUNG_TAU) };
         return x - sung::floor(x * TAU_INV) * TAU;
     }
 
@@ -36,17 +36,17 @@ namespace sung {
     /// @return Normalized angle in radians in range [-pi, pi)
     template <typename T>
     constexpr T wrap_rad_negative(T x) {
-        constexpr auto TAU = static_cast<T>(SUNG_TAU);
-        constexpr auto TAU_INV = static_cast<T>(1.0 / (SUNG_TAU));
-        return x - sung::floor(x * TAU_INV + static_cast<T>(0.5)) * TAU;
+        constexpr T TAU{ SUNG_TAU };
+        constexpr T TAU_INV{ 1.0 / (SUNG_TAU) };
+        return x - sung::floor(x * TAU_INV + T{ 0.5 }) * TAU;
     }
 
 
     template <typename T>
     T calc_rad_shortest_diff_mod(T from, T to) {
-        constexpr auto TAU = static_cast<T>(SUNG_TAU);
+        constexpr T TAU{ SUNG_TAU };
         const auto da = std::fmod(to - from, TAU);
-        return std::fmod(da * static_cast<T>(2), TAU) - da;
+        return std::fmod(da * T{ 2 }, TAU) - da;
     }
 
     template <typename T>

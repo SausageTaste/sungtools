@@ -16,18 +16,17 @@ namespace sung {
         return this->coeff().dot(Vec4{ p, 1 });
     }
 
-    bool Plane3::find_seg_intersec(SegIntersecInfo& out, const LineSeg3& seg)
-        const {
-        constexpr auto ZERO = static_cast<double>(0);
-
+    bool Plane3::find_seg_intersec(
+        SegIntersecInfo& out, const LineSeg3& seg
+    ) const {
         const auto pos_dist = this->calc_signed_dist(seg.pos());
         const auto end_dist = this->calc_signed_dist(seg.end());
-        if ((pos_dist * end_dist) > ZERO)
+        if ((pos_dist * end_dist) > 0.0)
             return false;
 
         const auto pos_dist_abs = std::abs(pos_dist);
         const auto denominator = pos_dist_abs + std::abs(end_dist);
-        if (ZERO == denominator) {
+        if (0.0 == denominator) {
             out = SegIntersecInfo{ 0, pos_dist > end_dist };
             return true;
         }
@@ -169,8 +168,9 @@ namespace sung {
         return discriminant > 0;
     }
 
-    bool Sphere3::find_intersection(Vec3& out, const sung::LineSeg3& ray)
-        const {
+    bool Sphere3::find_intersection(
+        Vec3& out, const sung::LineSeg3& ray
+    ) const {
         const auto oc = ray.pos() - pos_;
         const auto a = ray.dir().dot(ray.dir());
         const auto b = 2.0 * ray.dir().dot(oc);
@@ -208,9 +208,7 @@ namespace sung {
     size_t TriSoup3::tri_count() const { return idx_.size() / 3; }
 
     bool TriSoup3::find_seg_intersec(
-        SegIntersecInfo& out,
-        const sung::LineSegment3& ray,
-        bool ignore_back
+        SegIntersecInfo& out, const sung::LineSegment3& ray, bool ignore_back
     ) const {
         OptSegIntersec res;
         const auto tri_count = this->tri_count();

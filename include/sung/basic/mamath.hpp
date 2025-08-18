@@ -12,28 +12,26 @@ namespace sung { namespace internal {
 
     template <typename T>
     constexpr int signum(T x, std::false_type is_signed) {
-        constexpr auto ZERO = static_cast<T>(0);
-        return ZERO < x;
+        return T{ 0 } < x;
     }
 
     template <typename T>
     constexpr int signum(T x, std::true_type is_signed) {
-        constexpr auto ZERO = static_cast<T>(0);
-        return (ZERO < x) - (x < ZERO);
+        return (T{ 0 } < x) - (x < T{ 0 });
     }
 
 
     template <typename T>
     T acos_safe_clamp(T x) {
-        x = clamp(x, static_cast<T>(-1), static_cast<T>(1));
+        x = clamp(x, T{ -1 }, T{ 1 });
         return std::acos(x);
     }
 
     template <typename T>
     T acos_safe_branches(T x) {
-        if (x < static_cast<T>(-1))
+        if (x < T{ -1 })
             return SUNG_PI;
-        if (x > static_cast<T>(1))
+        if (x > T{ 1 })
             return 0;
         return std::acos(x);
     }
@@ -45,8 +43,7 @@ namespace sung {
 
     template <typename T>
     constexpr T abs(const T x) {
-        constexpr auto ZERO = static_cast<T>(0);
-        return ZERO == x ? ZERO : (x < ZERO ? -x : x);
+        return T{ 0 } == x ? T{ 0 } : (x < T{ 0 } ? -x : x);
     }
 
     template <typename T>
@@ -56,10 +53,8 @@ namespace sung {
 
     template <typename T>
     constexpr T floor(const T x) {
-        constexpr auto ZERO = static_cast<T>(0);
-        constexpr auto ONE = static_cast<T>(1);
         const auto x_int = static_cast<T>(static_cast<int64_t>(x));
-        return (x >= ZERO ? x_int : (x == x_int ? x : x_int - ONE));
+        return (x >= T{ 0 } ? x_int : (x == x_int ? x : x_int - T{ 1 }));
     }
 
     template <typename T>
@@ -76,20 +71,20 @@ namespace sung {
 
     template <typename T>
     constexpr T to_degrees(T radians) {
-        constexpr auto FACTOR = static_cast<T>(180.0 / SUNG_PI);
+        constexpr T FACTOR{ 180.0 / SUNG_PI };
         return radians * FACTOR;
     }
 
     template <typename T>
     constexpr T to_radians(T degrees) {
-        constexpr auto FACTOR = static_cast<T>(SUNG_PI / 180.0);
+        constexpr T FACTOR{ SUNG_PI / 180.0 };
         return degrees * FACTOR;
     }
 
 
     template <typename T>
     T asin_safe(T x) {
-        x = clamp(x, static_cast<T>(-1), static_cast<T>(1));
+        x = clamp(x, T{ -1 }, T{ 1 });
         return std::asin(x);
     }
 
