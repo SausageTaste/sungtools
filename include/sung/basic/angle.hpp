@@ -14,7 +14,7 @@ namespace sung {
     /// @param x Angle in radians
     /// @return Normalized angle in radians in range [0, 2pi)
     template <typename T>
-    constexpr T repeat_rad_positive(T x) {
+    constexpr T wrap_rad_positive(T x) {
         constexpr auto TAU = static_cast<T>(SUNG_TAU);
         constexpr auto TAU_INV = static_cast<T>(1.0 / (SUNG_TAU));
         return x - sung::floor(x * TAU_INV) * TAU;
@@ -22,9 +22,9 @@ namespace sung {
 
 
     // Normalize to [-pi, pi), retaining the phase.
-    // Same notion as `repeat_rad_positive`, but it maps values to [-pi, pi), or
+    // Same notion as `wrap_rad_positive`, but it maps values to [-pi, pi), or
     // [-180, 180) in degrees. 512 degrees will be 152 degrees, which is
-    // identical to result of `repeat_rad_positive`. But some angles like 272
+    // identical to result of `wrap_rad_positive`. But some angles like 272
     // degrees will be -88 degrees to make it fit in [-180, 180).
     //
     // You don't want to use this function for comparing two angles' similarity.
@@ -35,7 +35,7 @@ namespace sung {
     /// @param x Angle in radians
     /// @return Normalized angle in radians in range [-pi, pi)
     template <typename T>
-    constexpr T repeat_rad_negative(T x) {
+    constexpr T wrap_rad_negative(T x) {
         constexpr auto TAU = static_cast<T>(SUNG_TAU);
         constexpr auto TAU_INV = static_cast<T>(1.0 / (SUNG_TAU));
         return x - sung::floor(x * TAU_INV + static_cast<T>(0.5)) * TAU;
@@ -51,7 +51,7 @@ namespace sung {
 
     template <typename T>
     constexpr T calc_rad_shortest_diff_floor(T from, T to) {
-        return repeat_rad_negative(to - from);
+        return wrap_rad_negative(to - from);
     }
 
 
@@ -63,7 +63,7 @@ namespace sung {
     If `a` is 178 degrees and `b` is -169 degrees, the function will magically
     find the shortest path and outputs -13 degrees, which can be added to `a`
     and get new angle whose phase equals to `rhs`.
-    That means `repeat_rad_negative(a + new angle) = repeat_rad_negative(rhs)`,
+    That means `wrap_rad_negative(a + new angle) = wrap_rad_negative(rhs)`,
     ignoring the float precision problem. Check out [this
     gist](https://gist.github.com/shaunlebron/8832585) for more details. Also
     there is a simple interactive [Desmos
@@ -169,11 +169,11 @@ namespace sung {
             return TAngle{ radians_ + radians };
         }
 
-        constexpr TAngle normalize_pos() const {
-            return TAngle{ sung::repeat_rad_positive(radians_) };
+        constexpr TAngle wrap_pos() const {
+            return TAngle{ sung::wrap_rad_positive(radians_) };
         }
-        constexpr TAngle normalize_neg() const {
-            return TAngle{ sung::repeat_rad_negative(radians_) };
+        constexpr TAngle wrap_neg() const {
+            return TAngle{ sung::wrap_rad_negative(radians_) };
         }
 
         constexpr TAngle calc_short_diff_to(TAngle dst) const {
