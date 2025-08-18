@@ -2,10 +2,22 @@
 
 #include "sung/basic/angle.hpp"
 #include "sung/basic/linalg.hpp"
+#include "sung/basic/random.hpp"
 
 // Static ASSERT SIMILAR Double
 #define SASSERT_SIMILARD(a, b) \
     static_assert(sung::are_similiar((T)(a), (T)(b), (T)(1e-10)), "")
+
+#define ASSERT_MAT_NEAR(lhs, rhs, rows, cols, epsilon)                \
+    do {                                                              \
+        for (int row = 0; row < (rows); ++row) {                      \
+            for (int col = 0; col < (cols); ++col) {                  \
+                ASSERT_NEAR(                                          \
+                    (lhs).at(row, col), (rhs).at(row, col), (epsilon) \
+                );                                                    \
+            }                                                         \
+        }                                                             \
+    } while (false)
 
 
 namespace {
@@ -91,6 +103,30 @@ namespace {
     }
 
 
+    TEST(Linalg, Matrix3x3Rand) {
+        using T = double;
+        using Mat3 = sung::TMat3<T>;
+
+        sung::RandomRealNumGenerator<T> rg{ -10, 10 };
+        const auto IDENTITY = Mat3::identity();
+
+        for (int i = 0; i < 100000; ++i) {
+            const Mat3 m{
+                { rg(), rg(), rg() },
+                { rg(), rg(), rg() },
+                { rg(), rg(), rg() },
+            };
+
+            if (const auto m_inv = m.inverse()) {
+                const auto m_invinv = m_inv->inverse();
+                ASSERT_TRUE(m_invinv.has_value());
+                ASSERT_MAT_NEAR(IDENTITY, (m * m_inv.value()), 3, 3, 1e-6);
+                ASSERT_MAT_NEAR(m, m_invinv.value(), 3, 3, 1e-3);
+            }
+        }
+    }
+
+
     TEST(Linalg, Matrix4x4Operators) {
         using T = float;
         using Mat4 = sung::TMat4<T>;
@@ -146,6 +182,31 @@ namespace {
         constexpr auto result3 = Mat::translate(1, 2, 3) *
                                  Mat::translate(1, -2, 3) * Vec4(v, 1);
         static_assert(result3.are_similar({ 3, 0, 6, 1 }, 0.001f), "");
+    }
+
+
+    TEST(Linalg, Matrix4x4Rand) {
+        using T = double;
+        using Mat4 = sung::TMat4<T>;
+
+        sung::RandomRealNumGenerator<T> rg{ -10, 10 };
+        const auto IDENTITY = Mat4::identity();
+
+        for (int i = 0; i < 100000; ++i) {
+            const Mat4 m{
+                { rg(), rg(), rg(), rg() },
+                { rg(), rg(), rg(), rg() },
+                { rg(), rg(), rg(), rg() },
+                { rg(), rg(), rg(), rg() },
+            };
+
+            if (const auto m_inv = m.inverse()) {
+                const auto m_invinv = m_inv->inverse();
+                ASSERT_TRUE(m_invinv.has_value());
+                ASSERT_MAT_NEAR(IDENTITY, m * m_inv.value(), 4, 4, 1e-6);
+                ASSERT_MAT_NEAR(m, m_invinv.value(), 4, 4, 1e-3);
+            }
+        }
     }
 
 }  // namespace

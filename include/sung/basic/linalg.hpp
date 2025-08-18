@@ -474,7 +474,7 @@ namespace sung {
         // Do you trust AI?
         constexpr sung::Optional<TMat3> inverse() const {
             const auto det = this->determinant();
-            if (sung::are_similiar<T>(det, 0, T{ 1e-8 }))
+            if (sung::are_similiar<T>(det, 0, T{ 0 }))
                 return sung::nullopt;
 
             TMat3 m = *this;
@@ -611,6 +611,13 @@ namespace sung {
             this->at(1, c) = y;
             this->at(2, c) = z;
             this->at(3, c) = w;
+        }
+
+        constexpr bool are_similar(const TMat4& rhs, T epsilon = 0) const {
+            return this->elements_[0].are_similar(rhs.elements_[0], epsilon) &&
+                   this->elements_[1].are_similar(rhs.elements_[1], epsilon) &&
+                   this->elements_[2].are_similar(rhs.elements_[2], epsilon) &&
+                   this->elements_[3].are_similar(rhs.elements_[3], epsilon);
         }
 
         constexpr sung::Optional<TMat4> inverse() const {
