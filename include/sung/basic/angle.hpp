@@ -188,6 +188,13 @@ namespace sung {
             return (*this) + this->calc_short_diff_to(dst) * t;
         }
 
+        TAngle mini(TAngle rhs) const {
+            return TAngle{ std::min(radians_, rhs.radians_) };
+        }
+        TAngle maxi(TAngle rhs) const {
+            return TAngle{ std::max(radians_, rhs.radians_) };
+        }
+
         T sin() const { return std::sin(radians_); }
         T cos() const { return std::cos(radians_); }
 
@@ -206,5 +213,70 @@ namespace sung {
         sizeof(TAngle<double>) == sizeof(double),
         "The size of TAngle<double> must be same as underlying type"
     );
+
+
+    template <typename T>
+    class MeanAngleCalculator {
+
+    public:
+        using Angle = TAngle<T>;
+
+        void notify(double rad) {
+            sum_sin_ += std::sin(rad);
+            sum_cos_ += std::cos(rad);
+            ++count_;
+        }
+
+        void notify(const Angle angle) {
+            sum_sin_ += angle.sin();
+            sum_cos_ += angle.cos();
+            ++count_;
+        }
+
+        Angle mean() const {
+            if (count_ == 0)
+                return Angle::from_zero();
+            return Angle::from_rad(std::atan2(sum_sin_, sum_cos_));
+        }
+
+    private:
+        T sum_sin_ = 0;
+        T sum_cos_ = 0;
+        size_t count_ = 0;
+    };
+
+
+    template <typename T>
+    class AngleRange {
+
+    public:
+        using Angle = TAngle<T>;
+
+        void reset(Angle mean_angle) {
+            mean_angle_ = mean_angle.wrap_neg();
+            diff_max_.set_zero();
+            diff_min_.set_zero();
+        }
+
+        void notify(Angle a) {
+            const auto diff = a.calc_short_diff_from(mean_angle_);
+            diff_max_ = diff_max_.maxi(diff);
+            diff_min_ = diff_min_.mini(diff);
+        }
+
+        bool is_inside(Angle a) const {
+            const auto diff = a.calc_short_diff_from(mean_angle_);
+            return diff.rad() >= diff_min_.rad() &&
+                   diff.rad() <= diff_max_.rad();
+        }
+
+        Angle mini() const { return mean_angle_ + diff_min_; }
+        Angle maxi() const { return mean_angle_ + diff_max_; }
+
+    private:
+        Angle mean_angle_;
+        Angle diff_max_;
+        Angle diff_min_;
+    };
 
 }  // namespace sung
