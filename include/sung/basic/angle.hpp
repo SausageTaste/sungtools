@@ -258,6 +258,12 @@ namespace sung {
             diff_min_.set_zero();
         }
 
+        void set(Angle mini, Angle maxi) {
+            mean_angle_ = maxi - mini;
+            diff_max_ = maxi - mean_angle_;
+            diff_min_ = mini - mean_angle_;
+        }
+
         void notify(Angle a) {
             const auto diff = a.calc_short_diff_from(mean_angle_);
             diff_max_ = diff_max_.maxi(diff);
@@ -272,6 +278,7 @@ namespace sung {
 
         Angle mini() const { return mean_angle_ + diff_min_; }
         Angle maxi() const { return mean_angle_ + diff_max_; }
+        double diff() const { return diff_max_.rad() - diff_min_.rad(); }
 
     private:
         Angle mean_angle_;
