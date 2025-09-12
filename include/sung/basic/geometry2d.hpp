@@ -21,6 +21,10 @@ namespace sung {
         constexpr auto& b() const { return b_; }
         constexpr auto& c() const { return c_; }
 
+        constexpr double area() const {
+            return (b_ - a_).cross(c_ - a_) / (T)2;
+        }
+
         // Closed interval
         constexpr bool is_inside_cl(const Vec2& pt) const {
             const auto d1 = this->sign(pt, a_, b_);

@@ -91,6 +91,10 @@ namespace sung {
             return (this->x() * rhs.x()) + (this->y() * rhs.y());
         }
 
+        constexpr T cross(const TVec2& rhs) const {
+            return (this->x() * rhs.y()) - (this->y() * rhs.x());
+        }
+
         constexpr T len_sqr() const { return this->dot(*this); }
 
         T len() const { return std::sqrt(this->len_sqr()); }
