@@ -270,10 +270,10 @@ namespace sung {
             diff_min_ = diff_min_.mini(diff);
         }
 
-        bool is_inside(Angle a, T tolerance = 0) const {
+        bool is_inside(Angle a, Angle tolerance = Angle::from_zero()) const {
             const auto diff = a.calc_short_diff_from(mean_angle_);
-            return diff.rad() >= diff_min_.rad() - tolerance &&
-                   diff.rad() <= diff_max_.rad() + tolerance;
+            return diff.rad() >= diff_min_.rad() - tolerance.rad() &&
+                   diff.rad() <= diff_max_.rad() + tolerance.rad();
         }
 
         Angle mini() const { return mean_angle_ + diff_min_; }
