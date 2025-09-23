@@ -189,10 +189,10 @@ namespace sung {
         }
 
         TAngle mini(TAngle rhs) const {
-            return TAngle{ std::min(radians_, rhs.radians_) };
+            return TAngle{ (std::min)(radians_, rhs.radians_) };
         }
         TAngle maxi(TAngle rhs) const {
-            return TAngle{ std::max(radians_, rhs.radians_) };
+            return TAngle{ (std::max)(radians_, rhs.radians_) };
         }
 
         T sin() const { return std::sin(radians_); }
