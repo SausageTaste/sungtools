@@ -259,9 +259,19 @@ namespace sung {
         }
 
         void set(Angle mini, Angle maxi) {
-            mean_angle_ = maxi - mini;
+            MeanAngleCalculator<T> mean_angle_calc;
+            mean_angle_calc.notify(mini);
+            mean_angle_calc.notify(maxi);
+            mean_angle_ = mean_angle_calc.mean();
+
             diff_max_ = maxi - mean_angle_;
             diff_min_ = mini - mean_angle_;
+        }
+
+        void set_full_range() {
+            mean_angle_.set_rad(SUNG_PI);
+            diff_max_.set_rad(SUNG_TAU);
+            diff_min_.set_rad(0);
         }
 
         void notify(Angle a) {
