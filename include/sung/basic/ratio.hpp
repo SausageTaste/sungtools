@@ -53,6 +53,16 @@ namespace sung {
         constexpr T den() const { return den_; }
 
         template <typename U>
+        constexpr U mul(U value) const {
+            return value * static_cast<U>(num_) / static_cast<U>(den_);
+        }
+
+        template <typename U>
+        constexpr U mul_rcp(U numerator) const {
+            return numerator * static_cast<U>(den_) / static_cast<U>(num_);
+        }
+
+        template <typename U>
         constexpr U value() const {
             return static_cast<U>(num_) / static_cast<U>(den_);
         }

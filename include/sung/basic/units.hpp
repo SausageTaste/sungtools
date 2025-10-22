@@ -174,4 +174,49 @@ namespace sung {
         T metres_per_second_ = 0;
     };
 
+
+    template <typename T>
+    class TTemperature {
+
+    public:
+        constexpr TTemperature() = default;
+
+        // Kelvin
+        constexpr static TTemperature from_k(T kelvin) {
+            return TTemperature(kelvin);
+        }
+        constexpr void set_k(T kelvin) { kelvin_ = kelvin; }
+        constexpr T k() const { return kelvin_; }
+
+        // Celsius
+        constexpr static TTemperature from_c(T celsius) {
+            return TTemperature(celsius - ABS_ZERO_C.value<T>());
+        }
+        constexpr void set_c(T celsius) {
+            kelvin_ = celsius - ABS_ZERO_C.value<T>();
+        }
+        constexpr T c() const { return kelvin_ + ABS_ZERO_C.value<T>(); }
+
+        // Fahrenheit
+        constexpr static TTemperature from_f(T fahrenheit) {
+            return TTemperature(
+                FAH_FACTOR.mul(fahrenheit - 32) - ABS_ZERO_C.value<T>()
+            );
+        }
+        constexpr void set_f(T fahrenheit) {
+            kelvin_ = FAH_FACTOR.mul(fahrenheit - 32) - ABS_ZERO_C.value<T>();
+        }
+        constexpr T f() const {
+            return FAH_FACTOR.mul_rcp(kelvin_ + ABS_ZERO_C.value<T>()) + 32;
+        }
+
+    private:
+        constexpr explicit TTemperature(T kelvin) : kelvin_(kelvin) {}
+
+        constexpr static Ratio<int> ABS_ZERO_C{ -27315, 100 };
+        constexpr static Ratio<int> FAH_FACTOR{ 5, 9 };
+
+        T kelvin_ = 0;
+    };
+
 }  // namespace sung

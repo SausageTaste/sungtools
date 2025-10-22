@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "sung/basic/units.hpp"
 #include "sung/basic/mamath.hpp"
+#include "sung/basic/units.hpp"
 
 
 namespace {
@@ -45,6 +45,24 @@ namespace {
         static_assert(
             sung::are_similiar(speed_ms.mph(), speed_mph.mph(), 0.001f),
             "Speed conversion failed"
+        );
+    }
+
+
+    TEST(Units, TemperatureConversions) {
+        using Temperature = sung::TTemperature<double>;
+
+        constexpr auto temp_k = Temperature::from_k(300);
+        constexpr auto temp_c = Temperature::from_c(26.85);
+        constexpr auto temp_f = Temperature::from_f(80.33);
+
+        static_assert(
+            sung::are_similiar(temp_k.c(), temp_c.c(), 0.0001),
+            "Temperature conversion failed"
+        );
+        static_assert(
+            sung::are_similiar(temp_k.f(), temp_f.f(), 0.0001),
+            "Temperature conversion failed"
         );
     }
 
