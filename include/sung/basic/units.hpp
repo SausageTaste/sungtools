@@ -9,6 +9,8 @@ namespace sung {
     class TLength {
 
     public:
+        constexpr TLength() = default;
+
         // Metres
         constexpr static TLength from_m(T metres) { return TLength(metres); }
         constexpr void set_m(T metres) { metres_ = metres; }
@@ -45,8 +47,6 @@ namespace sung {
         }
         constexpr void set_nm(T nm) { metres_ = nm * M_PER_NM.value<T>(); }
         constexpr T nm() const { return metres_ * M_PER_NM.reciprocal<T>(); }
-
-        constexpr TLength() = default;
 
         constexpr TLength operator+(const TLength& rhs) const {
             return TLength(metres_ + rhs.metres_);
@@ -101,6 +101,8 @@ namespace sung {
     class TSpeed {
 
     public:
+        constexpr TSpeed() = default;
+
         // Metres per second
         constexpr static TSpeed from_ms(T value) { return TSpeed(value); }
         constexpr void set_ms(T value) { metres_per_second_ = value; }
@@ -127,8 +129,6 @@ namespace sung {
         constexpr T mph() const {
             return metres_per_second_ * MS_PER_MPH.template reciprocal<T>();
         }
-
-        constexpr TSpeed() = default;
 
         constexpr TSpeed operator+(const TSpeed& rhs) const {
             return TSpeed(metres_per_second_ + rhs.metres_per_second_);
