@@ -6,19 +6,17 @@
 namespace sung {
 
     template <typename T>
-    class TDistance {
+    class TLength {
 
     public:
         // Metres
-        constexpr static TDistance from_m(T metres) {
-            return TDistance(metres);
-        }
+        constexpr static TLength from_m(T metres) { return TLength(metres); }
         constexpr void set_m(T metres) { metres_ = metres; }
         constexpr T m() const { return metres_; }
 
         // Kilometres
-        constexpr static TDistance from_km(T kilometres) {
-            return TDistance(kilometres * M_PER_KM.value<T>());
+        constexpr static TLength from_km(T kilometres) {
+            return TLength(kilometres * M_PER_KM.value<T>());
         }
         constexpr void set_km(T kilometres) {
             metres_ = kilometres * M_PER_KM.value<T>();
@@ -26,15 +24,15 @@ namespace sung {
         constexpr T km() const { return metres_ * M_PER_KM.reciprocal<T>(); }
 
         // Feet
-        constexpr static TDistance from_ft(T feet) {
-            return TDistance(feet * M_PER_FT.value<T>());
+        constexpr static TLength from_ft(T feet) {
+            return TLength(feet * M_PER_FT.value<T>());
         }
         constexpr void set_ft(T feet) { metres_ = feet * M_PER_FT.value<T>(); }
         constexpr T ft() const { return metres_ * M_PER_FT.reciprocal<T>(); }
 
         // Miles
-        constexpr static TDistance from_mi(T miles) {
-            return TDistance(miles * M_PER_MI.value<T>());
+        constexpr static TLength from_mi(T miles) {
+            return TLength(miles * M_PER_MI.value<T>());
         }
         constexpr void set_mi(T miles) {
             metres_ = miles * M_PER_MI.value<T>();
@@ -42,43 +40,43 @@ namespace sung {
         constexpr T mi() const { return metres_ * M_PER_MI.reciprocal<T>(); }
 
         // Nautical miles
-        constexpr static TDistance from_nm(T nm) {
-            return TDistance(nm * M_PER_NM.value<T>());
+        constexpr static TLength from_nm(T nm) {
+            return TLength(nm * M_PER_NM.value<T>());
         }
         constexpr void set_nm(T nm) { metres_ = nm * M_PER_NM.value<T>(); }
         constexpr T nm() const { return metres_ * M_PER_NM.reciprocal<T>(); }
 
-        constexpr TDistance() = default;
+        constexpr TLength() = default;
 
-        constexpr TDistance operator+(const TDistance& rhs) const {
-            return TDistance(metres_ + rhs.metres_);
+        constexpr TLength operator+(const TLength& rhs) const {
+            return TLength(metres_ + rhs.metres_);
         }
-        constexpr TDistance operator-(const TDistance& rhs) const {
-            return TDistance(metres_ - rhs.metres_);
+        constexpr TLength operator-(const TLength& rhs) const {
+            return TLength(metres_ - rhs.metres_);
         }
-        constexpr TDistance operator*(T rhs) const {
-            return TDistance(metres_ * rhs);
+        constexpr TLength operator*(T rhs) const {
+            return TLength(metres_ * rhs);
         }
-        constexpr TDistance operator/(T rhs) const {
-            return TDistance(metres_ / rhs);
+        constexpr TLength operator/(T rhs) const {
+            return TLength(metres_ / rhs);
         }
 
-        constexpr bool operator<(const TDistance& rhs) const {
+        constexpr bool operator<(const TLength& rhs) const {
             return metres_ < rhs.metres_;
         }
-        constexpr bool operator>(const TDistance& rhs) const {
+        constexpr bool operator>(const TLength& rhs) const {
             return metres_ > rhs.metres_;
         }
-        constexpr bool operator<=(const TDistance& rhs) const {
+        constexpr bool operator<=(const TLength& rhs) const {
             return metres_ <= rhs.metres_;
         }
-        constexpr bool operator>=(const TDistance& rhs) const {
+        constexpr bool operator>=(const TLength& rhs) const {
             return metres_ >= rhs.metres_;
         }
-        constexpr bool operator==(const TDistance& rhs) const {
+        constexpr bool operator==(const TLength& rhs) const {
             return metres_ == rhs.metres_;
         }
-        constexpr bool operator!=(const TDistance& rhs) const {
+        constexpr bool operator!=(const TLength& rhs) const {
             return metres_ != rhs.metres_;
         }
 
@@ -93,7 +91,7 @@ namespace sung {
         constexpr static Ratio<int> M_PER_NM{ 1852 };
 
     private:
-        constexpr explicit TDistance(T metres) : metres_(metres) {}
+        constexpr explicit TLength(T metres) : metres_(metres) {}
 
         T metres_ = 0;
     };
@@ -167,8 +165,8 @@ namespace sung {
         // Seconds per hour
         constexpr static Ratio<int> SEC_PER_H{ 3600 };
 
-        constexpr static auto MS_PER_KTS = TDistance<T>::M_PER_NM / SEC_PER_H;
-        constexpr static auto MS_PER_MPH = TDistance<T>::M_PER_MI / SEC_PER_H;
+        constexpr static auto MS_PER_KTS = TLength<T>::M_PER_NM / SEC_PER_H;
+        constexpr static auto MS_PER_MPH = TLength<T>::M_PER_MI / SEC_PER_H;
 
     private:
         constexpr explicit TSpeed(T value) : metres_per_second_(value) {}

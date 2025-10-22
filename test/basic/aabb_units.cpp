@@ -7,7 +7,7 @@
 namespace {
 
     TEST(AABB, WithDistance) {
-        using Dist = sung::TDistance<float>;
+        using Dist = sung::TLength<float>;
 
         constexpr auto MIN_RANGE = Dist::from_nm(1);
         constexpr auto MAX_RANGE = Dist::from_nm(2);

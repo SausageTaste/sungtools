@@ -7,7 +7,7 @@
 namespace {
 
     TEST(Units, DistanceConversions) {
-        using Distance = sung::TDistance<float>;
+        using Distance = sung::TLength<float>;
 
         constexpr auto distance_m = Distance::from_m(1000);
         constexpr auto distance_ft = Distance::from_ft(3280.84f);
