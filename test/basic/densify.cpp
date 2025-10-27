@@ -12,7 +12,7 @@ namespace {
 
 
     TEST(Densify, Produce) {
-        const std::array<float, 32 * 32> data;
+        const std::array<float, 32 * 32> data{};
         const std::string description = "Test AADD File";
 
         std::array<sung::AaddHeader::Dimension, 2> dimensions;
