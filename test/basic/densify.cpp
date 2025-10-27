@@ -1,5 +1,6 @@
 #include "sung/basic/densify.hpp"
 
+#include <array>
 #include <fstream>
 
 #include <gtest/gtest.h>
@@ -7,11 +8,46 @@
 
 namespace {
 
-    TEST(Expected, Basic) {
-        const char* FILE_PATH =
-            "C:\\Users\\AORUS\\AppData\\Roaming\\KorSimGL\\cache\\elev\\ETOPO_"
-            "2022_v1_15s_N90E105_surface.aadd";
-        std::ifstream file(FILE_PATH, std::ios::binary);
+    const char* const TEST_FILE_PATH = "test_densify.aadd";
+
+
+    TEST(Densify, Produce) {
+        const std::array<float, 32 * 32> data;
+        const std::string description = "Test AADD File";
+
+        std::array<sung::AaddHeader::Dimension, 2> dimensions;
+        dimensions[0].init(0, 1, 32, "X Axis");
+        dimensions[1].init(0, 1, 32, "Y Axis");
+
+        sung::AaddHeader header;
+        header.init(
+            dimensions.size(),
+            description.size(),
+            data.size(),
+            sung::AaddHeader::DataType::float32,
+            sung::AaddHeader::CompMethod::none
+        );
+
+        std::ofstream file{ TEST_FILE_PATH, std::ios::binary };
+        ASSERT_TRUE(file.is_open());
+
+        file.write(
+            reinterpret_cast<const char*>(&header), sizeof(sung::AaddHeader)
+        );
+        file.write(
+            reinterpret_cast<const char*>(dimensions.data()),
+            sizeof(sung::AaddHeader::Dimension) * dimensions.size()
+        );
+        file.write(description.data(), description.size());
+        file.write(
+            reinterpret_cast<const char*>(data.data()),
+            sizeof(float) * data.size()
+        );
+    }
+
+
+    TEST(Densify, Consume) {
+        std::ifstream file(TEST_FILE_PATH, std::ios::binary);
         ASSERT_TRUE(file.is_open());
 
         // read file to vector
