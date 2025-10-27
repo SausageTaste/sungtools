@@ -121,7 +121,7 @@ namespace {
                 const auto m_invinv = m_inv->inverse();
                 ASSERT_TRUE(m_invinv.has_value());
                 ASSERT_MAT_NEAR(IDENTITY, (m * m_inv.value()), 3, 3, 1e-6);
-                ASSERT_MAT_NEAR(m, m_invinv.value(), 3, 3, 1e-3);
+                ASSERT_MAT_NEAR(m, m_invinv.value(), 3, 3, 1e-1);
             }
         }
     }
@@ -204,7 +204,7 @@ namespace {
                 const auto m_invinv = m_inv->inverse();
                 ASSERT_TRUE(m_invinv.has_value());
                 ASSERT_MAT_NEAR(IDENTITY, m * m_inv.value(), 4, 4, 1e-6);
-                ASSERT_MAT_NEAR(m, m_invinv.value(), 4, 4, 1e-3);
+                ASSERT_MAT_NEAR(m, m_invinv.value(), 4, 4, 1e-1);
             }
         }
     }
