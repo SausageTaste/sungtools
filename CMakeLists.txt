@@ -59,6 +59,9 @@ target_include_directories(sungtools_basic PUBLIC
     $<BUILD_INTERFACE:${sung_extern_dir}/optional/include>
     $<INSTALL_INTERFACE:include>
 )
+set_target_properties(sungtools_basic PROPERTIES
+    FOLDER "sungtools"
+)
 
 
 # Installation
