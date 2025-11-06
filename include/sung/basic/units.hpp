@@ -108,6 +108,17 @@ namespace sung {
         constexpr void set_ms(T value) { metres_per_second_ = value; }
         constexpr T ms() const { return metres_per_second_; }
 
+        // Kilometres per hour
+        constexpr static TSpeed from_kmph(T value) {
+            return TSpeed(value * MS_PER_KMPH.template value<T>());
+        }
+        constexpr void set_kmph(T value) {
+            metres_per_second_ = value * MS_PER_KMPH.template value<T>();
+        }
+        constexpr T kmph() const {
+            return metres_per_second_ * MS_PER_KMPH.template reciprocal<T>();
+        }
+
         // Knots (nautical miles per hour)
         constexpr static TSpeed from_kts(T value) {
             return TSpeed<T>(value * MS_PER_KTS.template value<T>());
@@ -165,6 +176,7 @@ namespace sung {
         // Seconds per hour
         constexpr static Ratio<int> SEC_PER_H{ 3600 };
 
+        constexpr static auto MS_PER_KMPH = TLength<T>::M_PER_KM / SEC_PER_H;
         constexpr static auto MS_PER_KTS = TLength<T>::M_PER_NM / SEC_PER_H;
         constexpr static auto MS_PER_MPH = TLength<T>::M_PER_MI / SEC_PER_H;
 
