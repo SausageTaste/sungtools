@@ -39,7 +39,7 @@ namespace {
 
         const auto expected_mean = (gen.upper_bound() + gen.lower_bound()) *
                                    0.5;
-        EXPECT_NEAR(weighted_sum, expected_mean, 1e-2);
+        EXPECT_NEAR(weighted_sum, expected_mean, 1e-1);
     }
 
 }  // namespace

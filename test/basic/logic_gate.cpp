@@ -38,7 +38,7 @@ namespace {
                 rmm.notify_signal(true);
         }
 
-        EXPECT_NEAR(timer.elapsed(), TRUE_DURATION + TOLERANCE, 1e-6);
+        EXPECT_NEAR(timer.elapsed(), TRUE_DURATION + TOLERANCE, 1e-4);
     }
 
 

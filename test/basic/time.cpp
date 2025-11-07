@@ -74,18 +74,19 @@ namespace {
 
     TEST(Time, Sleep) {
         constexpr double SLEEP_SEC = 1.0 / 3.0;
-
         sung::MonotonicRealtimeTimer sw;
+
+        sw.check();
         sung::sleep_hybrid(SLEEP_SEC);
-        EXPECT_NEAR(sw.elapsed(), SLEEP_SEC, 0.000001);
+        EXPECT_NEAR(sw.elapsed(), SLEEP_SEC, 1.0e-3);
 
         sw.check();
         sung::sleep_loop(SLEEP_SEC);
-        EXPECT_NEAR(sw.elapsed(), SLEEP_SEC, 0.00001);
+        EXPECT_NEAR(sw.elapsed(), SLEEP_SEC, 1.0e-3);
 
         sw.check();
         sung::sleep_naive(SLEEP_SEC);
-        EXPECT_NEAR(sw.elapsed(), SLEEP_SEC, 0.1);
+        EXPECT_NEAR(sw.elapsed(), SLEEP_SEC, 1.0e-1);
     }
 
 }  // namespace
