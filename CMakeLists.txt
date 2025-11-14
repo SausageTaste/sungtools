@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.23)
 
 project(sungtools
     VERSION 0.1.1
@@ -13,6 +13,7 @@ set(SUNG_ENABLE_TEST OFF CACHE BOOL "Build test executables")
 
 set(sung_extern_dir ${CMAKE_CURRENT_SOURCE_DIR}/extern)
 set(sung_src_dir ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(sung_include_dir ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 if (cxx_std_17 IN_LIST CMAKE_CXX_COMPILE_FEATURES)
     set(sung_cpp17_supported ON)
@@ -36,6 +37,33 @@ endif()
 # Define the library
 #-------------------------------------------------------------------------------
 
+set(sung_header_basic
+    ${sung_include_dir}/sung/basic/aabb.hpp
+    ${sung_include_dir}/sung/basic/angle.hpp
+    ${sung_include_dir}/sung/basic/byte_arr.hpp
+    ${sung_include_dir}/sung/basic/bytes.hpp
+    ${sung_include_dir}/sung/basic/cvar.hpp
+    ${sung_include_dir}/sung/basic/densify.hpp
+    ${sung_include_dir}/sung/basic/expected.hpp
+    ${sung_include_dir}/sung/basic/geometry2d.hpp
+    ${sung_include_dir}/sung/basic/geometry3d.hpp
+    ${sung_include_dir}/sung/basic/inputs.hpp
+    ${sung_include_dir}/sung/basic/linalg.hpp
+    ${sung_include_dir}/sung/basic/logic_gate.hpp
+    ${sung_include_dir}/sung/basic/mamath.hpp
+    ${sung_include_dir}/sung/basic/mesh_builder.hpp
+    ${sung_include_dir}/sung/basic/optional.hpp
+    ${sung_include_dir}/sung/basic/os_detect.hpp
+    ${sung_include_dir}/sung/basic/random.hpp
+    ${sung_include_dir}/sung/basic/ratio.hpp
+    ${sung_include_dir}/sung/basic/static_arr.hpp
+    ${sung_include_dir}/sung/basic/static_pool.hpp
+    ${sung_include_dir}/sung/basic/stringtool.hpp
+    ${sung_include_dir}/sung/basic/threading.hpp
+    ${sung_include_dir}/sung/basic/time.hpp
+    ${sung_include_dir}/sung/basic/units.hpp
+)
+
 set(sung_src_basic
     ${sung_src_dir}/basic/angle.cpp
     ${sung_src_dir}/basic/byte_arr.cpp
@@ -51,10 +79,24 @@ set(sung_src_basic
     ${sung_src_dir}/basic/time.cpp
 )
 
-add_library(sungtools_basic STATIC ${sung_src_basic})
+add_library(sungtools_basic)
 add_library(sungtools::sungtools_basic ALIAS sungtools_basic)
+target_sources(sungtools_basic
+    PUBLIC
+        FILE_SET HEADERS
+        BASE_DIRS
+            ${sung_include_dir}
+            ${sung_extern_dir}/expected/include
+            ${sung_extern_dir}/optional/include
+        FILES
+            ${sung_header_basic}
+            ${sung_extern_dir}/expected/include/tl/expected.hpp
+            ${sung_extern_dir}/optional/include/tl/optional.hpp
+    PRIVATE
+        ${sung_src_basic}
+)
 target_include_directories(sungtools_basic PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${sung_include_dir}>
     $<BUILD_INTERFACE:${sung_extern_dir}/expected/include>
     $<BUILD_INTERFACE:${sung_extern_dir}/optional/include>
     $<INSTALL_INTERFACE:include>
@@ -82,14 +124,11 @@ configure_package_config_file(
 
 install(TARGETS sungtools_basic
     EXPORT ${PROJECT_NAME}Targets
+    FILE_SET HEADERS DESTINATION include
     LIBRARY DESTINATION $<IF:$<CONFIG:Debug>,debug/lib,lib>
     ARCHIVE DESTINATION $<IF:$<CONFIG:Debug>,debug/lib,lib>
     RUNTIME DESTINATION $<IF:$<CONFIG:Debug>,debug/bin,bin>
-    INCLUDES DESTINATION include
 )
-install(DIRECTORY include/ DESTINATION include)
-install(DIRECTORY extern/expected/include/ DESTINATION include)
-install(DIRECTORY extern/optional/include/ DESTINATION include)
 install(EXPORT ${PROJECT_NAME}Targets
     FILE ${PROJECT_NAME}Targets.cmake
     NAMESPACE ${PROJECT_NAME}::
