@@ -9,7 +9,7 @@ namespace sung { namespace key {
             return;
 
         states_[index].tp_ = e.tp_;
-        states_[index].pressed = (e.action_ == key::ActionType::down);
+        states_[index].pressed = (e.action_ == KeyAction::down);
     }
 
     bool EventAnalyzer::is_pressed(KeyCode key) const {

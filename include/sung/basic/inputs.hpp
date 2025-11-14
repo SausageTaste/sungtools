@@ -3,38 +3,17 @@
 #include <array>
 #include <chrono>
 
+#include "sung/basic/input_enum.h"
 #include "sung/basic/optional.hpp"
 
 
 namespace sung { namespace key {
 
-    enum class ActionType { down, up };
-
-    // clang-format off
-    enum class KeyCode {
-        /* Alphabets */
-        a, b, c, d, e, f, g, h, i, j, k, l, m,
-        n, o, p, q, r, s, t, u, v, w, x, y, z,
-        /* Horizontal numbers */
-        n0, n1, n2, n3, n4, n5, n6, n7, n8, n9,
-        /* Misc in keyboard main area */
-        backquote, minus, equal, lbracket, rbracket, backslash, semicolon,
-        quote, comma, period, slash,
-        /* Special characters */
-        space, enter, backspace, tab,
-        /* No characters */
-        escape, lshfit, rshfit, lctrl, rctrl, lalt, ralt, up, down, left, right,
-        /* End Of Enum, just for calculating number of elements of Enum class */
-        eoe
-    };
-    // clang-format on
-
-
     struct Event {
         using Clock_t = std::chrono::steady_clock;
 
         Clock_t::time_point tp_ = Clock_t::now();
-        ActionType action_ = ActionType::down;
+        KeyAction action_ = KeyAction::eoe;
         KeyCode key_ = KeyCode::eoe;
     };
 
@@ -66,17 +45,12 @@ namespace sung { namespace key {
 
 namespace sung { namespace mouse {
 
-    enum class ActionType { move, down, up, mwheel_up, mwheel_down };
-
-    enum class ButtonCode { left, right, middle, unkown };
-
-
     struct Event {
         using Clock_t = std::chrono::steady_clock;
 
         Clock_t::time_point timepoint_ = Clock_t::now();
-        ActionType action_ = ActionType::down;
-        ButtonCode button_ = ButtonCode::unkown;
+        MouseAction action_ = MouseAction::eoe;
+        MouseBtn button_ = MouseBtn::eoe;
         int32_t btn_id_ = -1;
         double xpos_ = 0;
         double ypos_ = 0;
