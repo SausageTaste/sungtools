@@ -7,53 +7,47 @@
 #include "sung/basic/optional.hpp"
 
 
-namespace sung { namespace key {
+namespace sung {
 
-    struct Event {
-        using Clock_t = std::chrono::steady_clock;
+    using EventClock = std::chrono::steady_clock;
+    using EventTimePoint = EventClock::time_point;
 
-        Clock_t::time_point tp_ = Clock_t::now();
+
+    struct KeyEvent {
+        EventClock::time_point timepoint_ = EventClock::now();
         KeyAction action_ = KeyAction::eoe;
         KeyCode key_ = KeyCode::eoe;
     };
 
 
-    class EventAnalyzer {
-
-    private:
-        using Clock_t = Event::Clock_t;
-
-        struct KeyState {
-            Clock_t::time_point tp_ = Clock_t::now();
-            bool pressed = false;
-        };
+    class KeyEventStates {
 
     public:
-        void notify(const Event& e);
+        void notify(const KeyEvent& e);
         bool is_pressed(KeyCode key) const;
-        sung::Optional<Clock_t::time_point> get_timepoint(KeyCode key) const;
+        sung::Optional<EventTimePoint> get_timepoint(KeyCode key) const;
 
     private:
-        static size_t convert_key_to_index(const KeyCode key);
+        struct KeyState {
+            EventTimePoint timepoint_ = EventClock::now();
+            bool pressed = false;
+        };
 
         constexpr static auto KEYSPEC_SIZE = static_cast<size_t>(KeyCode::eoe);
         std::array<KeyState, KEYSPEC_SIZE> states_;
     };
 
-}}  // namespace sung::key
 
-
-namespace sung { namespace mouse {
-
-    struct Event {
-        using Clock_t = std::chrono::steady_clock;
-
-        Clock_t::time_point timepoint_ = Clock_t::now();
+    struct MouseEvent {
+        double x_ = 0;
+        double y_ = 0;
+        EventTimePoint timepoint_ = EventClock::now();
         MouseAction action_ = MouseAction::eoe;
         MouseBtn button_ = MouseBtn::eoe;
         int32_t btn_id_ = -1;
-        double xpos_ = 0;
-        double ypos_ = 0;
     };
 
-}}  // namespace sung::mouse
+    constexpr auto size = sizeof(MouseEvent);
+    constexpr auto offset = offsetof(MouseEvent, btn_id_);
+
+}  // namespace sung
