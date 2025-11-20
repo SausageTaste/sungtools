@@ -61,7 +61,7 @@ set(sung_src_basic
     ${sung_src_dir}/basic/time.cpp
 )
 
-add_library(sungtools_basic)
+add_library(sungtools_basic STATIC)
 add_library(sungtools::sungtools_basic ALIAS sungtools_basic)
 target_sources(sungtools_basic
     PUBLIC
