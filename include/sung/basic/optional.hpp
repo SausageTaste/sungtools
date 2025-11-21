@@ -39,4 +39,7 @@ namespace sung {
 
 #endif
 
+    template <typename T>
+    using Opt = Optional<T>;
+
 }  // namespace sung
