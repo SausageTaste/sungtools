@@ -233,6 +233,12 @@ namespace sung {
             ++count_;
         }
 
+        void reset() {
+            sum_sin_ = 0;
+            sum_cos_ = 0;
+            count_ = 0;
+        }
+
         Angle mean() const {
             if (count_ == 0)
                 return Angle::from_zero();
