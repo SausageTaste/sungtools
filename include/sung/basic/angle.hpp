@@ -270,8 +270,8 @@ namespace sung {
 
         void set_full_range() {
             mean_angle_.set_rad(SUNG_PI);
-            diff_max_.set_rad(SUNG_TAU);
-            diff_min_.set_rad(0);
+            diff_max_.set_rad(SUNG_PI);
+            diff_min_.set_rad(-SUNG_PI);
         }
 
         void notify(Angle a) {
