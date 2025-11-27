@@ -15,6 +15,17 @@ namespace sung {
         size_t height() const { return y_size_; }
         size_t depth() const { return z_size_; }
 
+        bool check_idx(size_t x, size_t y, size_t z) const {
+            if (x >= x_size_)
+                return false;
+            if (y >= y_size_)
+                return false;
+            if (z >= z_size_)
+                return false;
+            return true;
+        }
+
+    protected:
         size_t make_texel_idx(size_t x, size_t y, size_t z) const {
             const auto texel_size = channels_;
             const auto row_size = texel_size * x_size_;
@@ -22,7 +33,14 @@ namespace sung {
             return z * slice_size + y * row_size + x * texel_size;
         }
 
-    protected:
+        size_t make_texel_idx_clamp(size_t x, size_t y, size_t z) const {
+            return this->make_texel_idx(
+                sung::clamp<size_t>(x, 0, x_size_ - 1),
+                sung::clamp<size_t>(y, 0, y_size_ - 1),
+                sung::clamp<size_t>(z, 0, z_size_ - 1)
+            );
+        }
+
         void set_size(size_t channels, size_t x, size_t y, size_t z) {
             channels_ = channels;
             x_size_ = x;
@@ -63,12 +81,12 @@ namespace sung {
         size_t value_type_size() const { return sizeof(DataType); }
 
         DataType* texel_ptr(size_t x, size_t y = 0, size_t z = 0) {
-            const auto index = this->make_texel_idx(x, y, z);
+            const auto index = this->make_texel_idx_clamp(x, y, z);
             return data_.data() + index;
         }
 
         const DataType* texel_ptr(size_t x, size_t y = 0, size_t z = 0) const {
-            const auto index = this->make_texel_idx(x, y, z);
+            const auto index = this->make_texel_idx_clamp(x, y, z);
             return data_.data() + index;
         }
 
@@ -103,7 +121,7 @@ namespace sung {
         size_t value_type_size() const { return sizeof(DataType); }
 
         const DataType* texel_ptr(size_t x, size_t y = 0, size_t z = 0) const {
-            const auto index = this->make_texel_idx(x, y, z);
+            const auto index = this->make_texel_idx_clamp(x, y, z);
             return data_ + index;
         }
 
