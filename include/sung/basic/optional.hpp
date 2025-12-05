@@ -1,9 +1,23 @@
 #pragma once
 
-#if defined(__cpp_lib_optional)
-    #include <optional>
+#if defined(SUNG_FORCE_OPTIONAL_TL)
+    #define SUNG_OPTIONAL_TL
+#elif defined(SUNG_FORCE_OPTIONAL_STD)
+    #define SUNG_OPTIONAL_STD
 #else
+    #ifdef __cpp_lib_optional
+        #define SUNG_OPTIONAL_STD
+    #else
+        #define SUNG_OPTIONAL_TL
+    #endif
+#endif
+
+#if defined(SUNG_OPTIONAL_STD)
+    #include <optional>
+#elif defined(SUNG_OPTIONAL_TL)
     #include <tl/optional.hpp>
+#else
+    #error "Unknown optional implementation"
 #endif
 
 #include "sung/basic/os_detect.hpp"
@@ -11,7 +25,7 @@
 
 namespace sung {
 
-#if defined(__cpp_lib_optional)
+#if defined(SUNG_OPTIONAL_STD)
     template <class T>
     using Optional = std::optional<T>;
 
@@ -24,7 +38,7 @@ namespace sung {
         return std::make_optional(std::forward<T>(value));
     }
 
-#else
+#elif defined(SUNG_OPTIONAL_TL)
     template <class T>
     using Optional = tl::optional<T>;
 
