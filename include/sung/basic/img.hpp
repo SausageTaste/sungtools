@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "sung/basic/bytes.hpp"
+#include "sung/basic/mamath.hpp"
 
 
 namespace sung {
@@ -95,10 +96,6 @@ namespace sung {
         }
 
         std::vector<DataType> data_;
-        size_t channels_ = 0;
-        size_t x_size_ = 0;
-        size_t y_size_ = 0;
-        size_t z_size_ = 0;
     };
 
 
