@@ -31,7 +31,7 @@ namespace sung {
     }
 
     byte8* Image2D::pixel_ptr(uint32_t x, uint32_t y) {
-        return this->pixel_ptr(y * this->row_bytes() + x);
+        return this->pixel_ptr(y * x_size_ + x);
     }
 
     const byte8* Image2D::pixel_ptr(uint32_t idx) const {
@@ -39,7 +39,7 @@ namespace sung {
     }
 
     const byte8* Image2D::pixel_ptr(uint32_t x, uint32_t y) const {
-        return this->pixel_ptr(y * this->row_bytes() + x);
+        return this->pixel_ptr(y * x_size_ + x);
     }
 
 }  // namespace sung
