@@ -29,6 +29,7 @@ set(sung_header_basic
     ${sung_include_dir}/sung/basic/expected.hpp
     ${sung_include_dir}/sung/basic/geometry2d.hpp
     ${sung_include_dir}/sung/basic/geometry3d.hpp
+    ${sung_include_dir}/sung/basic/img2d.hpp
     ${sung_include_dir}/sung/basic/inputs.hpp
     ${sung_include_dir}/sung/basic/linalg.hpp
     ${sung_include_dir}/sung/basic/logic_gate.hpp
@@ -53,6 +54,7 @@ set(sung_src_basic
     ${sung_src_dir}/basic/cvar.cpp
     ${sung_src_dir}/basic/densify.cpp
     ${sung_src_dir}/basic/geometry3d.cpp
+    ${sung_src_dir}/basic/img2d.cpp
     ${sung_src_dir}/basic/inputs.cpp
     ${sung_src_dir}/basic/logic_gate.cpp
     ${sung_src_dir}/basic/mesh_builder.cpp
