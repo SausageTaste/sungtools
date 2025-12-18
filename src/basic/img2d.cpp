@@ -26,19 +26,19 @@ namespace sung {
 
     size_t Image2D::row_bytes() const { return x_size_ * this->pixel_bytes(); }
 
-    byte8* Image2D::pixel_ptr(uint32_t idx) {
+    byte8* Image2D::pixel_ptr(size_t idx) {
         return data_.data() + idx * this->pixel_bytes();
     }
 
-    byte8* Image2D::pixel_ptr(uint32_t x, uint32_t y) {
+    byte8* Image2D::pixel_ptr(size_t x, size_t y) {
         return this->pixel_ptr(y * x_size_ + x);
     }
 
-    const byte8* Image2D::pixel_ptr(uint32_t idx) const {
+    const byte8* Image2D::pixel_ptr(size_t idx) const {
         return data_.data() + idx * this->pixel_bytes();
     }
 
-    const byte8* Image2D::pixel_ptr(uint32_t x, uint32_t y) const {
+    const byte8* Image2D::pixel_ptr(size_t x, size_t y) const {
         return this->pixel_ptr(y * x_size_ + x);
     }
 

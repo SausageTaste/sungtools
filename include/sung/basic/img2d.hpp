@@ -27,28 +27,28 @@ namespace sung {
         size_t pixel_bytes() const;
         size_t row_bytes() const;
 
-        byte8* pixel_ptr(uint32_t idx);
-        byte8* pixel_ptr(uint32_t x, uint32_t y);
-        const byte8* pixel_ptr(uint32_t idx) const;
-        const byte8* pixel_ptr(uint32_t x, uint32_t y) const;
+        byte8* pixel_ptr(size_t idx);
+        byte8* pixel_ptr(size_t x, size_t y);
+        const byte8* pixel_ptr(size_t idx) const;
+        const byte8* pixel_ptr(size_t x, size_t y) const;
 
         template <typename T>
-        T* pixel_ptr(uint32_t idx) {
+        T* pixel_ptr(size_t idx) {
             return reinterpret_cast<T*>(this->pixel_ptr(idx));
         }
 
         template <typename T>
-        T* pixel_ptr(uint32_t x, uint32_t y) {
+        T* pixel_ptr(size_t x, size_t y) {
             return reinterpret_cast<T*>(this->pixel_ptr(x, y));
         }
 
         template <typename T>
-        const T* pixel_ptr(uint32_t idx) const {
+        const T* pixel_ptr(size_t idx) const {
             return reinterpret_cast<const T*>(this->pixel_ptr(idx));
         }
 
         template <typename T>
-        const T* pixel_ptr(uint32_t x, uint32_t y) const {
+        const T* pixel_ptr(size_t x, size_t y) const {
             return reinterpret_cast<const T*>(this->pixel_ptr(x, y));
         }
 
