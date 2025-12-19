@@ -1,8 +1,8 @@
 #include "sung/basic/cvar.hpp"
 
+#include <map>
 #include <sstream>
 #include <stdexcept>
-#include <map>
 
 #include "sung/basic/stringtool.hpp"
 
@@ -34,8 +34,8 @@ namespace {
     public:
         const std::string& id() override { return id_; }
         const std::string& help() override { return help_text_; }
-        int64_t get() override { return value_; }
-        bool set(int64_t value) override {
+        const int64_t& get() override { return value_; }
+        bool set(const int64_t& value) override {
             if (predicate_ && !predicate_(value))
                 return false;
 
@@ -55,8 +55,8 @@ namespace {
     public:
         const std::string& id() override { return id_; }
         const std::string& help() override { return help_text_; }
-        double get() override { return value_; }
-        bool set(double value) override {
+        const double& get() override { return value_; }
+        bool set(const double& value) override {
             if (predicate_ && !predicate_(value))
                 return false;
 
@@ -95,11 +95,11 @@ namespace {
     class CVars : public sung::ICVars {
 
     public:
-        std::shared_ptr<sung::ICVarInt> create_int(
+        std::shared_ptr<sung::ICVarInt> create(
             const std::string& id,
             const std::string& help,
             int64_t value,
-            std::function<bool(int64_t)> predicate
+            std::function<bool(const int64_t&)> predicate
         ) override {
             ::assert_valid_id(id);
 
@@ -112,11 +112,11 @@ namespace {
             return cvar;
         }
 
-        std::shared_ptr<sung::ICVarFloat> create_float(
+        std::shared_ptr<sung::ICVarFloat> create(
             const std::string& id,
             const std::string& help,
             double value,
-            std::function<bool(double)> predicate
+            std::function<bool(const double&)> predicate
         ) override {
             ::assert_valid_id(id);
 
@@ -129,7 +129,7 @@ namespace {
             return cvar;
         }
 
-        std::shared_ptr<sung::ICVarStr> create_str(
+        std::shared_ptr<sung::ICVarStr> create(
             const std::string& id,
             const std::string& help,
             const std::string& value,

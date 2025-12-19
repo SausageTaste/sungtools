@@ -14,22 +14,15 @@ namespace sung {
     };
 
 
-    struct ICVarInt : public ICVarValue {
-        virtual int64_t get() = 0;
-        virtual bool set(int64_t value) = 0;
+    template <typename T>
+    struct TCVarValue : public ICVarValue {
+        virtual const T& get() = 0;
+        virtual bool set(const T& value) = 0;
     };
 
-
-    struct ICVarFloat : public ICVarValue {
-        virtual double get() = 0;
-        virtual bool set(double value) = 0;
-    };
-
-
-    struct ICVarStr : public ICVarValue {
-        virtual const std::string& get() = 0;
-        virtual bool set(const std::string& value) = 0;
-    };
+    using ICVarInt = TCVarValue<int64_t>;
+    using ICVarFloat = TCVarValue<double>;
+    using ICVarStr = TCVarValue<std::string>;
 
 
     struct ICVarVisitor {
@@ -43,21 +36,21 @@ namespace sung {
     struct ICVars {
         virtual ~ICVars() = default;
 
-        virtual std::shared_ptr<ICVarInt> create_int(
+        virtual std::shared_ptr<ICVarInt> create(
             const std::string& id,
             const std::string& help,
             int64_t value,
-            std::function<bool(int64_t)> predicate = nullptr
+            std::function<bool(const int64_t&)> predicate = nullptr
         ) = 0;
 
-        virtual std::shared_ptr<ICVarFloat> create_float(
+        virtual std::shared_ptr<ICVarFloat> create(
             const std::string& id,
             const std::string& help,
             double value,
-            std::function<bool(double)> predicate = nullptr
+            std::function<bool(const double&)> predicate = nullptr
         ) = 0;
 
-        virtual std::shared_ptr<ICVarStr> create_str(
+        virtual std::shared_ptr<ICVarStr> create(
             const std::string& id,
             const std::string& help,
             const std::string& value,
@@ -69,6 +62,16 @@ namespace sung {
         virtual void visit(ICVarVisitor& visitor) = 0;
 
         virtual std::string serialize_str() = 0;
+
+        template <typename T>
+        std::shared_ptr<TCVarValue<T>> t_create(
+            const std::string& id,
+            const std::string& help,
+            const T& value,
+            std::function<bool(const T&)> predicate = nullptr
+        ) {
+            return this->create(id, help, value, predicate);
+        }
 
         std::shared_ptr<ICVarInt> geti(const std::string& id) {
             return std::dynamic_pointer_cast<ICVarInt>(this->get(id));
@@ -90,121 +93,52 @@ namespace sung {
     inline ICVars& gcvars() { return *get_cvars_global(); }
 
 
-    class AutoCVarInt : public ICVarInt {
+    template <typename T>
+    class TAutoCVar : public TCVarValue<T> {
 
     public:
-        AutoCVarInt(
+        TAutoCVar(
             const std::string& id,
             const std::string& help,
-            int64_t value,
-            std::function<bool(int64_t)> predicate,
+            const T& value,
+            std::function<bool(const T&)> predicate,
             ICVars& cvars
         ) {
-            cvar_ = cvars.create_int(id, help, value, predicate);
+            cvar_ = cvars.create(id, help, value, predicate);
         }
 
-        AutoCVarInt(
+        TAutoCVar(
             const std::string& id,
             const std::string& help,
-            int64_t value,
-            ICVars& cvars
-        ) {
-            cvar_ = cvars.create_int(id, help, value);
-        }
+            const T& value,
+            std::function<bool(const T&)> predicate
+        )
+            : TAutoCVar(id, help, value, predicate, sung::gcvars()) {}
 
-        AutoCVarInt(
-            const std::string& id, const std::string& help, int64_t value
-        ) {
-            cvar_ = sung::gcvars().create_int(id, help, value);
-        }
+        TAutoCVar(
+            const std::string& id,
+            const std::string& help,
+            const T& value,
+            ICVars& cvars
+        )
+            : TAutoCVar(id, help, value, nullptr, cvars) {}
+
+        TAutoCVar(
+            const std::string& id, const std::string& help, const T& value
+        )
+            : TAutoCVar(id, help, value, nullptr, sung::gcvars()) {}
 
         const std::string& id() override { return cvar_->id(); }
         const std::string& help() override { return cvar_->help(); }
-        int64_t get() override { return cvar_->get(); }
-        bool set(int64_t value) override { return cvar_->set(value); }
+        const T& get() override { return cvar_->get(); }
+        bool set(const T& value) override { return cvar_->set(value); }
 
     private:
-        std::shared_ptr<ICVarInt> cvar_;
+        std::shared_ptr<TCVarValue<T>> cvar_;
     };
 
-
-    class AutoCVarFlt : public ICVarFloat {
-
-    public:
-        AutoCVarFlt(
-            const std::string& id,
-            const std::string& help,
-            double value,
-            std::function<bool(double)> predicate,
-            ICVars& cvars
-        ) {
-            cvar_ = cvars.create_float(id, help, value, predicate);
-        }
-
-        AutoCVarFlt(
-            const std::string& id,
-            const std::string& help,
-            double value,
-            ICVars& cvars
-        ) {
-            cvar_ = cvars.create_float(id, help, value);
-        }
-
-        AutoCVarFlt(
-            const std::string& id, const std::string& help, double value
-        ) {
-            cvar_ = sung::gcvars().create_float(id, help, value);
-        }
-
-        const std::string& id() override { return cvar_->id(); }
-        const std::string& help() override { return cvar_->help(); }
-        double get() override { return cvar_->get(); }
-        bool set(double value) override { return cvar_->set(value); }
-
-    private:
-        std::shared_ptr<ICVarFloat> cvar_;
-    };
-
-
-    class AutoCVarStr : public ICVarStr {
-
-    public:
-        AutoCVarStr(
-            const std::string& id,
-            const std::string& help,
-            const std::string& value,
-            std::function<bool(const std::string&)> predicate,
-            ICVars& cvars
-        ) {
-            cvar_ = cvars.create_str(id, help, value, predicate);
-        }
-
-        AutoCVarStr(
-            const std::string& id,
-            const std::string& help,
-            const std::string& value,
-            ICVars& cvars
-        ) {
-            cvar_ = cvars.create_str(id, help, value);
-        }
-
-        AutoCVarStr(
-            const std::string& id,
-            const std::string& help,
-            const std::string& value
-        ) {
-            cvar_ = sung::gcvars().create_str(id, help, value);
-        }
-
-        const std::string& id() override { return cvar_->id(); }
-        const std::string& help() override { return cvar_->help(); }
-        const std::string& get() override { return cvar_->get(); }
-        bool set(const std::string& value) override {
-            return cvar_->set(value);
-        }
-
-    private:
-        std::shared_ptr<ICVarStr> cvar_;
-    };
+    using AutoCVarInt = TAutoCVar<int64_t>;
+    using AutoCVarFlt = TAutoCVar<double>;
+    using AutoCVarStr = TAutoCVar<std::string>;
 
 }  // namespace sung
