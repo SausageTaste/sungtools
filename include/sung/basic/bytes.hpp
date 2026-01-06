@@ -10,6 +10,28 @@ namespace sung {
     using byte8 = uint8_t;
 
 
+    template <typename Uint>
+    Uint bit_set(Uint number, Uint n) {
+        return number | ((Uint)1 << n);
+    }
+
+    template <typename Uint>
+    Uint bit_clear(Uint number, Uint n) {
+        return number & ~((Uint)1 << n);
+    }
+
+
+    template <typename Uint>
+    Uint bit_toggle(Uint number, Uint n) {
+        return number ^ ((Uint)1 << n);
+    }
+
+    template <typename Uint>
+    bool bit_check(Uint number, Uint n) {
+        return (number >> n) & (Uint)1;
+    }
+
+
     bool is_big_endian() noexcept;
     bool is_little_endian() noexcept;
 
