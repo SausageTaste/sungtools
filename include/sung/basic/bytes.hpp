@@ -1,14 +1,12 @@
 #pragma once
 
 #include <array>
-#include <cstdint>
 #include <cstring>
+
+#include "sung/basic/byte_type.hpp"
 
 
 namespace sung {
-
-    using byte8 = uint8_t;
-
 
     template <typename Uint>
     Uint bit_set(Uint number, Uint n) {
