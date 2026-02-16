@@ -73,6 +73,33 @@ namespace sung {
             return this->create(id, help, value, predicate);
         }
 
+        std::shared_ptr<ICVarInt> create_int(
+            const std::string& id,
+            const std::string& help,
+            int64_t value,
+            std::function<bool(const int64_t&)> predicate = nullptr
+        ) {
+            return this->create(id, help, value, predicate);
+        }
+
+        std::shared_ptr<ICVarFloat> create_float(
+            const std::string& id,
+            const std::string& help,
+            double value,
+            std::function<bool(const double&)> predicate = nullptr
+        ) {
+            return this->create(id, help, value, predicate);
+        }
+
+        std::shared_ptr<ICVarStr> create_str(
+            const std::string& id,
+            const std::string& help,
+            const std::string& value,
+            std::function<bool(const std::string&)> predicate = nullptr
+        ) {
+            return this->create(id, help, value, predicate);
+        }
+
         std::shared_ptr<ICVarInt> geti(const std::string& id) {
             return std::dynamic_pointer_cast<ICVarInt>(this->get(id));
         }
