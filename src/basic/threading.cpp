@@ -141,7 +141,7 @@ namespace {
         }
 
         ::TaskList* tasks_ = nullptr;
-        std::atomic_bool quit_flag_ = false;
+        std::atomic_bool quit_flag_{ false };
     };
 
 

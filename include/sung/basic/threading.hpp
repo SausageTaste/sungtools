@@ -23,7 +23,7 @@ namespace sung {
         void set_priority(int16_t priority);
 
     private:
-        std::atomic_int16_t priority_ = 0;
+        std::atomic_int16_t priority_{ 0 };
     };
 
 

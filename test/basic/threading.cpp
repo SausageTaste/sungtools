@@ -24,7 +24,7 @@ namespace {
         size_t counter() { return counter_; }
 
     private:
-        std::atomic_size_t counter_ = 0;
+        std::atomic_size_t counter_{ 0 };
     };
 
 
