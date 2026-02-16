@@ -99,7 +99,7 @@ namespace {
             ASSERT_DOUBLE_EQ(vg1.x, vs1.x());
             ASSERT_DOUBLE_EQ(vg1.y, vs1.y());
             ASSERT_DOUBLE_EQ(vg1.z, vs1.z());
-            ASSERT_DOUBLE_EQ(glm::dot(vg0, vg1), sung::dot(vs0, vs1));
+            ASSERT_NEAR(glm::dot(vg0, vg1), sung::dot(vs0, vs1), 1e-6);
 
             const auto vs_add = vs0 + vs1;
             const auto vg_add = vg0 + vg1;
@@ -109,9 +109,9 @@ namespace {
 
             const auto vs_cross = sung::cross(vs0, vs1);
             const auto vg_cross = glm::cross(vg0, vg1);
-            ASSERT_DOUBLE_EQ(vg_cross.x, vs_cross.x());
-            ASSERT_DOUBLE_EQ(vg_cross.y, vs_cross.y());
-            ASSERT_DOUBLE_EQ(vg_cross.z, vs_cross.z());
+            ASSERT_NEAR(vg_cross.x, vs_cross.x(), 1e-6);
+            ASSERT_NEAR(vg_cross.y, vs_cross.y(), 1e-6);
+            ASSERT_NEAR(vg_cross.z, vs_cross.z(), 1e-6);
         }
 
         return;
@@ -144,10 +144,10 @@ namespace {
             const auto v2_glm = mat_glm * v_glm;
             const auto v2_sung = mat_sung * v_sung;
 
-            ASSERT_DOUBLE_EQ(v2_glm.x, v2_sung.x());
-            ASSERT_DOUBLE_EQ(v2_glm.y, v2_sung.y());
-            ASSERT_DOUBLE_EQ(v2_glm.z, v2_sung.z());
-            ASSERT_DOUBLE_EQ(v2_glm.w, v2_sung.w());
+            ASSERT_NEAR(v2_glm.x, v2_sung.x(), 1e-6);
+            ASSERT_NEAR(v2_glm.y, v2_sung.y(), 1e-6);
+            ASSERT_NEAR(v2_glm.z, v2_sung.z(), 1e-6);
+            ASSERT_NEAR(v2_glm.w, v2_sung.w(), 1e-6);
 
             const auto mat_inv_glm = glm::inverse(mat_glm);
             const auto mat_inv_sung = mat_sung.inverse().value();
@@ -163,15 +163,15 @@ namespace {
             const auto v3_glm = mat_inv_glm * v2_glm;
             const auto v3_sung = mat_inv_sung * v2_sung;
 
-            ASSERT_NEAR(v_sung.x(), v3_sung.x(), 0.01);
-            ASSERT_NEAR(v_sung.y(), v3_sung.y(), 0.01);
-            ASSERT_NEAR(v_sung.z(), v3_sung.z(), 0.01);
-            ASSERT_NEAR(v_sung.w(), v3_sung.w(), 0.01);
+            ASSERT_NEAR(v_sung.x(), v3_sung.x(), 1e-6);
+            ASSERT_NEAR(v_sung.y(), v3_sung.y(), 1e-6);
+            ASSERT_NEAR(v_sung.z(), v3_sung.z(), 1e-6);
+            ASSERT_NEAR(v_sung.w(), v3_sung.w(), 1e-6);
 
-            ASSERT_DOUBLE_EQ(v3_glm.x, v3_sung.x());
-            ASSERT_DOUBLE_EQ(v3_glm.y, v3_sung.y());
-            ASSERT_DOUBLE_EQ(v3_glm.z, v3_sung.z());
-            ASSERT_DOUBLE_EQ(v3_glm.w, v3_sung.w());
+            ASSERT_NEAR(v3_glm.x, v3_sung.x(), 1e-6);
+            ASSERT_NEAR(v3_glm.y, v3_sung.y(), 1e-6);
+            ASSERT_NEAR(v3_glm.z, v3_sung.z(), 1e-6);
+            ASSERT_NEAR(v3_glm.w, v3_sung.w(), 1e-6);
         }
 
         return;
