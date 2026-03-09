@@ -21,7 +21,7 @@
     #elif TARGET_OS_IPHONE
     // iOS device
     #elif TARGET_OS_MAC
-    // Other kinds of Mac OS
+        #define SUNG_OS_MACOS
     #else
         #error "Unknown Apple platform"
     #endif
