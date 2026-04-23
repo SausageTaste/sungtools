@@ -79,6 +79,8 @@ namespace sung {
                 return true;
             case EdgeDetector::Type::falling:
                 return false;
+            case EdgeDetector::Type::none:
+                break;
         }
 
         if (active_)
