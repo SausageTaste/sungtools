@@ -141,6 +141,17 @@ namespace sung {
             return metres_per_second_ * MS_PER_MPH.template reciprocal<T>();
         }
 
+        // Mach
+        constexpr static TSpeed from_mach(T value) {
+            return TSpeed(value * MS_PER_MACH.template value<T>());
+        }
+        constexpr void set_mach(T value) {
+            metres_per_second_ = value * MS_PER_MACH.template value<T>();
+        }
+        constexpr T mach() const {
+            return metres_per_second_ * MS_PER_MACH.template reciprocal<T>();
+        }
+
         constexpr TSpeed operator+(const TSpeed& rhs) const {
             return TSpeed(metres_per_second_ + rhs.metres_per_second_);
         }
@@ -179,6 +190,8 @@ namespace sung {
         constexpr static auto MS_PER_KMPH = TLength<T>::M_PER_KM / SEC_PER_H;
         constexpr static auto MS_PER_KTS = TLength<T>::M_PER_NM / SEC_PER_H;
         constexpr static auto MS_PER_MPH = TLength<T>::M_PER_MI / SEC_PER_H;
+        constexpr static auto MS_PER_MACH = TLength<T>::M_PER_KM *
+                                            Ratio<int>{ 1235 } / SEC_PER_H;
 
     private:
         constexpr explicit TSpeed(T value) : metres_per_second_(value) {}
