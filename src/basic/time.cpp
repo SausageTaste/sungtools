@@ -48,6 +48,12 @@ namespace {
         return out;
     }
 
+    std::string make_sec_frac_str(bool remove_tail_zero, size_t digits) {
+        return make_sec_frac_str(
+            sung::backend::get_time_unix_chrono(), remove_tail_zero, digits
+        );
+    }
+
 }  // namespace
 
 
@@ -111,7 +117,7 @@ namespace sung {
         std::ostringstream ss;
         ss << std::put_time(&tmm, "%FT%T");
         if (milisec)
-            ss << ::make_sec_frac_str(uti, remove_tail_zero, digits);
+            ss << ::make_sec_frac_str(remove_tail_zero, digits);
         ss << std::put_time(&tmm, "Z");
         return ss.str();
     }
@@ -126,7 +132,7 @@ namespace sung {
         std::ostringstream ss;
         ss << std::put_time(&tmm, "%FT%T");
         if (milisec)
-            ss << ::make_sec_frac_str(uti, remove_tail_zero, digits);
+            ss << ::make_sec_frac_str(remove_tail_zero, digits);
         ss << std::put_time(&tmm, "%z");
 
         auto str = ss.str();
@@ -144,7 +150,7 @@ namespace sung {
         std::ostringstream ss;
         ss << std::put_time(&tmm, "%Y%m%dT%H%M%S");
         if (milisec)
-            ss << ::make_sec_frac_str(uti, remove_tail_zero, digits);
+            ss << ::make_sec_frac_str(remove_tail_zero, digits);
         ss << std::put_time(&tmm, "%z");
         return ss.str();
     }
